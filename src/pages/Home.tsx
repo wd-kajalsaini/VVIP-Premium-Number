@@ -153,10 +153,51 @@ const CarouselSlide = styled.div<{ $isActive: boolean }>`
   width: 100%;
   height: 100%;
   opacity: ${props => props.$isActive ? 1 : 0};
-  transition: opacity 0.8s ease-in-out;
+  transform: ${props => props.$isActive ? 'scale(1) translateX(0)' : 'scale(1.05) translateX(0)'};
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${props => props.$isActive 
+      ? 'linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.05) 100%)'
+      : 'linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(255,255,255,0.1) 100%)'};
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: scale(1.1) translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95) translateX(-30px);
+    }
+  }
+
+  ${props => props.$isActive && `
+    animation: slideIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  `}
 `;
 
 const CarouselOverlay = styled.div`
@@ -167,6 +208,28 @@ const CarouselOverlay = styled.div`
   height: 100%;
   background: linear-gradient(135deg, rgba(255, 107, 53, 0.8) 0%, rgba(247, 147, 30, 0.8) 25%, rgba(255, 204, 2, 0.8) 50%, rgba(255, 107, 53, 0.8) 75%, rgba(255, 75, 75, 0.8) 100%);
   z-index: 1;
+  transition: all 1s ease-in-out;
+  opacity: 0.9;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
 `;
 
 const CarouselNavigation = styled.div`
@@ -186,14 +249,44 @@ const CarouselDot = styled.button<{ $isActive: boolean }>`
   border: 2px solid ${theme.colors.neutral.white};
   background: ${props => props.$isActive ? theme.colors.neutral.white : 'rgba(0, 0, 0, 0.5)'};
   cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: ${props => props.$isActive ? 1 : 0.8};
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${props => props.$isActive ? 1 : 0.7};
+  box-shadow: ${props => props.$isActive 
+    ? '0 4px 15px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4)' 
+    : '0 2px 8px rgba(0, 0, 0, 0.3)'};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: ${props => props.$isActive 
+      ? 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%)'
+      : 'transparent'};
+    animation: ${props => props.$isActive ? 'pulse 2s ease-in-out infinite' : 'none'};
+    border-radius: 50%;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+  }
 
   &:hover {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.3);
     background: ${theme.colors.neutral.white};
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 255, 255, 0.5);
   }
 `;
 
@@ -202,8 +295,8 @@ const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
   top: 50%;
   ${props => props.$direction}: 20px;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   color: ${theme.colors.neutral.white};
   width: 50px;
   height: 50px;
@@ -215,15 +308,37 @@ const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
   font-size: 24px;
   font-weight: bold;
   z-index: 3;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: ${props => props.$direction === 'left' ? '-100%' : '100%'};
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+  }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    color: ${theme.colors.neutral.white};
+
+    &::before {
+      left: ${props => props.$direction === 'left' ? '100%' : '-100%'};
+    }
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(1.05);
   }
 
   @media (max-width: 768px) {
