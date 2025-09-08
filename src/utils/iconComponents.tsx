@@ -35,3 +35,6 @@ export const FaEye = createIcon(FaIcons.FaEye);
 export const FaEyeSlash = createIcon(FaIcons.FaEyeSlash);
 export const FaGoogle = createIcon(FaIcons.FaGoogle);
 export const FaFacebook = createIcon(FaIcons.FaFacebook);
+export const FaChevronDown = createIcon(FaIcons.FaChevronDown);
+export const FaChevronUp = createIcon(FaIcons.FaChevronUp);
+export const FaPlay = createIcon(FaIcons.FaPlay);
