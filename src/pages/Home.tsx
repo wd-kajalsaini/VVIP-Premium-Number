@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaStar, FaShieldAlt, FaRocket, FaPhoneAlt, FaCrown, FaMagic, FaFilter, FaGlobe } from '../utils/iconComponents';
@@ -125,64 +125,250 @@ const PriceRange = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
-  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
-  margin: 0;
-  margin-bottom: ${theme.spacing.xl};
   position: relative;
   overflow: hidden;
-  min-height: 500px;
+  min-height: 600px;
+  margin-bottom: ${theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    min-height: 500px;
+  }
+`;
+
+const CarouselContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: 500px;
+  }
+`;
+
+const CarouselSlide = styled.div<{ $isActive: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: ${props => props.$isActive ? 1 : 0};
+  transform: ${props => props.$isActive ? 'scale(1) translateX(0)' : 'scale(1.05) translateX(0)'};
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${props => props.$isActive 
+      ? 'linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.05) 100%)'
+      : 'linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(255,255,255,0.1) 100%)'};
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: scale(1.1) translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95) translateX(-30px);
+    }
+  }
+
+  ${props => props.$isActive && `
+    animation: slideIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  `}
+`;
+
+const CarouselOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.8) 0%, rgba(247, 147, 30, 0.8) 25%, rgba(255, 204, 2, 0.8) 50%, rgba(255, 107, 53, 0.8) 75%, rgba(255, 75, 75, 0.8) 100%);
+  z-index: 1;
+  transition: all 1s ease-in-out;
+  opacity: 0.9;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+`;
+
+const CarouselNavigation = styled.div`
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  align-items: center;
+  gap: ${theme.spacing.sm};
+  z-index: 3;
+`;
+
+const CarouselDot = styled.button<{ $isActive: boolean }>`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid ${theme.colors.neutral.white};
+  background: ${props => props.$isActive ? theme.colors.neutral.white : 'rgba(0, 0, 0, 0.5)'};
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${props => props.$isActive ? 1 : 0.7};
+  box-shadow: ${props => props.$isActive 
+    ? '0 4px 15px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4)' 
+    : '0 2px 8px rgba(0, 0, 0, 0.3)'};
+  position: relative;
+  overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: -20px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="ganesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="30" r="15" fill="%23FFD700" opacity="0.3"/><path d="M35,45 Q50,35 65,45 Q60,60 50,65 Q40,60 35,45" fill="%23FF6B35" opacity="0.4"/></pattern></defs><rect width="100" height="100" fill="url(%23ganesh)"/></svg>') no-repeat;
-    background-size: contain;
-    opacity: 0.1;
-    transform: rotate(15deg);
-    animation: float 6s ease-in-out infinite;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -30px;
-    left: -80px;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 53, 0.1) 70%, transparent 100%);
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: ${props => props.$isActive 
+      ? 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%)'
+      : 'transparent'};
+    animation: ${props => props.$isActive ? 'pulse 2s ease-in-out infinite' : 'none'};
     border-radius: 50%;
-    animation: pulse 4s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: rotate(15deg) translateY(0px); }
-    50% { transform: rotate(15deg) translateY(-20px); }
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.1); }
+    0%, 100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.3);
+    background: ${theme.colors.neutral.white};
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.8), 0 0 25px rgba(255, 255, 255, 0.5);
+  }
+`;
+
+const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
+  position: absolute;
+  top: 50%;
+  ${props => props.$direction}: 20px;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  color: ${theme.colors.neutral.white};
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 3;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: ${props => props.$direction === 'left' ? '-100%' : '100%'};
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    color: ${theme.colors.neutral.white};
+
+    &::before {
+      left: ${props => props.$direction === 'left' ? '100%' : '-100%'};
+    }
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    ${props => props.$direction}: 10px;
   }
 `;
 
 const HeroContent = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   max-width: 1400px;
   margin: 0 auto;
-  width: 100%;
+  padding: 0 ${theme.spacing.lg};
   text-align: center;
   gap: ${theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    padding: 0 ${theme.spacing.md};
+  }
 `;
 
 const HeroText = styled.div`
@@ -1359,6 +1545,32 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    '/hero2.jpeg',
+    '/hero3.jpeg'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000); // Auto-advance every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   const sidebarCategories = [
     {
@@ -1586,62 +1798,35 @@ const Home: React.FC = () => {
 
   return (
     <HomeContainer>
-      {/* Hero Section - Full Width */}
+      {/* Hero Section with Carousel */}
       <HeroSection>
-        <HeroContent>
-          <HeroText>
-            <MainHeroTitle>RESERVE YOUR VIP MOBILE NUMBER</MainHeroTitle>
-            <MainHeroSubtitle>Premium Numbers Trusted</MainHeroSubtitle>
+        <CarouselContainer>
+          {heroImages.map((image, index) => (
+            <CarouselSlide
+              key={index}
+              $isActive={index === currentSlide}
+              style={{ backgroundImage: `url(${image})` }}
+            />
+          ))}
 
-            {/* Trust Badges */}
-            <TrustBadges>
-              <TrustBadge>
-                <TrustIcon style={{ color: '#4285F4' }}>
-                  <FaStar />
-                </TrustIcon>
-                <TrustInfo>
-                  <TrustTitle>1000+ SATISFIED</TrustTitle>
-                  <TrustSubtitle>GOOGLE REVIEWS</TrustSubtitle>
-                </TrustInfo>
-              </TrustBadge>
+          <CarouselArrow $direction="left" onClick={prevSlide}>
+            ‹
+          </CarouselArrow>
 
-              <TrustBadge>
-                <TrustIcon style={{ color: '#1976D2' }}>
-                  <FaGlobe />
-                </TrustIcon>
-                <TrustInfo>
-                  <TrustTitle>INDIA'S</TrustTitle>
-                  <TrustSubtitle>BIGGEST WEBSITE</TrustSubtitle>
-                </TrustInfo>
-              </TrustBadge>
+          <CarouselArrow $direction="right" onClick={nextSlide}>
+            ›
+          </CarouselArrow>
 
-              <TrustBadge>
-                <TrustIcon style={{ color: '#673AB7' }}>
-                  <FaShieldAlt />
-                </TrustIcon>
-                <TrustInfo>
-                  <TrustTitle>PHONEPAY VERIFIED</TrustTitle>
-                  <TrustSubtitle>PAYMENT GATEWAY</TrustSubtitle>
-                </TrustInfo>
-              </TrustBadge>
-
-            </TrustBadges>
-
-            <ServiceCategoryContainer>
-              <ServiceBadge>100% Genuine Service Provider</ServiceBadge>
-              <CategoryNavigation>VIP NUMBERS | FANCY NUMBERS | LUCKY NUMBERS
-              </CategoryNavigation>
-            </ServiceCategoryContainer>
-          </HeroText>
-
-
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-            <TrustedBadge>
-              <FaShieldAlt />
-              TRUSTED SELLER
-            </TrustedBadge>
-          </div>
-        </HeroContent>
+          <CarouselNavigation>
+            {heroImages.map((_, index) => (
+              <CarouselDot
+                key={index}
+                $isActive={index === currentSlide}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
+          </CarouselNavigation>
+        </CarouselContainer>
       </HeroSection>
 
       {/* Numbers Section with Sidebar */}
