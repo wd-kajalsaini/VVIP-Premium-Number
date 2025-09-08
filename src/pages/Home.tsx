@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaStar, FaShieldAlt, FaRocket, FaPhoneAlt, FaCrown, FaMagic, FaFilter, FaWhatsapp, FaGlobe, FaUndo, FaPhone } from '../utils/iconComponents';
+import { FaSearch, FaStar, FaShieldAlt, FaRocket, FaPhoneAlt, FaCrown, FaMagic, FaFilter, FaGlobe } from '../utils/iconComponents';
 import { theme } from '../styles/theme';
 
 const HomeContainer = styled.div`
@@ -125,54 +125,64 @@ const PriceRange = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  padding: ${theme.spacing.xl} ${theme.spacing.lg};
-  border: 2px solid ${theme.colors.neutral.gray300};
-  border-radius: ${theme.borderRadius.xl};
-  margin: ${theme.spacing.lg};
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #e94560 100%);
+  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
+  margin: 0;
   margin-bottom: ${theme.spacing.xl};
-  box-shadow: ${theme.shadows.lg};
   position: relative;
   overflow: hidden;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
 
   &::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 200px;
-    height: 200%;
-    background: ${theme.colors.neutral.white}15;
-    transform: rotate(25deg);
+    top: -20px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="ganesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="30" r="15" fill="%23FFD700" opacity="0.3"/><path d="M35,45 Q50,35 65,45 Q60,60 50,65 Q40,60 35,45" fill="%23FF6B35" opacity="0.4"/></pattern></defs><rect width="100" height="100" fill="url(%23ganesh)"/></svg>') no-repeat;
+    background-size: contain;
+    opacity: 0.1;
+    transform: rotate(15deg);
+    animation: float 6s ease-in-out infinite;
   }
 
   &::after {
     content: '';
     position: absolute;
-    bottom: -50%;
-    left: -20%;
-    width: 150px;
-    height: 200%;
-    background: ${theme.colors.neutral.white}10;
-    transform: rotate(-25deg);
+    bottom: -30px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 53, 0.1) 70%, transparent 100%);
+    border-radius: 50%;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: rotate(15deg) translateY(0px); }
+    50% { transform: rotate(15deg) translateY(-20px); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
   }
 `;
 
 const HeroContent = styled.div`
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: ${theme.spacing.xl};
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: ${theme.spacing.lg};
-  }
+  width: 100%;
+  text-align: center;
+  gap: ${theme.spacing.xl};
 `;
 
 const HeroText = styled.div`
@@ -552,25 +562,37 @@ const VVIPDetailsButton = styled.button`
 `;
 
 const MainHeroTitle = styled.h1`
-  font-size: ${theme.typography.fontSize['4xl']};
+  font-size: 3.5rem;
   font-weight: ${theme.typography.fontWeight.bold};
-  margin-bottom: ${theme.spacing.sm};
-  color: #2c3e50;
-  line-height: 1.2;
+  margin-bottom: ${theme.spacing.md};
+  background: linear-gradient(135deg, #FFD700, #FF6B35, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  animation: shimmer 3s ease-in-out infinite;
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
 
   @media (max-width: 768px) {
-    font-size: ${theme.typography.fontSize['2xl']};
+    font-size: 2.5rem;
   }
 `;
 
 const MainHeroSubtitle = styled.p`
-  font-size: ${theme.typography.fontSize.lg};
-  color: ${theme.colors.neutral.gray600};
+  font-size: 1.5rem;
+  color: #FFFFFF;
   margin-bottom: ${theme.spacing.lg};
-  font-weight: ${theme.typography.fontWeight.medium};
+  font-weight: ${theme.typography.fontWeight.semibold};
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  opacity: 0.95;
 
   @media (max-width: 768px) {
-    font-size: ${theme.typography.fontSize.md};
+    font-size: 1.2rem;
   }
 `;
 
@@ -590,10 +612,19 @@ const TrustBadge = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.md};
-  background: ${theme.colors.neutral.white};
+  background: rgba(255, 255, 255, 0.95);
   padding: ${theme.spacing.md};
   border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.sm};
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.6);
+  }
 `;
 
 const TrustIcon = styled.div`
@@ -628,8 +659,19 @@ const ServiceBadge = styled.div`
   border-radius: ${theme.borderRadius.lg};
   font-weight: ${theme.typography.fontWeight.bold};
   text-align: center;
-  margin: ${theme.spacing.lg} 0;
   font-size: ${theme.typography.fontSize.lg};
+  flex: 1;
+`;
+
+const ServiceCategoryContainer = styled.div`
+  display: flex;
+  gap: ${theme.spacing.md};
+  margin-top: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: ${theme.spacing.sm};
+  }
 `;
 
 const CategoryNavigation = styled.div`
@@ -639,43 +681,31 @@ const CategoryNavigation = styled.div`
   text-align: center;
   font-size: ${theme.typography.fontSize.sm};
   font-weight: ${theme.typography.fontWeight.medium};
-  margin-top: ${theme.spacing.lg};
   border-radius: ${theme.borderRadius.md};
-`;
+  flex: 1;
 
-const HeroContact = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${theme.spacing.md};
+  div {
+    margin-bottom: ${theme.spacing.xs};
 
-  @media (min-width: 768px) {
-    align-items: flex-end;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `;
 
-const ContactNumbers = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.sm};
-`;
 
-const ContactNumber = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  background: ${theme.colors.primary.green};
-  color: ${theme.colors.neutral.white};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.lg};
-  font-weight: ${theme.typography.fontWeight.bold};
-  font-size: ${theme.typography.fontSize.lg};
-  box-shadow: ${theme.shadows.md};
-`;
+
+
+
+
+
+
+
+
 
 const TrustedBadge = styled.div`
-  background: linear-gradient(135deg, ${theme.colors.primary.orange}, ${theme.colors.primary.yellow});
-  color: ${theme.colors.neutral.white};
+  background: linear-gradient(135deg, #FFD700, #FF6B35);
+  color: #FFFFFF;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
   border-radius: ${theme.borderRadius.lg};
   font-weight: ${theme.typography.fontWeight.bold};
@@ -683,7 +713,15 @@ const TrustedBadge = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.sm};
-  box-shadow: ${theme.shadows.md};
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  animation: pulse-glow 3s ease-in-out infinite;
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
+    50% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.3); }
+  }
 `;
 
 const CTAButtons = styled.div`
@@ -1553,7 +1591,7 @@ const Home: React.FC = () => {
         <HeroContent>
           <HeroText>
             <MainHeroTitle>RESERVE YOUR VIP MOBILE NUMBER</MainHeroTitle>
-            <MainHeroSubtitle>Premium Numbers Trusted by Elites</MainHeroSubtitle>
+            <MainHeroSubtitle>Premium Numbers Trusted</MainHeroSubtitle>
 
             {/* Trust Badges */}
             <TrustBadges>
@@ -1589,19 +1627,20 @@ const Home: React.FC = () => {
 
             </TrustBadges>
 
-            <ServiceBadge>100% Genuine Service Provider</ServiceBadge>
-
-            <CategoryNavigation>
-              VIP NUMBERS | FANCY NUMBERS | LUCKY NUMBERS | PREMIUM NUMBERS | GOLDEN NUMBERS
-            </CategoryNavigation>
+            <ServiceCategoryContainer>
+              <ServiceBadge>100% Genuine Service Provider</ServiceBadge>
+              <CategoryNavigation>VIP NUMBERS | FANCY NUMBERS | LUCKY NUMBERS
+              </CategoryNavigation>
+            </ServiceCategoryContainer>
           </HeroText>
 
-          <HeroContact>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
             <TrustedBadge>
               <FaShieldAlt />
               TRUSTED SELLER
             </TrustedBadge>
-          </HeroContact>
+          </div>
         </HeroContent>
       </HeroSection>
 
@@ -1725,7 +1764,7 @@ const Home: React.FC = () => {
                     <VVIPBuyButton
                       onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy VIP number ${number.number} for ${number.price}`, '_blank')}
                     >
-                      BUY NOW
+                      BUY
                     </VVIPBuyButton>
                     <VVIPDetailsButton>
                       DETAILS
