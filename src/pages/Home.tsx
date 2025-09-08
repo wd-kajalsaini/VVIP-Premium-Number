@@ -291,62 +291,7 @@ const CarouselDot = styled.button<{ $isActive: boolean }>`
 `;
 
 const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
-  position: absolute;
-  top: 50%;
-  ${props => props.$direction}: 20px;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  color: ${theme.colors.neutral.white};
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 24px;
-  font-weight: bold;
-  z-index: 3;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: ${props => props.$direction === 'left' ? '-100%' : '100%'};
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.6s ease;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.15);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
-    color: ${theme.colors.neutral.white};
-
-    &::before {
-      left: ${props => props.$direction === 'left' ? '100%' : '-100%'};
-    }
-  }
-
-  &:active {
-    transform: translateY(-50%) scale(1.05);
-  }
-
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    ${props => props.$direction}: 10px;
-  }
+  display: none;
 `;
 
 const HeroContent = styled.div`
