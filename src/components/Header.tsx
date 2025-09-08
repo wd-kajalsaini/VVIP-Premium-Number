@@ -10,13 +10,13 @@ const HeaderContainer = styled.header<{ $isScrolled: boolean }>`
   left: 0;
   right: 0;
   z-index: 100;
-  background: ${props => props.$isScrolled 
-    ? 'rgba(255, 255, 255, 0.95)' 
+  background: ${props => props.$isScrolled
+    ? 'rgba(255, 255, 255, 0.95)'
     : 'rgba(255, 255, 255, 0.9)'};
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
-  box-shadow: ${props => props.$isScrolled 
-    ? theme.shadows.md 
+  box-shadow: ${props => props.$isScrolled
+    ? theme.shadows.md
     : 'none'};
 `;
 
@@ -39,8 +39,8 @@ const Nav = styled.nav`
 const Logo = styled(Link)`
   font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -86,11 +86,11 @@ const NavLinks = styled.div<{ $isOpen: boolean }>`
 `;
 
 const NavLink = styled(Link)<{ $isActive: boolean }>`
-  color: ${props => props.$isActive 
-    ? theme.colors.primary.skyBlue 
+  color: ${props => props.$isActive
+    ? theme.colors.primary.skyBlue
     : theme.colors.neutral.gray700};
-  font-weight: ${props => props.$isActive 
-    ? theme.typography.fontWeight.semibold 
+  font-weight: ${props => props.$isActive
+    ? theme.typography.fontWeight.semibold
     : theme.typography.fontWeight.medium};
   text-decoration: none;
   transition: all 0.2s ease;
@@ -207,7 +207,7 @@ const Header: React.FC = () => {
           ))}
 
           <ContactInfo>
-            <ContactButton 
+            <ContactButton
               href="https://wa.me/919772297722?text=Hi! I'm interested in premium numbers"
               target="_blank"
               rel="noopener noreferrer"

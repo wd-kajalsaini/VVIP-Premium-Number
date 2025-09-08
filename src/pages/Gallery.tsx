@@ -58,10 +58,10 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
   text-decoration: none;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
   border-radius: ${theme.borderRadius.md};
-  background: ${props => props.$isActive 
+  background: ${props => props.$isActive
     ? 'linear-gradient(135deg, #20b2aa20, #48cae420)'
     : theme.colors.neutral.white};
-  border: 1px solid ${props => props.$isActive 
+  border: 1px solid ${props => props.$isActive
     ? '#20b2aa'
     : theme.colors.neutral.gray300};
   transition: all 0.3s ease;
@@ -118,8 +118,8 @@ const CategoryCheckbox = styled.input`
 `;
 
 const SearchSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.skyBlue}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.skyBlue},
     ${theme.colors.primary.green}
   );
   padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
@@ -165,7 +165,7 @@ const SearchInput = styled.input`
   border-radius: ${theme.borderRadius.md};
   font-size: ${theme.typography.fontSize.md};
   color: ${theme.colors.neutral.gray700};
-  
+
   &::placeholder {
     color: ${theme.colors.neutral.gray400};
   }
@@ -209,14 +209,14 @@ const FilterTags = styled.div`
 `;
 
 const FilterTag = styled.button<{ $isActive?: boolean }>`
-  background: ${props => props.$isActive 
-    ? theme.colors.primary.orange 
+  background: ${props => props.$isActive
+    ? theme.colors.primary.orange
     : theme.colors.neutral.gray100};
-  border: 1px solid ${props => props.$isActive 
-    ? theme.colors.primary.orange 
+  border: 1px solid ${props => props.$isActive
+    ? theme.colors.primary.orange
     : theme.colors.neutral.gray300};
-  color: ${props => props.$isActive 
-    ? theme.colors.neutral.white 
+  color: ${props => props.$isActive
+    ? theme.colors.neutral.white
     : theme.colors.neutral.gray600};
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
   border-radius: ${theme.borderRadius.full};
@@ -242,8 +242,8 @@ const NumbersGrid = styled.div`
 `;
 
 const NumberCard = styled.div`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.skyBlue}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.skyBlue},
     ${theme.colors.primary.green}
   );
   border-radius: ${theme.borderRadius.lg};
@@ -320,11 +320,11 @@ const NumberActions = styled.div`
 `;
 
 const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' 
-    ? theme.colors.primary.orange 
+  background: ${props => props.$variant === 'primary'
+    ? theme.colors.primary.orange
     : theme.colors.neutral.white};
-  color: ${props => props.$variant === 'primary' 
-    ? theme.colors.neutral.white 
+  color: ${props => props.$variant === 'primary'
+    ? theme.colors.neutral.white
     : theme.colors.primary.skyBlue};
   border: none;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
@@ -336,8 +336,8 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
   white-space: nowrap;
 
   &:hover {
-    background: ${props => props.$variant === 'primary' 
-      ? theme.colors.primary.yellow 
+    background: ${props => props.$variant === 'primary'
+      ? theme.colors.primary.yellow
       : theme.colors.neutral.gray100};
     transform: translateY(-1px);
   }
@@ -361,7 +361,7 @@ const Gallery: React.FC = () => {
     },
     {
       name: "Premium Numbers",
-      count: "800+", 
+      count: "800+",
       priceRange: "₹2,000 - ₹10,000"
     },
     {
@@ -375,7 +375,7 @@ const Gallery: React.FC = () => {
       priceRange: "₹3,000 - ₹15,000"
     },
     {
-      name: "Repeating Numbers", 
+      name: "Repeating Numbers",
       count: "300+",
       priceRange: "₹2,500 - ₹20,000"
     },
@@ -459,8 +459,8 @@ const Gallery: React.FC = () => {
   const filteredNumbers = demoNumbers.filter(number => {
     const matchesSearch = number.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          number.category.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = selectedCategory === 'All' || 
+
+    const matchesCategory = selectedCategory === 'All' ||
                            number.category.toLowerCase().includes(selectedCategory.toLowerCase());
 
     return matchesSearch && matchesCategory;
@@ -474,7 +474,7 @@ const Gallery: React.FC = () => {
         <CategoryList>
           {sidebarCategories.map((category, index) => (
             <CategoryItem key={index}>
-              <CategoryLink 
+              <CategoryLink
                 $isActive={selectedCategory === (category.name.includes('All') ? 'All' : category.name)}
                 onClick={() => setSelectedCategory(category.name.includes('All') ? 'All' : category.name)}
               >
@@ -484,8 +484,8 @@ const Gallery: React.FC = () => {
                     <CategoryCount>{category.count}</CategoryCount>
                   </CategoryInfo>
                 </div>
-                <CategoryCheckbox 
-                  type="checkbox" 
+                <CategoryCheckbox
+                  type="checkbox"
                   checked={selectedCategory === (category.name.includes('All') ? 'All' : category.name)}
                   onChange={() => setSelectedCategory(category.name.includes('All') ? 'All' : category.name)}
                 />
@@ -503,8 +503,8 @@ const Gallery: React.FC = () => {
             <SearchTitle>Premium Numbers Gallery</SearchTitle>
             <SearchForm>
               <SearchInputGroup>
-                <SearchInput 
-                  type="text" 
+                <SearchInput
+                  type="text"
                   placeholder="Search by number or pattern..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -516,8 +516,8 @@ const Gallery: React.FC = () => {
               </SearchInputGroup>
               <FilterTags>
                 {filterTags.map((tag, index) => (
-                  <FilterTag 
-                    key={index} 
+                  <FilterTag
+                    key={index}
                     $isActive={selectedCategory.toLowerCase().includes(tag.toLowerCase())}
                     onClick={() => setSelectedCategory(tag)}
                   >
@@ -540,13 +540,13 @@ const Gallery: React.FC = () => {
                   <NumberPrice>{number.price}</NumberPrice>
                 </NumberInfo>
                 <NumberActions>
-                  <NumberAction 
+                  <NumberAction
                     $variant="primary"
                     onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number} for ${number.price}`, '_blank')}
                   >
                     Buy Now
                   </NumberAction>
-                  <NumberAction 
+                  <NumberAction
                     $variant="secondary"
                     onClick={() => alert(`Number Details:\n+91 ${number.number}\nCategory: ${number.category}\nPrice: ${number.price}\n\nCall +91 97722-97722 for more details.`)}
                   >
@@ -558,10 +558,10 @@ const Gallery: React.FC = () => {
           </NumbersGrid>
 
           {filteredNumbers.length === 0 && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: theme.spacing['2xl'],
-              color: theme.colors.neutral.gray500 
+              color: theme.colors.neutral.gray500
             }}>
               <p>No numbers found matching your criteria. Try adjusting your search or filters.</p>
             </div>

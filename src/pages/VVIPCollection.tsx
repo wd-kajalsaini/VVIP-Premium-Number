@@ -55,10 +55,10 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
   color: ${props => props.$isActive ? theme.colors.primary.orange : theme.colors.neutral.gray700};
-  background: ${props => props.$isActive 
+  background: ${props => props.$isActive
     ? theme.colors.primary.orange + '15'
     : 'transparent'};
-  border: 1px solid ${props => props.$isActive 
+  border: 1px solid ${props => props.$isActive
     ? theme.colors.primary.orange
     : theme.colors.neutral.gray300};
   padding: ${theme.spacing.sm} ${theme.spacing.md};
@@ -116,7 +116,7 @@ const PriceRange = styled.div`
 `;
 
 const SearchSection = styled.section`
-  background: linear-gradient(135deg, 
+  background: linear-gradient(135deg,
     #667eea 0%,
     #764ba2 100%
   );
@@ -171,7 +171,7 @@ const SearchInput = styled.input`
   border-radius: ${theme.borderRadius.md};
   font-size: ${theme.typography.fontSize.md};
   color: ${theme.colors.neutral.gray700};
-  
+
   &::placeholder {
     color: ${theme.colors.neutral.gray400};
   }
@@ -218,7 +218,7 @@ const NumbersGrid = styled.div`
 `;
 
 const VVIPCard = styled.div`
-  background: linear-gradient(135deg, 
+  background: linear-gradient(135deg,
     #667eea 0%,
     #764ba2 100%
   );
@@ -303,14 +303,14 @@ const VVIPActions = styled.div`
 `;
 
 const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' 
-    ? theme.colors.neutral.white 
+  background: ${props => props.$variant === 'primary'
+    ? theme.colors.neutral.white
     : 'transparent'};
-  color: ${props => props.$variant === 'primary' 
-    ? theme.colors.primary.orange 
+  color: ${props => props.$variant === 'primary'
+    ? theme.colors.primary.orange
     : theme.colors.neutral.white};
-  border: ${props => props.$variant === 'primary' 
-    ? 'none' 
+  border: ${props => props.$variant === 'primary'
+    ? 'none'
     : `1px solid ${theme.colors.neutral.white}`};
   padding: ${theme.spacing.md} ${theme.spacing.lg};
   border-radius: ${theme.borderRadius.md};
@@ -321,8 +321,8 @@ const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
   white-space: nowrap;
 
   &:hover {
-    background: ${props => props.$variant === 'primary' 
-      ? theme.colors.neutral.gray100 
+    background: ${props => props.$variant === 'primary'
+      ? theme.colors.neutral.gray100
       : theme.colors.neutral.white};
     color: ${theme.colors.primary.orange};
     transform: translateY(-1px);
@@ -354,8 +354,8 @@ const PriceSection = styled.div`
   text-align: center;
   margin-bottom: ${theme.spacing.lg};
   padding: ${theme.spacing.md};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}10, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange}10,
     ${theme.colors.primary.yellow}10
   );
   border-radius: ${theme.borderRadius.lg};
@@ -365,8 +365,8 @@ const PriceSection = styled.div`
 const Price = styled.div`
   font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   -webkit-background-clip: text;
@@ -399,8 +399,8 @@ const CTAButton = styled.a`
   gap: ${theme.spacing.sm};
   width: 100%;
   padding: ${theme.spacing.md} ${theme.spacing.lg};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   color: ${theme.colors.neutral.white};
@@ -414,8 +414,8 @@ const CTAButton = styled.a`
   &:hover {
     transform: translateY(-2px);
     box-shadow: ${theme.shadows.xl};
-    background: linear-gradient(135deg, 
-      ${theme.colors.primary.yellow}, 
+    background: linear-gradient(135deg,
+      ${theme.colors.primary.yellow},
       ${theme.colors.primary.orange}
     );
   }
@@ -423,8 +423,8 @@ const CTAButton = styled.a`
 
 const ExclusiveFeatures = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray100}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.neutral.gray100},
     ${theme.colors.neutral.white}
   );
 `;
@@ -454,8 +454,8 @@ const FeatureIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   border-radius: ${theme.borderRadius.full};
@@ -470,69 +470,51 @@ const VVIPCollection: React.FC = () => {
   const categories = [
     { name: 'All Numbers', count: 150 },
     { name: 'VIP Numbers', count: 45 },
-    { name: 'Fancy Numbers', count: 32 },
+    { name: 'Premium Numbers', count: 32 },
     { name: 'Lucky Numbers', count: 28 },
-    { name: 'Premium Numbers', count: 25 },
-    { name: 'Golden Numbers', count: 20 },
-    { name: 'Diamond Numbers', count: 15 },
-    { name: 'Platinum Numbers', count: 12 }
+    { name: 'Sequential Numbers', count: 25 },
+    { name: 'Repeating Numbers', count: 20 },
+    { name: 'Mirror Numbers', count: 15 },
+    { name: 'Easy to Remember', count: 12 }
   ];
 
   const vvipNumbers = [
     {
       number: '99999 99999',
-      specialty: 'Ultimate Nine Pattern',
-      category: 'Ultra Premium',
-      price: 500000,
-      originalPrice: 650000,
-      savings: 150000
+      category: 'VIP Numbers',
+      price: 500000
     },
     {
       number: '88888 88888',
-      specialty: 'Infinity Power Pattern',
-      category: 'Diamond Elite',
-      price: 450000,
-      originalPrice: 575000,
-      savings: 125000
+      category: 'VIP Numbers',
+      price: 450000
     },
     {
       number: '77777 77777',
-      specialty: 'Seven Chakra Alignment',
-      category: 'Ultra Premium',
-      price: 350000,
-      originalPrice: 425000,
-      savings: 75000
+      category: 'VIP Numbers',
+      price: 350000
     },
     {
       number: '11111 11111',
-      specialty: 'Master Manifestation',
-      category: 'Golden VIP',
-      price: 300000,
-      originalPrice: 375000,
-      savings: 75000
+      category: 'VIP Numbers',
+      price: 300000
     },
     {
       number: '12345 67890',
-      specialty: 'Perfect Sequential Flow',
-      category: 'Platinum Plus',
-      price: 275000,
-      originalPrice: 325000,
-      savings: 50000
+      category: 'Sequential Numbers',
+      price: 275000
     },
     {
       number: '98765 43210',
-      specialty: 'Reverse Sequential Power',
-      category: 'Golden VIP',
-      price: 250000,
-      originalPrice: 300000,
-      savings: 50000
+      category: 'Sequential Numbers',
+      price: 250000
     }
   ];
 
   const filteredNumbers = vvipNumbers.filter(number => {
     const matchesCategory = selectedCategory === 'All Numbers' || number.category === selectedCategory;
-    const matchesSearch = number.number.includes(searchTerm) || 
-                         number.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = number.number.includes(searchTerm) ||
+                         number.category.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -548,7 +530,7 @@ const VVIPCollection: React.FC = () => {
         <CategoryList>
           {categories.map((category, index) => (
             <CategoryItem key={index}>
-              <CategoryLink 
+              <CategoryLink
                 as="label"
                 $isActive={selectedCategory === category.name}
               >
@@ -556,8 +538,8 @@ const VVIPCollection: React.FC = () => {
                   <CategoryName>{category.name}</CategoryName>
                   <CategoryCount>{category.count}</CategoryCount>
                 </CategoryInfo>
-                <CategoryCheckbox 
-                  type="checkbox" 
+                <CategoryCheckbox
+                  type="checkbox"
                   checked={selectedCategory === category.name}
                   onChange={() => setSelectedCategory(category.name)}
                 />
@@ -601,24 +583,17 @@ const VVIPCollection: React.FC = () => {
                 </VVIPBadge>
                 <NumberDisplay>+91 {number.number}</NumberDisplay>
                 <NumberInfo>
-                  <div style={{ 
-                    fontSize: theme.typography.fontSize.sm, 
+                  <div style={{
+                    fontSize: theme.typography.fontSize.sm,
                     opacity: 0.9,
                     marginBottom: theme.spacing.md
                   }}>
-                    {number.specialty}
+                    {number.category}
                   </div>
                   <NumberPrice>₹{number.price.toLocaleString('en-IN')}</NumberPrice>
-                  <div style={{ 
-                    fontSize: theme.typography.fontSize.sm, 
-                    opacity: 0.7,
-                    textDecoration: 'line-through'
-                  }}>
-                    ₹{number.originalPrice.toLocaleString('en-IN')}
-                  </div>
                 </NumberInfo>
                 <VVIPActions>
-                  <VVIPAction 
+                  <VVIPAction
                     $variant="primary"
                     onClick={() => window.open(getWhatsAppLink(number.number, number.price), '_blank')}
                   >

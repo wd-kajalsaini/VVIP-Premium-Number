@@ -9,8 +9,8 @@ const NumerologyContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.yellow}15, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.yellow}15,
     ${theme.colors.primary.orange}15,
     ${theme.colors.primary.skyBlue}10
   );
@@ -19,8 +19,8 @@ const HeroSection = styled.section`
 `;
 
 const HeroTitle = styled.h1`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow},
     ${theme.colors.primary.skyBlue}
   );
@@ -71,9 +71,9 @@ const FormCard = styled.div`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, 
-      ${theme.colors.primary.orange}, 
-      ${theme.colors.primary.yellow}, 
+    background: linear-gradient(90deg,
+      ${theme.colors.primary.orange},
+      ${theme.colors.primary.yellow},
       ${theme.colors.primary.skyBlue}
     );
   }
@@ -82,8 +82,8 @@ const FormCard = styled.div`
 const FormTitle = styled.h2`
   text-align: center;
   margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   -webkit-background-clip: text;
@@ -175,8 +175,8 @@ const TextArea = styled.textarea`
 
 const SubmitButton = styled.button`
   padding: ${theme.spacing.md} ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   color: ${theme.colors.neutral.white};
@@ -207,8 +207,8 @@ const SubmitButton = styled.button`
 
 const ContentSection = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.yellow}05, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.yellow}05,
     ${theme.colors.primary.orange}05
   );
 `;
@@ -290,8 +290,8 @@ const BenefitText = styled.span`
 `;
 
 const HighlightBox = styled.div`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}15, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange}15,
     ${theme.colors.primary.yellow}15
   );
   border: 2px solid ${theme.colors.primary.orange}30;
@@ -309,8 +309,8 @@ const HighlightBox = styled.div`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, 
-      ${theme.colors.primary.orange}, 
+    background: linear-gradient(90deg,
+      ${theme.colors.primary.orange},
       ${theme.colors.primary.yellow}
     );
   }
@@ -319,8 +319,8 @@ const HighlightBox = styled.div`
 const PriceText = styled.div`
   font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   -webkit-background-clip: text;
@@ -331,8 +331,8 @@ const PriceText = styled.div`
 
 const InfoSection = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray100}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.neutral.gray100},
     ${theme.colors.neutral.white}
   );
 `;
@@ -387,8 +387,8 @@ const InfoDescription = styled.p`
 const SectionTitle = styled.h2`
   text-align: center;
   margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   -webkit-background-clip: text;
@@ -449,7 +449,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
 
     const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
-    
+
     setTimeout(() => {
       setIsSubmitting(false);
       alert('Your numerology consultation request has been sent! Our expert will contact you soon with personalized recommendations.');
@@ -486,8 +486,8 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
             Numerology Consultation
             <MagicIcon />
           </HeroTitle>
-          <p style={{ 
-            color: theme.colors.neutral.gray600, 
+          <p style={{
+            color: theme.colors.neutral.gray600,
             fontSize: theme.typography.fontSize.lg,
             maxWidth: '700px',
             margin: '0 auto'
@@ -504,7 +504,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
               <FaCalculator />
               Get Your Numerology Analysis
             </FormTitle>
-            
+
             <Form onSubmit={handleSubmit}>
               <FormRow>
                 <FormGroup>
@@ -519,7 +519,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     required
                   />
                 </FormGroup>
-                
+
                 <FormGroup>
                   <Label htmlFor="dateOfBirth">Date of Birth *</Label>
                   <Input
@@ -545,7 +545,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     placeholder="HH:MM"
                   />
                 </FormGroup>
-                
+
                 <FormGroup>
                   <Label htmlFor="birthPlace">Birth Place *</Label>
                   <Input
@@ -573,7 +573,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     required
                   />
                 </FormGroup>
-                
+
                 <FormGroup>
                   <Label htmlFor="profession">Profession/Business *</Label>
                   <Select
@@ -753,22 +753,22 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                 <BenefitText>• सही नंबर लेने की सटीक गाइडेंस</BenefitText>
               </BenefitItem>
             </BenefitsList>
-            <ContentText style={{ 
-              textAlign: 'center', 
+            <ContentText style={{
+              textAlign: 'center',
               fontWeight: theme.typography.fontWeight.semibold,
               color: theme.colors.primary.orange,
-              marginTop: theme.spacing.md 
+              marginTop: theme.spacing.md
             }}>
               🧠 Limited Slots | 1-on-1 Consultation | 100% Personalized
             </ContentText>
           </HighlightBox>
 
           <ContentCard>
-            <ContentText style={{ 
-              textAlign: 'center', 
+            <ContentText style={{
+              textAlign: 'center',
               fontSize: theme.typography.fontSize.xl,
               fontWeight: theme.typography.fontWeight.semibold,
-              color: theme.colors.primary.orange 
+              color: theme.colors.primary.orange
             }}>
               आपका नंबर सिर्फ डिजिट नहीं, आपकी दिशा है।<br />
               🌠 सही नंबर आपको बनाता है magnet for success!
@@ -792,8 +792,8 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
             ))}
           </InfoGrid>
 
-          <div style={{ 
-            textAlign: 'center', 
+          <div style={{
+            textAlign: 'center',
             marginTop: theme.spacing['2xl'],
             padding: theme.spacing.xl,
             background: `linear-gradient(135deg, ${theme.colors.primary.orange}10, ${theme.colors.primary.yellow}10)`,
@@ -801,7 +801,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
             maxWidth: '800px',
             margin: `${theme.spacing['2xl']} auto 0`
           }}>
-            <h3 style={{ 
+            <h3 style={{
               color: theme.colors.neutral.gray800,
               marginBottom: theme.spacing.md,
               display: 'flex',
@@ -813,14 +813,14 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
               What You'll Receive
               <FaMagic style={{ color: theme.colors.primary.orange }} />
             </h3>
-            <p style={{ 
+            <p style={{
               color: theme.colors.neutral.gray600,
               lineHeight: '1.7',
               fontSize: theme.typography.fontSize.md
             }}>
-              After submitting your details, our expert numerologist will analyze your information 
-              and contact you via WhatsApp with a detailed report including your life path number, 
-              destiny number, compatible number patterns, and personalized premium number recommendations 
+              After submitting your details, our expert numerologist will analyze your information
+              and contact you via WhatsApp with a detailed report including your life path number,
+              destiny number, compatible number patterns, and personalized premium number recommendations
               that align with your goals and aspirations. The consultation is <strong>completely free</strong>!
             </p>
           </div>

@@ -66,10 +66,10 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
   text-decoration: none;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
   border-radius: ${theme.borderRadius.md};
-  background: ${props => props.$isActive 
+  background: ${props => props.$isActive
     ? 'linear-gradient(135deg, #20b2aa20, #48cae420)'
     : theme.colors.neutral.white};
-  border: 1px solid ${props => props.$isActive 
+  border: 1px solid ${props => props.$isActive
     ? '#20b2aa'
     : theme.colors.neutral.gray300};
   transition: all 0.3s ease;
@@ -176,7 +176,7 @@ const HeroContent = styled.div`
 `;
 
 const HeroText = styled.div`
-  
+
 `;
 
 const HeroTitle = styled.h1`
@@ -220,7 +220,7 @@ const HeroImage = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.md};
-  
+
   @media (max-width: 768px) {
     justify-content: center;
   }
@@ -295,8 +295,8 @@ const VVIPGrid = styled.div`
 `;
 
 const VVIPCard = styled.div`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   border-radius: ${theme.borderRadius.xl};
@@ -369,14 +369,14 @@ const VVIPActions = styled.div`
 `;
 
 const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' 
-    ? theme.colors.neutral.white 
+  background: ${props => props.$variant === 'primary'
+    ? theme.colors.neutral.white
     : 'transparent'};
-  color: ${props => props.$variant === 'primary' 
-    ? theme.colors.primary.orange 
+  color: ${props => props.$variant === 'primary'
+    ? theme.colors.primary.orange
     : theme.colors.neutral.white};
-  border: ${props => props.$variant === 'primary' 
-    ? 'none' 
+  border: ${props => props.$variant === 'primary'
+    ? 'none'
     : `1px solid ${theme.colors.neutral.white}`};
   padding: ${theme.spacing.sm} ${theme.spacing.md};
   border-radius: ${theme.borderRadius.md};
@@ -387,8 +387,8 @@ const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
   white-space: nowrap;
 
   &:hover {
-    background: ${props => props.$variant === 'primary' 
-      ? theme.colors.neutral.gray100 
+    background: ${props => props.$variant === 'primary'
+      ? theme.colors.neutral.gray100
       : theme.colors.neutral.white};
     color: ${theme.colors.primary.orange};
     transform: translateY(-1px);
@@ -399,16 +399,16 @@ const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
 const VVIPScrollContainer = styled.div`
   overflow-x: auto;
   padding-bottom: ${theme.spacing.sm};
-  
+
   &::-webkit-scrollbar {
     height: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: ${theme.colors.neutral.gray100};
     border-radius: 3px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: ${theme.colors.primary.orange};
     border-radius: 3px;
@@ -421,7 +421,7 @@ const VVIPScrollWrapper = styled.div`
   width: max-content;
   padding: ${theme.spacing.sm} 0;
   animation: scroll 20s linear infinite;
-  
+
   @keyframes scroll {
     0% {
       transform: translateX(0);
@@ -430,7 +430,7 @@ const VVIPScrollWrapper = styled.div`
       transform: translateX(-50%);
     }
   }
-  
+
   &:hover {
     animation-play-state: paused;
   }
@@ -446,7 +446,7 @@ const VVIPScrollCard = styled.div`
   overflow: hidden;
   box-shadow: ${theme.shadows.md};
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: ${theme.shadows.lg};
@@ -525,7 +525,7 @@ const VVIPBuyButton = styled.button`
   transition: all 0.3s ease;
   flex: 1;
   white-space: nowrap;
-  
+
   &:hover {
     background: ${theme.colors.neutral.gray100};
     transform: translateY(-1px);
@@ -544,7 +544,7 @@ const VVIPDetailsButton = styled.button`
   transition: all 0.3s ease;
   flex: 1;
   white-space: nowrap;
-  
+
   &:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.5);
@@ -579,7 +579,7 @@ const TrustBadges = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: ${theme.spacing.lg};
   margin: ${theme.spacing.xl} 0;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     gap: ${theme.spacing.md};
@@ -648,7 +648,7 @@ const HeroContact = styled.div`
   flex-direction: column;
   align-items: center;
   gap: ${theme.spacing.md};
-  
+
   @media (min-width: 768px) {
     align-items: flex-end;
   }
@@ -710,10 +710,10 @@ const CTAButton = styled(Link)<{ $variant: 'primary' | 'secondary' }>`
   gap: ${theme.spacing.sm};
   transition: all 0.3s ease;
 
-  ${props => props.$variant === 'primary' 
+  ${props => props.$variant === 'primary'
     ? `
-      background: linear-gradient(135deg, 
-        ${theme.colors.primary.green}, 
+      background: linear-gradient(135deg,
+        ${theme.colors.primary.green},
         ${theme.colors.primary.skyBlue}
       );
       color: ${theme.colors.neutral.white};
@@ -752,8 +752,8 @@ const FeaturesSection = styled.section`
 const SectionTitle = styled.h2`
   text-align: center;
   margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -810,8 +810,8 @@ const FeatureDescription = styled.p`
 
 const ShowcaseSection = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray100}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.neutral.gray100},
     ${theme.colors.neutral.white}
   );
 `;
@@ -874,8 +874,8 @@ const ShowcaseAction = styled.span`
 `;
 
 const PromoSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.yellow}
   );
   padding: ${theme.spacing.xl} 0;
@@ -947,8 +947,8 @@ const PromoButton = styled.a`
 `;
 
 const SearchSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.skyBlue}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.skyBlue},
     ${theme.colors.primary.green}
   );
   padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
@@ -994,7 +994,7 @@ const SearchInput = styled.input`
   border-radius: ${theme.borderRadius.md};
   font-size: ${theme.typography.fontSize.md};
   color: ${theme.colors.neutral.gray700};
-  
+
   &::placeholder {
     color: ${theme.colors.neutral.gray400};
   }
@@ -1062,14 +1062,14 @@ const FilterTags = styled.div`
 `;
 
 const FilterTag = styled.button<{ $isActive?: boolean }>`
-  background: ${props => props.$isActive 
-    ? theme.colors.primary.orange 
+  background: ${props => props.$isActive
+    ? theme.colors.primary.orange
     : theme.colors.neutral.gray100};
-  border: 1px solid ${props => props.$isActive 
-    ? theme.colors.primary.orange 
+  border: 1px solid ${props => props.$isActive
+    ? theme.colors.primary.orange
     : theme.colors.neutral.gray300};
-  color: ${props => props.$isActive 
-    ? theme.colors.neutral.white 
+  color: ${props => props.$isActive
+    ? theme.colors.neutral.white
     : theme.colors.neutral.gray600};
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
   border-radius: ${theme.borderRadius.full};
@@ -1176,8 +1176,8 @@ const CategoryStats = styled.div`
 
 const FeaturedNumbersSection = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray100}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.neutral.gray100},
     ${theme.colors.neutral.white}
   );
 `;
@@ -1288,11 +1288,11 @@ const NumberActions = styled.div`
 `;
 
 const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary' 
-    ? '#ff6b35' 
+  background: ${props => props.$variant === 'primary'
+    ? '#ff6b35'
     : 'rgba(255, 255, 255, 0.95)'};
-  color: ${props => props.$variant === 'primary' 
-    ? theme.colors.neutral.white 
+  color: ${props => props.$variant === 'primary'
+    ? theme.colors.neutral.white
     : '#20b2aa'};
   border: none;
   border-radius: ${theme.borderRadius.md};
@@ -1304,15 +1304,15 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
   white-space: nowrap;
   flex: 1;
   min-width: 0;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    background: ${props => props.$variant === 'primary' 
-      ? '#e55a2b' 
+    background: ${props => props.$variant === 'primary'
+      ? '#e55a2b'
       : theme.colors.neutral.white};
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -1338,7 +1338,7 @@ const Home: React.FC = () => {
     },
     {
       name: "Premium Numbers",
-      count: "1000+", 
+      count: "1000+",
       priceRange: "₹2,000 - ₹10,000",
       href: "#premium"
     },
@@ -1355,7 +1355,7 @@ const Home: React.FC = () => {
       href: "#sequential"
     },
     {
-      name: "Repeating Numbers", 
+      name: "Repeating Numbers",
       count: "400+",
       priceRange: "₹2,500 - ₹20,000",
       href: "#repeating"
@@ -1363,7 +1363,7 @@ const Home: React.FC = () => {
     {
       name: "Mirror Numbers",
       count: "200+",
-      priceRange: "₹4,000 - ₹18,000", 
+      priceRange: "₹4,000 - ₹18,000",
       href: "#mirror"
     },
     {
@@ -1407,7 +1407,7 @@ const Home: React.FC = () => {
     },
     {
       icon: <FaStar />,
-      title: "Premium Numbers", 
+      title: "Premium Numbers",
       description: "High-quality premium numbers with special sequences and lucky combinations",
       priceRange: "₹2,000 - ₹10,000",
       count: "1000+ Numbers",
@@ -1418,7 +1418,7 @@ const Home: React.FC = () => {
       icon: <FaMagic />,
       title: "Lucky Numbers",
       description: "Numbers based on numerology and astrology for good fortune and prosperity",
-      priceRange: "₹1,000 - ₹5,000", 
+      priceRange: "₹1,000 - ₹5,000",
       count: "750+ Numbers",
       link: "/numerology",
       color: theme.colors.primary.green
@@ -1428,7 +1428,7 @@ const Home: React.FC = () => {
       title: "Instant Numbers",
       description: "Ready-to-activate numbers available for immediate purchase and delivery",
       priceRange: "₹500 - ₹3,000",
-      count: "2000+ Numbers", 
+      count: "2000+ Numbers",
       link: "/gallery",
       color: theme.colors.primary.yellow
     }
@@ -1441,13 +1441,13 @@ const Home: React.FC = () => {
       price: "₹1,50,000"
     },
     {
-      number: "88888-88888", 
+      number: "88888-88888",
       category: "SUPER VIP",
       price: "₹1,25,000"
     },
     {
       number: "77777-77777",
-      category: "PLATINUM VIP", 
+      category: "PLATINUM VIP",
       price: "₹1,00,000"
     },
     {
@@ -1464,13 +1464,13 @@ const Home: React.FC = () => {
       price: "₹45,000"
     },
     {
-      number: "77777-77777", 
+      number: "77777-77777",
       category: "PLATINUM VIP",
       price: "₹35,000"
     },
     {
       number: "88888-99999",
-      category: "GOLD VIP", 
+      category: "GOLD VIP",
       price: "₹25,000"
     },
     {
@@ -1485,37 +1485,37 @@ const Home: React.FC = () => {
     },
     {
       number: "44444-55555",
-      category: "PREMIUM", 
+      category: "PREMIUM",
       price: "₹8,000"
     },
     {
       number: "33333-44444",
-      category: "PREMIUM", 
+      category: "PREMIUM",
       price: "₹6,000"
     },
     {
       number: "22222-33333",
-      category: "STANDARD", 
+      category: "STANDARD",
       price: "₹4,000"
     },
     {
       number: "12345-67890",
-      category: "SEQUENTIAL", 
+      category: "SEQUENTIAL",
       price: "₹10,000"
     },
     {
       number: "98765-43210",
-      category: "REVERSE", 
+      category: "REVERSE",
       price: "₹8,500"
     },
     {
       number: "11111-22222",
-      category: "DOUBLE", 
+      category: "DOUBLE",
       price: "₹12,000"
     },
     {
       number: "12321-54345",
-      category: "MIRROR", 
+      category: "MIRROR",
       price: "₹9,000"
     }
   ];
@@ -1554,7 +1554,7 @@ const Home: React.FC = () => {
           <HeroText>
             <MainHeroTitle>RESERVE YOUR VIP MOBILE NUMBER</MainHeroTitle>
             <MainHeroSubtitle>Premium Numbers Trusted by Elites</MainHeroSubtitle>
-            
+
             {/* Trust Badges */}
             <TrustBadges>
               <TrustBadge>
@@ -1566,7 +1566,7 @@ const Home: React.FC = () => {
                   <TrustSubtitle>GOOGLE REVIEWS</TrustSubtitle>
                 </TrustInfo>
               </TrustBadge>
-              
+
               <TrustBadge>
                 <TrustIcon style={{ color: '#1976D2' }}>
                   <FaGlobe />
@@ -1576,7 +1576,7 @@ const Home: React.FC = () => {
                   <TrustSubtitle>BIGGEST WEBSITE</TrustSubtitle>
                 </TrustInfo>
               </TrustBadge>
-              
+
               <TrustBadge>
                 <TrustIcon style={{ color: '#673AB7' }}>
                   <FaShieldAlt />
@@ -1586,36 +1586,17 @@ const Home: React.FC = () => {
                   <TrustSubtitle>PAYMENT GATEWAY</TrustSubtitle>
                 </TrustInfo>
               </TrustBadge>
-              
-              <TrustBadge>
-                <TrustIcon style={{ color: '#FF9800' }}>
-                  <FaUndo />
-                </TrustIcon>
-                <TrustInfo>
-                  <TrustTitle>100%</TrustTitle>
-                  <TrustSubtitle>REFUND POLICY</TrustSubtitle>
-                </TrustInfo>
-              </TrustBadge>
+
             </TrustBadges>
-            
+
             <ServiceBadge>100% Genuine Service Provider</ServiceBadge>
-            
+
             <CategoryNavigation>
               VIP NUMBERS | FANCY NUMBERS | LUCKY NUMBERS | PREMIUM NUMBERS | GOLDEN NUMBERS
             </CategoryNavigation>
           </HeroText>
-          
+
           <HeroContact>
-            <ContactNumbers>
-              <ContactNumber>
-                <FaWhatsapp />
-                94111 94111
-              </ContactNumber>
-              <ContactNumber>
-                <FaPhone />
-                97111 97111
-              </ContactNumber>
-            </ContactNumbers>
             <TrustedBadge>
               <FaShieldAlt />
               TRUSTED SELLER
@@ -1631,7 +1612,7 @@ const Home: React.FC = () => {
           <CategoryList>
             {sidebarCategories.map((category, index) => (
               <CategoryItem key={index}>
-                <CategoryLink 
+                <CategoryLink
                   as="label"
                   $isActive={category.isActive}
                 >
@@ -1639,8 +1620,8 @@ const Home: React.FC = () => {
                     <CategoryName>{category.name}</CategoryName>
                     <CategoryCount>{category.count}</CategoryCount>
                   </CategoryInfo>
-                  <CategoryCheckbox 
-                    type="checkbox" 
+                  <CategoryCheckbox
+                    type="checkbox"
                     checked={category.isActive}
                     onChange={() => console.log('Category toggled:', category.name)}
                   />
@@ -1658,8 +1639,8 @@ const Home: React.FC = () => {
             <SearchTitle>Find Your Perfect Premium Number</SearchTitle>
             <SearchForm>
               <SearchInputGroup>
-                <SearchInput 
-                  type="text" 
+                <SearchInput
+                  type="text"
                   placeholder="Search by pattern, digits, or city..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -1675,8 +1656,8 @@ const Home: React.FC = () => {
               </SearchInputGroup>
               <FilterTags>
                 {filterTags.map((tag, index) => (
-                  <FilterTag 
-                    key={index} 
+                  <FilterTag
+                    key={index}
                     $isActive={activeFilter === tag.toLowerCase()}
                     onClick={() => {
                       setActiveFilter(tag.toLowerCase());
@@ -1702,13 +1683,13 @@ const Home: React.FC = () => {
                   <NumberPrice>{number.price}</NumberPrice>
                 </NumberInfo>
                 <NumberActions>
-                  <NumberAction 
+                  <NumberAction
                     $variant="primary"
                     onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
                   >
                     Buy Now
                   </NumberAction>
-                  <NumberAction 
+                  <NumberAction
                     $variant="secondary"
                     onClick={() => alert(`Details for +91 ${number.number}\nCategory: ${number.category}\nPrice: ${number.price}\n\nCall +91 97722-97722 for more details.`)}
                   >
@@ -1741,7 +1722,7 @@ const Home: React.FC = () => {
                     <VVIPCurrentPrice>{number.price}</VVIPCurrentPrice>
                   </VVIPPriceInfo>
                   <VVIPCardActions>
-                    <VVIPBuyButton 
+                    <VVIPBuyButton
                       onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy VIP number ${number.number} for ${number.price}`, '_blank')}
                     >
                       BUY NOW
