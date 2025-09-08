@@ -45,7 +45,7 @@ const MagicIcon = styled(FaMagic)`
 `;
 
 const FormSection = styled.section`
-  padding: ${theme.spacing['3xl']} 0;
+  padding: ${theme.spacing['2xl']} 0;
   background: ${theme.colors.neutral.white};
 `;
 
@@ -497,141 +497,6 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
         </div>
       </HeroSection>
 
-      <ContentSection>
-        <ContentContainer>
-          <ContentCard>
-            <ContentText style={{ textAlign: 'center', fontSize: theme.typography.fontSize.lg, color: theme.colors.neutral.gray600 }}>
-              क्या आप जानते हैं?<br />
-              इस ब्रह्मांड में जो कुछ भी होता है, वह किसी न किसी नंबर से जुड़ा होता है। हर मोबाइल नंबर एक विशेष ऊर्जा को धारण करता है — जो आपके जीवन में सफलता, असफलता, स्वास्थ्य, रिश्ते, व्यवसाय और भाग्य को प्रभावित कर सकता है।
-            </ContentText>
-          </ContentCard>
-
-          <ContentCard>
-            <ContentSubtitle>🔍 मोबाइल न्यूमरोलॉजी क्या है?</ContentSubtitle>
-            <ContentText>
-              मोबाइल न्यूमरोलॉजी (Mobile Numerology) एक ऐसी अद्भुत विद्या है जिसमें आपके मोबाइल नंबर को आपके जन्मांक और मूलांक के अनुसार विश्लेषण किया जाता है। इससे यह जाना जा सकता है कि आपका नंबर आपके लिए लकी है या ब्लॉकेज पैदा कर रहा है।
-            </ContentText>
-          </ContentCard>
-
-          <ContentCard>
-            <ContentSubtitle>📈 क्यों ज़रूरी है आज के समय में मोबाइल न्यूमरोलॉजी?</ContentSubtitle>
-            <BenefitsList>
-              <BenefitItem>
-                <BenefitText>
-                  मोबाइल आज सिर्फ बात करने का साधन नहीं रहा, ये आपकी वाइब, कनेक्शन और ऊर्जा को ट्रांसफर करता है।
-                </BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitText>
-                  हर दिन आप इसी नंबर से दुनिया से जुड़ते हैं – अगर ये नंबर आपके ग्रहों के साथ मेल नहीं खाता, तो रुकावटें, तनाव और असफलता आ सकती है।
-                </BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitText>
-                  एक सही नंबर आपको बना सकता है attractive, successful & powerful communicator.
-                </BenefitText>
-              </BenefitItem>
-            </BenefitsList>
-          </ContentCard>
-
-          <ContentCard>
-            <ContentSubtitle>✅ मोबाइल न्यूमरोलॉजी के फायदे:</ContentSubtitle>
-            <BenefitsList>
-              <BenefitItem>
-                <BenefitNumber>1</BenefitNumber>
-                <BenefitText>आपकी financial growth में तेजी</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>2</BenefitNumber>
-                <BenefitText>व्यापार में positive response</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>3</BenefitNumber>
-                <BenefitText>मानसिक तनाव को कम करता है</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>4</BenefitNumber>
-                <BenefitText>रिश्तों में संतुलन लाता है</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>5</BenefitNumber>
-                <BenefitText>भाग्य को activate करता है</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>6</BenefitNumber>
-                <BenefitText>छुपे हुए talents को उजागर करता है</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitNumber>7</BenefitNumber>
-                <BenefitText>नए opportunities के लिए मार्ग खोलता है</BenefitText>
-              </BenefitItem>
-            </BenefitsList>
-          </ContentCard>
-
-          <ContentCard>
-            <ContentSubtitle>🚫 बुरे मोबाइल नंबर क्या होते हैं?</ContentSubtitle>
-            <BenefitsList>
-              <BenefitItem>
-                <BenefitText>जो आपके मूलांक से टकराते हैं</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitText>जिनका कुल योग 13, 14, 16, 19 जैसे कर्मिक नंबरों में आता है</BenefitText>
-              </BenefitItem>
-              <BenefitItem>
-                <BenefitText>जिनमें अलग-अलग दिशाओं की ऊर्जा का टकराव हो</BenefitText>
-              </BenefitItem>
-            </BenefitsList>
-          </ContentCard>
-
-          <ContentCard>
-            <ContentText style={{ textAlign: 'center', fontStyle: 'italic', color: theme.colors.primary.orange }}>
-              हर नाम, हर तारीख, हर रिश्ता और हर अवसर – नंबर के माध्यम से ही ब्रह्मांड का खेल चलता है। जब आप सही नंबर के साथ होते हैं, तो पूरी सृष्टि आपके लिए मार्ग खोलने लगती है।
-            </ContentText>
-          </ContentCard>
-
-          <HighlightBox>
-            <ContentTitle style={{ marginBottom: theme.spacing.md }}>
-              📞 अब जानिए क्या आपका मोबाइल नंबर आपके लिए शुभ है या नहीं!
-            </ContentTitle>
-            <PriceText>👉 सिर्फ ₹999/- में पाएँ:</PriceText>
-            <BenefitsList>
-              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
-                <BenefitText>• मोबाइल नंबर का पूर्ण न्यूमरोलॉजिकल विश्लेषण</BenefitText>
-              </BenefitItem>
-              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
-                <BenefitText>• कौन सा नंबर आपके लिए शुभ रहेगा</BenefitText>
-              </BenefitItem>
-              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
-                <BenefitText>• ब्लॉकेज दूर करने के उपाय</BenefitText>
-              </BenefitItem>
-              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
-                <BenefitText>• सही नंबर लेने की सटीक गाइडेंस</BenefitText>
-              </BenefitItem>
-            </BenefitsList>
-            <ContentText style={{ 
-              textAlign: 'center', 
-              fontWeight: theme.typography.fontWeight.semibold,
-              color: theme.colors.primary.orange,
-              marginTop: theme.spacing.md 
-            }}>
-              🧠 Limited Slots | 1-on-1 Consultation | 100% Personalized
-            </ContentText>
-          </HighlightBox>
-
-          <ContentCard>
-            <ContentText style={{ 
-              textAlign: 'center', 
-              fontSize: theme.typography.fontSize.xl,
-              fontWeight: theme.typography.fontWeight.semibold,
-              color: theme.colors.primary.orange 
-            }}>
-              आपका नंबर सिर्फ डिजिट नहीं, आपकी दिशा है।<br />
-              🌠 सही नंबर आपको बनाता है magnet for success!
-            </ContentText>
-          </ContentCard>
-        </ContentContainer>
-      </ContentSection>
-
       <FormSection>
         <FormContainer>
           <FormCard>
@@ -776,6 +641,141 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
           </FormCard>
         </FormContainer>
       </FormSection>
+
+      <ContentSection>
+        <ContentContainer>
+          <ContentCard>
+            <ContentText style={{ textAlign: 'center', fontSize: theme.typography.fontSize.lg, color: theme.colors.neutral.gray600 }}>
+              क्या आप जानते हैं?<br />
+              इस ब्रह्मांड में जो कुछ भी होता है, वह किसी न किसी नंबर से जुड़ा होता है। हर मोबाइल नंबर एक विशेष ऊर्जा को धारण करता है — जो आपके जीवन में सफलता, असफलता, स्वास्थ्य, रिश्ते, व्यवसाय और भाग्य को प्रभावित कर सकता है।
+            </ContentText>
+          </ContentCard>
+
+          <ContentCard>
+            <ContentSubtitle>🔍 मोबाइल न्यूमरोलॉजी क्या है?</ContentSubtitle>
+            <ContentText>
+              मोबाइल न्यूमरोलॉजी (Mobile Numerology) एक ऐसी अद्भुत विद्या है जिसमें आपके मोबाइल नंबर को आपके जन्मांक और मूलांक के अनुसार विश्लेषण किया जाता है। इससे यह जाना जा सकता है कि आपका नंबर आपके लिए लकी है या ब्लॉकेज पैदा कर रहा है।
+            </ContentText>
+          </ContentCard>
+
+          <ContentCard>
+            <ContentSubtitle>📈 क्यों ज़रूरी है आज के समय में मोबाइल न्यूमरोलॉजी?</ContentSubtitle>
+            <BenefitsList>
+              <BenefitItem>
+                <BenefitText>
+                  मोबाइल आज सिर्फ बात करने का साधन नहीं रहा, ये आपकी वाइब, कनेक्शन और ऊर्जा को ट्रांसफर करता है।
+                </BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitText>
+                  हर दिन आप इसी नंबर से दुनिया से जुड़ते हैं – अगर ये नंबर आपके ग्रहों के साथ मेल नहीं खाता, तो रुकावटें, तनाव और असफलता आ सकती है।
+                </BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitText>
+                  एक सही नंबर आपको बना सकता है attractive, successful & powerful communicator.
+                </BenefitText>
+              </BenefitItem>
+            </BenefitsList>
+          </ContentCard>
+
+          <ContentCard>
+            <ContentSubtitle>✅ मोबाइल न्यूमरोलॉजी के फायदे:</ContentSubtitle>
+            <BenefitsList>
+              <BenefitItem>
+                <BenefitNumber>1</BenefitNumber>
+                <BenefitText>आपकी financial growth में तेजी</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>2</BenefitNumber>
+                <BenefitText>व्यापार में positive response</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>3</BenefitNumber>
+                <BenefitText>मानसिक तनाव को कम करता है</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>4</BenefitNumber>
+                <BenefitText>रिश्तों में संतुलन लाता है</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>5</BenefitNumber>
+                <BenefitText>भाग्य को activate करता है</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>6</BenefitNumber>
+                <BenefitText>छुपे हुए talents को उजागर करता है</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitNumber>7</BenefitNumber>
+                <BenefitText>नए opportunities के लिए मार्ग खोलता है</BenefitText>
+              </BenefitItem>
+            </BenefitsList>
+          </ContentCard>
+
+          <ContentCard>
+            <ContentSubtitle>🚫 बुरे मोबाइल नंबर क्या होते हैं?</ContentSubtitle>
+            <BenefitsList>
+              <BenefitItem>
+                <BenefitText>जो आपके मूलांक से टकराते हैं</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitText>जिनका कुल योग 13, 14, 16, 19 जैसे कर्मिक नंबरों में आता है</BenefitText>
+              </BenefitItem>
+              <BenefitItem>
+                <BenefitText>जिनमें अलग-अलग दिशाओं की ऊर्जा का टकराव हो</BenefitText>
+              </BenefitItem>
+            </BenefitsList>
+          </ContentCard>
+
+          <ContentCard>
+            <ContentText style={{ textAlign: 'center', fontStyle: 'italic', color: theme.colors.primary.orange }}>
+              हर नाम, हर तारीख, हर रिश्ता और हर अवसर – नंबर के माध्यम से ही ब्रह्मांड का खेल चलता है। जब आप सही नंबर के साथ होते हैं, तो पूरी सृष्टि आपके लिए मार्ग खोलने लगती है।
+            </ContentText>
+          </ContentCard>
+
+          <HighlightBox>
+            <ContentTitle style={{ marginBottom: theme.spacing.md }}>
+              📞 अब जानिए क्या आपका मोबाइल नंबर आपके लिए शुभ है या नहीं!
+            </ContentTitle>
+            <PriceText>👉 सिर्फ ₹999/- में पाएँ:</PriceText>
+            <BenefitsList>
+              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
+                <BenefitText>• मोबाइल नंबर का पूर्ण न्यूमरोलॉजिकल विश्लेषण</BenefitText>
+              </BenefitItem>
+              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
+                <BenefitText>• कौन सा नंबर आपके लिए शुभ रहेगा</BenefitText>
+              </BenefitItem>
+              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
+                <BenefitText>• ब्लॉकेज दूर करने के उपाय</BenefitText>
+              </BenefitItem>
+              <BenefitItem style={{ background: 'transparent', borderLeft: 'none', justifyContent: 'center' }}>
+                <BenefitText>• सही नंबर लेने की सटीक गाइडेंस</BenefitText>
+              </BenefitItem>
+            </BenefitsList>
+            <ContentText style={{ 
+              textAlign: 'center', 
+              fontWeight: theme.typography.fontWeight.semibold,
+              color: theme.colors.primary.orange,
+              marginTop: theme.spacing.md 
+            }}>
+              🧠 Limited Slots | 1-on-1 Consultation | 100% Personalized
+            </ContentText>
+          </HighlightBox>
+
+          <ContentCard>
+            <ContentText style={{ 
+              textAlign: 'center', 
+              fontSize: theme.typography.fontSize.xl,
+              fontWeight: theme.typography.fontWeight.semibold,
+              color: theme.colors.primary.orange 
+            }}>
+              आपका नंबर सिर्फ डिजिट नहीं, आपकी दिशा है।<br />
+              🌠 सही नंबर आपको बनाता है magnet for success!
+            </ContentText>
+          </ContentCard>
+        </ContentContainer>
+      </ContentSection>
 
       <InfoSection>
         <div className="container">

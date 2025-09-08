@@ -130,7 +130,7 @@ The application uses a comprehensive design system with:
 
 ### Color Palette
 - **Primary Colors**: Green, Sky Blue, Orange, Yellow
-- **Secondary Colors**: Light variations of primary colors  
+- **Secondary Colors**: Light variations of primary colors
 - **Neutral Colors**: Gray scale from white to black
 
 ### Typography
@@ -193,7 +193,7 @@ REACT_APP_API_BASE_URL=https://api.yourbackend.com
 ### WhatsApp Integration
 The application integrates with WhatsApp Business API for:
 - Direct number inquiries
-- Numerology consultations  
+- Numerology consultations
 - Customer support
 
 ## 🚀 Deployment

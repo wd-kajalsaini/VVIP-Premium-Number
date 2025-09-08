@@ -1,50 +1,140 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaCrown, FaStar, FaGem, FaWhatsapp } from '../utils/iconComponents';
+import { FaCrown, FaStar, FaGem, FaWhatsapp, FaSearch } from '../utils/iconComponents';
 import { theme } from '../styles/theme';
 
 const VVIPContainer = styled.div`
   margin-top: 70px;
-  min-height: 100vh;
+  display: flex;
+  min-height: calc(100vh - 70px);
 `;
 
-const HeroSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}20, 
-    ${theme.colors.primary.yellow}20,
-    ${theme.colors.primary.orange}15
-  );
-  padding: ${theme.spacing['2xl']} 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+const Sidebar = styled.div`
+  width: 280px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-right: 1px solid ${theme.colors.neutral.gray200};
+  padding: ${theme.spacing.md};
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f97316' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='m0 40 40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  @media (max-width: 1024px) {
+    width: 250px;
+    padding: ${theme.spacing.sm};
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
-const HeroContent = styled.div`
-  position: relative;
-  z-index: 2;
+const MainContent = styled.div`
+  flex: 1;
+  background: ${theme.colors.neutral.gray50};
 `;
 
-const HeroTitle = styled.h1`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
-    ${theme.colors.primary.yellow},
-    ${theme.colors.primary.orange}
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+const SidebarTitle = styled.h3`
+  color: ${theme.colors.neutral.gray800};
   margin-bottom: ${theme.spacing.md};
+  font-size: ${theme.typography.fontSize.md};
+  font-weight: ${theme.typography.fontWeight.bold};
+  text-align: left;
+  border-bottom: 2px solid ${theme.colors.primary.orange};
+  padding-bottom: ${theme.spacing.xs};
+`;
+
+const CategoryList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const CategoryItem = styled.li`
+  margin-bottom: 0;
+`;
+
+const CategoryLink = styled.label<{ $isActive?: boolean }>`
+  display: flex;
+  align-items: center;
+  color: ${props => props.$isActive ? theme.colors.primary.orange : theme.colors.neutral.gray700};
+  background: ${props => props.$isActive 
+    ? theme.colors.primary.orange + '15'
+    : 'transparent'};
+  border: 1px solid ${props => props.$isActive 
+    ? theme.colors.primary.orange
+    : theme.colors.neutral.gray300};
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.md};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: ${theme.typography.fontSize.sm};
+  font-weight: ${theme.typography.fontWeight.medium};
+  margin-bottom: ${theme.spacing.xs};
+
+  &:hover {
+    background: ${theme.colors.primary.orange}20;
+    border-color: ${theme.colors.primary.orange};
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const CategoryInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${theme.spacing.xs};
+`;
+
+const CategoryName = styled.span`
+  font-weight: ${theme.typography.fontWeight.semibold};
+`;
+
+const CategoryCount = styled.span`
+  font-size: ${theme.typography.fontSize.xs};
+  opacity: 0.8;
+  background: ${theme.colors.neutral.gray200};
+  padding: 2px ${theme.spacing.xs};
+  border-radius: ${theme.borderRadius.sm};
+  color: ${theme.colors.neutral.gray600};
+`;
+
+const CategoryCheckbox = styled.input`
+  width: 16px;
+  height: 16px;
+  margin-right: ${theme.spacing.sm};
+  accent-color: ${theme.colors.primary.orange};
+  cursor: pointer;
+`;
+
+const PriceRange = styled.div`
+  font-size: ${theme.typography.fontSize.xs};
+  opacity: 0.7;
+  color: ${theme.colors.neutral.gray500};
+`;
+
+const SearchSection = styled.section`
+  background: linear-gradient(135deg, 
+    #667eea 0%,
+    #764ba2 100%
+  );
+  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
+  color: ${theme.colors.neutral.white};
+  text-align: center;
+`;
+
+const SearchContainer = styled.div`
+  max-width: 900px;
+  margin: 0 auto;
+`;
+
+const SearchTitle = styled.h2`
+  font-size: ${theme.typography.fontSize['2xl']};
+  margin-bottom: ${theme.spacing.lg};
+  font-weight: ${theme.typography.fontWeight.bold};
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,120 +142,191 @@ const HeroTitle = styled.h1`
 `;
 
 const CrownIcon = styled(FaCrown)`
-  color: ${theme.colors.primary.orange};
-  filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.3));
+  color: ${theme.colors.neutral.white};
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 `;
 
-const ExclusiveSection = styled.section`
-  padding: ${theme.spacing['3xl']} 0;
+const SearchForm = styled.div`
   background: ${theme.colors.neutral.white};
+  border-radius: ${theme.borderRadius.xl};
+  padding: ${theme.spacing.lg};
+  box-shadow: ${theme.shadows.xl};
+  margin-bottom: ${theme.spacing.lg};
 `;
 
-const SectionTitle = styled.h2`
-  text-align: center;
-  margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
-    ${theme.colors.primary.yellow}
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const VVIPGrid = styled.div`
+const SearchInputGroup = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: ${theme.spacing.xl};
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 ${theme.spacing.md};
+  grid-template-columns: 1fr auto;
+  gap: ${theme.spacing.sm};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing.sm};
+  }
+`;
+
+const SearchInput = styled.input`
+  padding: ${theme.spacing.md};
+  border: 2px solid ${theme.colors.neutral.gray300};
+  border-radius: ${theme.borderRadius.md};
+  font-size: ${theme.typography.fontSize.md};
+  color: ${theme.colors.neutral.gray700};
+  
+  &::placeholder {
+    color: ${theme.colors.neutral.gray400};
+  }
+
+  &:focus {
+    border-color: ${theme.colors.primary.orange};
+    outline: none;
+  }
+`;
+
+const SearchButton = styled.button`
+  background: ${theme.colors.primary.orange};
+  color: ${theme.colors.neutral.white};
+  border: none;
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.md};
+  font-weight: ${theme.typography.fontWeight.semibold};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: ${theme.colors.primary.yellow};
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    width: 100%;
+  }
+`;
+
+const NumbersSection = styled.section`
+  padding: ${theme.spacing.lg} 0;
+`;
+
+const NumbersGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: ${theme.spacing.lg};
 `;
 
 const VVIPCard = styled.div`
   background: linear-gradient(135deg, 
-    ${theme.colors.neutral.white}, 
-    ${theme.colors.neutral.gray100}
+    #667eea 0%,
+    #764ba2 100%
   );
   border-radius: ${theme.borderRadius.xl};
-  box-shadow: ${theme.shadows.xl};
-  overflow: hidden;
-  transition: all 0.4s ease;
-  border: 3px solid transparent;
+  padding: ${theme.spacing.xl};
+  color: ${theme.colors.neutral.white};
+  text-align: center;
+  box-shadow: ${theme.shadows.lg};
+  transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, 
-      ${theme.colors.primary.orange}, 
-      ${theme.colors.primary.yellow}, 
-      ${theme.colors.primary.orange}
-    );
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: ${theme.colors.neutral.white}10;
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
   }
 
   &:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: ${theme.shadows.xl}, 0 20px 40px rgba(249, 115, 22, 0.2);
-    border-color: ${theme.colors.primary.orange};
-  }
-`;
+    transform: translateY(-10px);
+    box-shadow: ${theme.shadows.xl};
 
-const VVIPHeader = styled.div`
-  padding: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
-    ${theme.colors.primary.yellow}
-  );
-  color: ${theme.colors.neutral.white};
-  text-align: center;
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 10px solid ${theme.colors.primary.orange};
+    &::before {
+      right: -30%;
+    }
   }
 `;
 
 const VVIPBadge = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: ${theme.spacing.xs};
-  background: rgba(255, 255, 255, 0.2);
+  background: ${theme.colors.neutral.white}30;
+  color: ${theme.colors.neutral.white};
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.full};
-  font-size: ${theme.typography.fontSize.sm};
+  border-radius: ${theme.borderRadius.md};
+  font-size: ${theme.typography.fontSize.xs};
   font-weight: ${theme.typography.fontWeight.semibold};
   margin-bottom: ${theme.spacing.sm};
+  display: inline-block;
+  position: relative;
+  z-index: 2;
 `;
 
 const NumberDisplay = styled.div`
-  font-size: ${theme.typography.fontSize['3xl']};
+  font-size: ${theme.typography.fontSize.xl};
   font-weight: ${theme.typography.fontWeight.bold};
-  letter-spacing: 3px;
-  margin: ${theme.spacing.sm} 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: ${theme.colors.neutral.white};
+  margin-bottom: ${theme.spacing.md};
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const SpecialtyTag = styled.div`
+const NumberInfo = styled.div`
+  position: relative;
+  z-index: 2;
+  margin-bottom: ${theme.spacing.lg};
+`;
+
+const NumberPrice = styled.div`
+  font-size: ${theme.typography.fontSize['2xl']};
+  font-weight: ${theme.typography.fontWeight.bold};
+  color: ${theme.colors.neutral.white};
+  margin-bottom: ${theme.spacing.md};
+  position: relative;
+  z-index: 2;
+`;
+
+const VVIPActions = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.spacing.sm};
+  position: relative;
+  z-index: 2;
+`;
+
+const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
+  background: ${props => props.$variant === 'primary' 
+    ? theme.colors.neutral.white 
+    : 'transparent'};
+  color: ${props => props.$variant === 'primary' 
+    ? theme.colors.primary.orange 
+    : theme.colors.neutral.white};
+  border: ${props => props.$variant === 'primary' 
+    ? 'none' 
+    : `1px solid ${theme.colors.neutral.white}`};
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.md};
+  font-weight: ${theme.typography.fontWeight.semibold};
   font-size: ${theme.typography.fontSize.sm};
-  font-weight: ${theme.typography.fontWeight.medium};
-  background: rgba(255, 255, 255, 0.3);
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.sm};
-  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: ${props => props.$variant === 'primary' 
+      ? theme.colors.neutral.gray100 
+      : theme.colors.neutral.white};
+    color: ${theme.colors.primary.orange};
+    transform: translateY(-1px);
+  }
 `;
 
 const VVIPBody = styled.div`
@@ -303,216 +464,175 @@ const FeatureIcon = styled.div`
 `;
 
 const VVIPCollection: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState('All Numbers');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const categories = [
+    { name: 'All Numbers', count: 150 },
+    { name: 'VIP Numbers', count: 45 },
+    { name: 'Fancy Numbers', count: 32 },
+    { name: 'Lucky Numbers', count: 28 },
+    { name: 'Premium Numbers', count: 25 },
+    { name: 'Golden Numbers', count: 20 },
+    { name: 'Diamond Numbers', count: 15 },
+    { name: 'Platinum Numbers', count: 12 }
+  ];
+
   const vvipNumbers = [
     {
-      number: '+91 99999 99999',
+      number: '99999 99999',
       specialty: 'Ultimate Nine Pattern',
       category: 'Ultra Premium',
-      features: [
-        'Most auspicious number in numerology',
-        'Perfect for business leaders',
-        'Brings maximum prosperity',
-        'Extremely rare and exclusive',
-        'Lifetime prestige symbol'
-      ],
       price: 500000,
       originalPrice: 650000,
       savings: 150000
     },
     {
-      number: '+91 88888 88888',
+      number: '88888 88888',
       specialty: 'Infinity Power Pattern',
       category: 'Diamond Elite',
-      features: [
-        'Symbol of infinity and abundance',
-        'Lucky number in Chinese culture',
-        'Perfect for wealth creation',
-        'Double prosperity pattern',
-        'Celebrity favorite choice'
-      ],
       price: 450000,
       originalPrice: 575000,
       savings: 125000
     },
     {
-      number: '+91 77777 77777',
+      number: '77777 77777',
       specialty: 'Seven Chakra Alignment',
-      category: 'Spiritual Premium',
-      features: [
-        'Spiritual enlightenment number',
-        'Perfect for healers and coaches',
-        'Brings inner wisdom',
-        'Mystical and powerful',
-        'Attracts positive energy'
-      ],
+      category: 'Ultra Premium',
       price: 350000,
       originalPrice: 425000,
       savings: 75000
     },
     {
-      number: '+91 11111 11111',
+      number: '11111 11111',
       specialty: 'Master Manifestation',
-      category: 'Manifestor Elite',
-      features: [
-        'Master number for manifestation',
-        'Perfect for entrepreneurs',
-        'Leadership and innovation',
-        'Attracts opportunities',
-        'Gateway to success'
-      ],
+      category: 'Golden VIP',
       price: 300000,
       originalPrice: 375000,
       savings: 75000
     },
     {
-      number: '+91 12345 67890',
+      number: '12345 67890',
       specialty: 'Perfect Sequential Flow',
-      category: 'Mathematical Elite',
-      features: [
-        'Complete numerical sequence',
-        'Perfect mathematical harmony',
-        'Easy to remember and dial',
-        'Represents progress and growth',
-        'Unique conversation starter'
-      ],
+      category: 'Platinum Plus',
       price: 275000,
       originalPrice: 325000,
       savings: 50000
     },
     {
-      number: '+91 98765 43210',
+      number: '98765 43210',
       specialty: 'Reverse Sequential Power',
-      category: 'Countdown Elite',
-      features: [
-        'Descending numerical sequence',
-        'Represents mastery and completion',
-        'Perfect for achievers',
-        'Countdown to success pattern',
-        'Memorable and prestigious'
-      ],
+      category: 'Golden VIP',
       price: 250000,
       originalPrice: 300000,
       savings: 50000
     }
   ];
 
-  const exclusiveFeatures = [
-    {
-      icon: <FaCrown />,
-      title: "Lifetime Exclusivity",
-      description: "Once sold, these numbers will never be available again"
-    },
-    {
-      icon: <FaGem />,
-      title: "Authenticated Certificate",
-      description: "Official certificate of authenticity with each purchase"
-    },
-    {
-      icon: <FaGem />,
-      title: "VIP Customer Support",
-      description: "Dedicated premium support for all VVIP customers"
-    },
-    {
-      icon: <FaStar />,
-      title: "Immediate Activation",
-      description: "Priority activation within 2 hours of payment"
-    }
-  ];
+  const filteredNumbers = vvipNumbers.filter(number => {
+    const matchesCategory = selectedCategory === 'All Numbers' || number.category === selectedCategory;
+    const matchesSearch = number.number.includes(searchTerm) || 
+                         number.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const getWhatsAppLink = (number: string, price: number) => {
-    const message = `Hi! I'm interested in the VVIP number ${number} for ₹${price.toLocaleString('en-IN')}. This is truly exclusive! Please provide complete details and payment process.`;
-    return `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const message = `Hi! I'm interested in the VVIP number +91 ${number} for ₹${price.toLocaleString('en-IN')}. Please provide complete details.`;
+    return `https://wa.me/919772297722?text=${encodeURIComponent(message)}`;
   };
 
   return (
     <VVIPContainer>
-      <HeroSection>
-        <div className="container">
-          <HeroContent>
-            <HeroTitle>
-              <CrownIcon />
-              VVIP Exclusive Collection
-              <CrownIcon />
-            </HeroTitle>
-            <p style={{ 
-              color: theme.colors.neutral.gray600, 
-              fontSize: theme.typography.fontSize.lg,
-              maxWidth: '600px',
-              margin: '0 auto'
-            }}>
-              Ultra-premium numbers for those who demand absolute exclusivity. 
-              These rare gems are available for a limited time only.
-            </p>
-          </HeroContent>
-        </div>
-      </HeroSection>
+      <Sidebar>
+        <SidebarTitle>VVIP Categories</SidebarTitle>
+        <CategoryList>
+          {categories.map((category, index) => (
+            <CategoryItem key={index}>
+              <CategoryLink 
+                as="label"
+                $isActive={selectedCategory === category.name}
+              >
+                <CategoryInfo>
+                  <CategoryName>{category.name}</CategoryName>
+                  <CategoryCount>{category.count}</CategoryCount>
+                </CategoryInfo>
+                <CategoryCheckbox 
+                  type="checkbox" 
+                  checked={selectedCategory === category.name}
+                  onChange={() => setSelectedCategory(category.name)}
+                />
+              </CategoryLink>
+            </CategoryItem>
+          ))}
+        </CategoryList>
+      </Sidebar>
 
-      <ExclusiveSection>
-        <div className="container">
-          <SectionTitle>Ultra-Exclusive Numbers</SectionTitle>
-          <VVIPGrid>
-            {vvipNumbers.map((number, index) => (
+      <MainContent>
+        <SearchSection>
+          <SearchContainer>
+            <SearchTitle>
+              <CrownIcon />
+              Find Your Perfect VVIP Number
+            </SearchTitle>
+            <SearchForm>
+              <SearchInputGroup>
+                <SearchInput
+                  type="text"
+                  placeholder="Search by number or pattern..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <SearchButton>
+                  <FaSearch />
+                  Search
+                </SearchButton>
+              </SearchInputGroup>
+            </SearchForm>
+          </SearchContainer>
+        </SearchSection>
+
+        <NumbersSection>
+          <NumbersGrid>
+            {filteredNumbers.map((number, index) => (
               <VVIPCard key={index}>
-                <VVIPHeader>
-                  <VVIPBadge>
-                    <FaCrown />
-                    {number.category}
-                  </VVIPBadge>
-                  <NumberDisplay>{number.number}</NumberDisplay>
-                  <SpecialtyTag>{number.specialty}</SpecialtyTag>
-                </VVIPHeader>
-
-                <VVIPBody>
-                  <FeaturesList>
-                    {number.features.map((feature, idx) => (
-                      <FeatureItem key={idx}>
-                        <FaStar />
-                        {feature}
-                      </FeatureItem>
-                    ))}
-                  </FeaturesList>
-
-                  <PriceSection>
-                    <Price>₹{number.price.toLocaleString('en-IN')}</Price>
-                    <OriginalPrice>₹{number.originalPrice.toLocaleString('en-IN')}</OriginalPrice>
-                    <SavingsTag>Save ₹{number.savings.toLocaleString('en-IN')}</SavingsTag>
-                  </PriceSection>
-
-                  <CTAButton
-                    href={getWhatsAppLink(number.number, number.price)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <VVIPBadge>
+                  <FaCrown />
+                  {number.category}
+                </VVIPBadge>
+                <NumberDisplay>+91 {number.number}</NumberDisplay>
+                <NumberInfo>
+                  <div style={{ 
+                    fontSize: theme.typography.fontSize.sm, 
+                    opacity: 0.9,
+                    marginBottom: theme.spacing.md
+                  }}>
+                    {number.specialty}
+                  </div>
+                  <NumberPrice>₹{number.price.toLocaleString('en-IN')}</NumberPrice>
+                  <div style={{ 
+                    fontSize: theme.typography.fontSize.sm, 
+                    opacity: 0.7,
+                    textDecoration: 'line-through'
+                  }}>
+                    ₹{number.originalPrice.toLocaleString('en-IN')}
+                  </div>
+                </NumberInfo>
+                <VVIPActions>
+                  <VVIPAction 
+                    $variant="primary"
+                    onClick={() => window.open(getWhatsAppLink(number.number, number.price), '_blank')}
                   >
-                    <FaWhatsapp />
-                    Reserve This Exclusive Number
-                  </CTAButton>
-                </VVIPBody>
+                    Buy Now
+                  </VVIPAction>
+                  <VVIPAction $variant="secondary">
+                    Details
+                  </VVIPAction>
+                </VVIPActions>
               </VVIPCard>
             ))}
-          </VVIPGrid>
-        </div>
-      </ExclusiveSection>
-
-      <ExclusiveFeatures>
-        <div className="container">
-          <SectionTitle>VVIP Exclusive Benefits</SectionTitle>
-          <FeaturesGrid>
-            {exclusiveFeatures.map((feature, index) => (
-              <FeatureCard key={index}>
-                <FeatureIcon>
-                  {feature.icon}
-                </FeatureIcon>
-                <h3 style={{ marginBottom: theme.spacing.sm, color: theme.colors.neutral.gray800 }}>
-                  {feature.title}
-                </h3>
-                <p style={{ color: theme.colors.neutral.gray600 }}>
-                  {feature.description}
-                </p>
-              </FeatureCard>
-            ))}
-          </FeaturesGrid>
-        </div>
-      </ExclusiveFeatures>
+          </NumbersGrid>
+        </NumbersSection>
+      </MainContent>
     </VVIPContainer>
   );
 };

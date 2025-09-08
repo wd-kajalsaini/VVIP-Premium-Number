@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaBars, FaTimes } from '../utils/iconComponents';
+import { FaBars, FaTimes, FaWhatsapp } from '../utils/iconComponents';
 import { theme } from '../styles/theme';
 
 const HeaderContainer = styled.header<{ $isScrolled: boolean }>`
@@ -29,6 +29,11 @@ const Nav = styled.nav`
   margin: 0 auto;
   padding-left: ${theme.spacing.md};
   padding-right: ${theme.spacing.md};
+
+  @media (max-width: 768px) {
+    padding-left: ${theme.spacing.sm};
+    padding-right: ${theme.spacing.sm};
+  }
 `;
 
 const Logo = styled(Link)`
@@ -42,9 +47,19 @@ const Logo = styled(Link)`
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &:hover {
     opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    font-size: ${theme.typography.fontSize.xl};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${theme.typography.fontSize.lg};
   }
 `;
 
@@ -101,56 +116,37 @@ const NavLink = styled(Link)<{ $isActive: boolean }>`
   }
 `;
 
-const AuthButtons = styled.div`
+const ContactInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.spacing.sm};
+  gap: ${theme.spacing.md};
 
   @media (max-width: 768px) {
-    flex-direction: column;
     width: 100%;
-    gap: ${theme.spacing.sm};
+    justify-content: center;
   }
 `;
 
-const Button = styled(Link)<{ $variant: 'outline' | 'filled' }>`
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
+const ContactButton = styled.a`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.xs};
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  background: ${theme.colors.primary.green};
+  color: ${theme.colors.neutral.white};
   border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.fontWeight.medium};
   text-decoration: none;
+  font-size: ${theme.typography.fontSize.sm};
+  font-weight: ${theme.typography.fontWeight.medium};
   transition: all 0.2s ease;
-  text-align: center;
-  display: inline-block;
 
-  ${props => props.$variant === 'outline' 
-    ? `
-      color: ${theme.colors.primary.skyBlue};
-      border: 2px solid ${theme.colors.primary.skyBlue};
-      background: transparent;
-
-      &:hover {
-        background: ${theme.colors.primary.skyBlue};
-        color: ${theme.colors.neutral.white};
-      }
-    `
-    : `
-      color: ${theme.colors.neutral.white};
-      background: linear-gradient(135deg, 
-        ${theme.colors.primary.green}, 
-        ${theme.colors.primary.skyBlue}
-      );
-      border: 2px solid transparent;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: ${theme.shadows.md};
-      }
-    `
+  &:hover {
+    background: ${theme.colors.primary.orange};
+    transform: translateY(-1px);
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    padding: ${theme.spacing.md};
+    padding: ${theme.spacing.sm} ${theme.spacing.md};
   }
 `;
 
@@ -210,22 +206,16 @@ const Header: React.FC = () => {
             </NavLink>
           ))}
 
-          <AuthButtons>
-            <Button
-              to="/login"
-              $variant="outline"
-              onClick={() => setIsMobileMenuOpen(false)}
+          <ContactInfo>
+            <ContactButton 
+              href="https://wa.me/919772297722?text=Hi! I'm interested in premium numbers"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Login
-            </Button>
-            <Button
-              to="/signup"
-              $variant="filled"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Sign Up
-            </Button>
-          </AuthButtons>
+              <FaWhatsapp />
+              WhatsApp
+            </ContactButton>
+          </ContactInfo>
         </NavLinks>
 
         <MobileMenuButton onClick={toggleMobileMenu}>
