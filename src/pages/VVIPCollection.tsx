@@ -390,6 +390,7 @@ const PriceTag = styled.div`
   font-weight: 700;
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
 `;
 
 const PhoneNumber = styled.div`
@@ -397,6 +398,7 @@ const PhoneNumber = styled.div`
   font-weight: 700;
   color: white;
   margin-bottom: 8px;
+  text-align: center;
   
   .highlight {
     color: #f97316;
@@ -404,9 +406,11 @@ const PhoneNumber = styled.div`
 `;
 
 const SumTotal = styled.div`
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   margin-bottom: 15px;
+  font-weight: 500;
+  text-align: center;
 `;
 
 const ButtonRow = styled.div`
@@ -455,6 +459,24 @@ const OwnerTag = styled.div`
   border-radius: 4px;
   transform: rotate(15deg);
 `;
+
+// Function to calculate sum total of digits in a phone number
+const calculateSumTotal = (phoneNumber: string): string => {
+  // Remove all non-digit characters
+  const digits = phoneNumber.replace(/\D/g, '');
+  
+  // Calculate sum of all digits (first sum)
+  const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the first sum (second sum)
+  const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the second sum (third sum)
+  const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Return format: "firstSum-secondSum-thirdSum"
+  return `${firstSum}-${secondSum}-${thirdSum}`;
+};
 
 const VVIPCollection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -600,6 +622,7 @@ const VVIPCollection: React.FC = () => {
             {sampleNumbers.map((item) => (
               <NumberCard key={item.id}>
                 <PhoneNumber>{formatNumber(item.number, item.highlights)}</PhoneNumber>
+                <SumTotal>Sum Total = {calculateSumTotal(item.number)}</SumTotal>
                 <PriceTag>{item.price}</PriceTag>
                 <ButtonRow>
                   <ActionButton>Details</ActionButton>
