@@ -1,573 +1,314 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaWhatsapp, FaStar, FaFilter, FaSearch } from '../utils/iconComponents';
-import { theme } from '../styles/theme';
 
 const GalleryContainer = styled.div`
   margin-top: 70px;
-  display: flex;
   min-height: calc(100vh - 70px);
 `;
 
-const Sidebar = styled.div`
-  width: 280px;
-  background: linear-gradient(135deg, #20b2aa15, #48cae415);
-  border-right: 2px solid #20b2aa30;
-  padding: ${theme.spacing.md};
-  box-shadow: 2px 0 10px rgba(32, 178, 170, 0.1);
-
-  @media (max-width: 1024px) {
-    width: 250px;
-    padding: ${theme.spacing.sm};
-  }
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  background: ${theme.colors.neutral.gray50};
-`;
-
-const SidebarTitle = styled.h3`
-  color: ${theme.colors.neutral.gray800};
-  margin-bottom: ${theme.spacing.lg};
-  font-size: ${theme.typography.fontSize.lg};
-  font-weight: ${theme.typography.fontWeight.bold};
-  text-align: left;
-  border-bottom: 3px solid #20b2aa;
-  padding-bottom: ${theme.spacing.sm};
-`;
-
-const CategoryList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const CategoryItem = styled.li`
-  margin-bottom: 0;
-`;
-
-const CategoryLink = styled.label<{ $isActive?: boolean }>`
+const HeroBanner = styled.section`
+  background: linear-gradient(135deg, #6366f1, #4f46e5, #374151);
+  height: 300px;
   display: flex;
   align-items: center;
-  color: ${props => props.$isActive ? '#20b2aa' : theme.colors.neutral.gray700};
-  text-decoration: none;
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  background: ${props => props.$isActive
-    ? 'linear-gradient(135deg, #20b2aa20, #48cae420)'
-    : theme.colors.neutral.white};
-  border: 1px solid ${props => props.$isActive
-    ? '#20b2aa'
-    : theme.colors.neutral.gray300};
-  transition: all 0.3s ease;
-  font-size: ${theme.typography.fontSize.sm};
-  font-weight: ${theme.typography.fontWeight.medium};
-  margin-bottom: ${theme.spacing.xs};
-  cursor: pointer;
-
-  &:hover {
-    background: linear-gradient(135deg, #20b2aa15, #48cae415);
-    border-color: #20b2aa;
-    transform: translateX(2px);
-    box-shadow: 0 2px 8px rgba(32, 178, 170, 0.2);
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const CategoryInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex: 1;
-  margin-bottom: ${theme.spacing.xs};
-`;
-
-const CategoryName = styled.span`
-  font-weight: ${theme.typography.fontWeight.semibold};
-`;
-
-const CategoryCount = styled.span`
-  font-size: ${theme.typography.fontSize.xs};
-  opacity: 0.8;
-  background: ${theme.colors.neutral.gray200};
-  padding: 2px ${theme.spacing.xs};
-  border-radius: ${theme.borderRadius.sm};
-  color: ${theme.colors.neutral.gray600};
-`;
-
-const PriceRange = styled.div`
-  font-size: ${theme.typography.fontSize.xs};
-  opacity: 0.7;
-  color: ${theme.colors.neutral.gray500};
-`;
-
-const CategoryCheckbox = styled.input`
-  width: 16px;
-  height: 16px;
-  margin-right: ${theme.spacing.sm};
-  accent-color: #20b2aa;
-  cursor: pointer;
-`;
-
-const SearchSection = styled.section`
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.skyBlue},
-    ${theme.colors.primary.green}
-  );
-  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
-  color: ${theme.colors.neutral.white};
-  text-align: center;
-`;
-
-const SearchContainer = styled.div`
-  max-width: 900px;
-  margin: 0 auto;
-`;
-
-const SearchTitle = styled.h2`
-  font-size: ${theme.typography.fontSize['2xl']};
-  margin-bottom: ${theme.spacing.lg};
-  font-weight: ${theme.typography.fontWeight.bold};
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-`;
-
-const SearchForm = styled.div`
-  background: ${theme.colors.neutral.white};
-  border-radius: ${theme.borderRadius.xl};
-  padding: ${theme.spacing.lg};
-  box-shadow: ${theme.shadows.xl};
-  margin-bottom: ${theme.spacing.lg};
-`;
-
-const SearchInputGroup = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.md};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: ${theme.spacing.sm};
-  }
-`;
-
-const SearchInput = styled.input`
-  padding: ${theme.spacing.md};
-  border: 2px solid ${theme.colors.neutral.gray300};
-  border-radius: ${theme.borderRadius.md};
-  font-size: ${theme.typography.fontSize.md};
-  color: ${theme.colors.neutral.gray700};
-
-  &::placeholder {
-    color: ${theme.colors.neutral.gray400};
-  }
-
-  &:focus {
-    border-color: ${theme.colors.primary.orange};
-    outline: none;
-  }
-`;
-
-const SearchButton = styled.button`
-  background: ${theme.colors.primary.orange};
-  color: ${theme.colors.neutral.white};
-  border: none;
-  padding: ${theme.spacing.md} ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  transition: all 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    background: ${theme.colors.primary.yellow};
-    transform: translateY(-1px);
-  }
-
-  @media (max-width: 768px) {
-    justify-content: center;
-    width: 100%;
-  }
-`;
-
-const FilterTags = styled.div`
-  display: flex;
-  gap: ${theme.spacing.xs};
   justify-content: center;
-  flex-wrap: wrap;
-`;
-
-const FilterTag = styled.button<{ $isActive?: boolean }>`
-  background: ${props => props.$isActive
-    ? theme.colors.primary.orange
-    : theme.colors.neutral.gray100};
-  border: 1px solid ${props => props.$isActive
-    ? theme.colors.primary.orange
-    : theme.colors.neutral.gray300};
-  color: ${props => props.$isActive
-    ? theme.colors.neutral.white
-    : theme.colors.neutral.gray600};
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.full};
-  font-size: ${theme.typography.fontSize.xs};
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${theme.colors.primary.orange};
-    color: ${theme.colors.neutral.white};
-    border-color: ${theme.colors.primary.orange};
-  }
-`;
-
-const NumbersSection = styled.section`
-  padding: ${theme.spacing.lg};
-`;
-
-const NumbersGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: ${theme.spacing.lg};
-`;
-
-const NumberCard = styled.div`
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.skyBlue},
-    ${theme.colors.primary.green}
-  );
-  border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing.lg};
-  color: ${theme.colors.neutral.white};
-  text-align: center;
-  box-shadow: ${theme.shadows.md};
-  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-
+  
   &::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 200%;
-    background: ${theme.colors.neutral.white}10;
-    transform: rotate(45deg);
-    transition: all 0.3s ease;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
   }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><polygon points="30,0 60,30 30,60 0,30"/></g></g></svg>') repeat;
+    z-index: 1;
+  }
+`;
 
+const HeroTitle = styled.h1`
+  color: white;
+  font-size: 4rem;
+  font-weight: 700;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 4px;
+  
+  @media (max-width: 768px) {
+    font-size: 3rem;
+    letter-spacing: 2px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
+`;
+
+const GalleryContent = styled.div`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background: #f8f9fa;
+`;
+
+const SectionTitle = styled.h2`
+  color: #1f2937;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const SectionSubtitle = styled.p`
+  color: #6b7280;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 50px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+`;
+
+const ImageGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 60px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+`;
+
+const ImageCard = styled.div`
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
   &:hover {
     transform: translateY(-5px);
-    box-shadow: ${theme.shadows.xl};
-
-    &::before {
-      right: -30%;
-    }
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const NumberDisplay = styled.div`
-  font-size: ${theme.typography.fontSize['2xl']};
-  font-weight: ${theme.typography.fontWeight.bold};
-  color: ${theme.colors.neutral.white};
-  margin-bottom: ${theme.spacing.sm};
-  letter-spacing: 1px;
+const ImagePlaceholder = styled.div<{ $height?: string; $gradient?: string }>`
+  width: 100%;
+  height: ${props => props.$height || '250px'};
+  background: ${props => props.$gradient || 'linear-gradient(135deg, #6366f1, #4f46e5)'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
   position: relative;
-  z-index: 2;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+  }
+  
+  span {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
 `;
 
-const NumberInfo = styled.div`
-  position: relative;
-  z-index: 2;
-  margin-bottom: ${theme.spacing.lg};
+const ImageCaption = styled.div`
+  padding: 20px;
+  text-align: center;
 `;
 
-const NumberCategory = styled.div`
-  background: ${theme.colors.neutral.white}20;
-  color: ${theme.colors.neutral.white};
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.md};
-  font-size: ${theme.typography.fontSize.xs};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  margin-bottom: ${theme.spacing.xs};
-  display: inline-block;
+const ImageTitle = styled.h3`
+  color: #1f2937;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
 `;
 
-const NumberPrice = styled.div`
-  font-size: ${theme.typography.fontSize.xl};
-  font-weight: ${theme.typography.fontWeight.bold};
-  color: ${theme.colors.neutral.white};
-  margin-bottom: ${theme.spacing.sm};
+const ImageDescription = styled.p`
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 `;
 
-const NumberActions = styled.div`
+const StatsSection = styled.section`
+  background: linear-gradient(135deg, #1f2937, #374151);
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+`;
+
+const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${theme.spacing.sm};
-  position: relative;
-  z-index: 2;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
-const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary'
-    ? theme.colors.primary.orange
-    : theme.colors.neutral.white};
-  color: ${props => props.$variant === 'primary'
-    ? theme.colors.neutral.white
-    : theme.colors.primary.skyBlue};
-  border: none;
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  font-size: ${theme.typography.fontSize.sm};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+const StatItem = styled.div`
+  text-align: center;
+`;
 
-  &:hover {
-    background: ${props => props.$variant === 'primary'
-      ? theme.colors.primary.yellow
-      : theme.colors.neutral.gray100};
-    transform: translateY(-1px);
-  }
+const StatNumber = styled.div`
+  font-size: 3rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin-bottom: 10px;
+`;
+
+const StatLabel = styled.div`
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 `;
 
 const Gallery: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-
-  const sidebarCategories = [
+  const galleryImages = [
     {
-      name: "All Numbers",
-      count: "2500+",
-      priceRange: "₹500 - ₹1,50,000",
-      isActive: true
+      id: 1,
+      title: "Business Upgrade Event",
+      description: "Premium VIP numbers presentation",
+      gradient: "linear-gradient(135deg, #6366f1, #4f46e5)",
+      height: "280px"
     },
     {
-      name: "VIP Numbers",
-      count: "500+",
-      priceRange: "₹5,000 - ₹25,000"
+      id: 2,
+      title: "Customer Success Stories",
+      description: "Happy clients with their premium numbers",
+      gradient: "linear-gradient(135deg, #059669, #047857)",
+      height: "320px"
     },
     {
-      name: "Premium Numbers",
-      count: "800+",
-      priceRange: "₹2,000 - ₹10,000"
+      id: 3,
+      title: "VIP Number Launch",
+      description: "Exclusive collection announcement",
+      gradient: "linear-gradient(135deg, #dc2626, #b91c1c)",
+      height: "260px"
     },
     {
-      name: "Lucky Numbers",
-      count: "400+",
-      priceRange: "₹1,000 - ₹5,000"
+      id: 4,
+      title: "Premium Service Center",
+      description: "Our professional service locations",
+      gradient: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+      height: "300px"
     },
     {
-      name: "Sequential Numbers",
-      count: "200+",
-      priceRange: "₹3,000 - ₹15,000"
+      id: 5,
+      title: "Team Excellence",
+      description: "Our dedicated support team",
+      gradient: "linear-gradient(135deg, #0891b2, #0e7490)",
+      height: "290px"
     },
     {
-      name: "Repeating Numbers",
-      count: "300+",
-      priceRange: "₹2,500 - ₹20,000"
+      id: 6,
+      title: "Award Recognition",
+      description: "Industry awards and certifications",
+      gradient: "linear-gradient(135deg, #ca8a04, #a16207)",
+      height: "270px"
     },
     {
-      name: "Mirror Numbers",
-      count: "150+",
-      priceRange: "₹4,000 - ₹18,000"
+      id: 7,
+      title: "Technology Innovation",
+      description: "Advanced number selection process",
+      gradient: "linear-gradient(135deg, #1f2937, #374151)",
+      height: "310px"
     },
     {
-      name: "Easy to Remember",
-      count: "450+",
-      priceRange: "₹1,500 - ₹8,000"
+      id: 8,
+      title: "Community Events",
+      description: "Engaging with our valued customers",
+      gradient: "linear-gradient(135deg, #be185d, #9d174d)",
+      height: "285px"
     }
   ];
-
-  const filterTags = ["VIP", "Premium", "Lucky", "Sequential", "Repeating", "Mirror"];
-
-  const demoNumbers = [
-    {
-      number: '98765-43210',
-      category: 'SEQUENTIAL VIP',
-      price: '₹75,000'
-    },
-    {
-      number: '99999-88888',
-      category: 'SUPER VIP',
-      price: '₹45,000'
-    },
-    {
-      number: '88888-88888',
-      category: 'ULTRA VIP',
-      price: '₹1,25,000'
-    },
-    {
-      number: '77777-77777',
-      category: 'PLATINUM VIP',
-      price: '₹95,000'
-    },
-    {
-      number: '12345-67890',
-      category: 'SEQUENTIAL',
-      price: '₹35,000'
-    },
-    {
-      number: '66666-66666',
-      category: 'DIAMOND VIP',
-      price: '₹65,000'
-    },
-    {
-      number: '55555-55555',
-      category: 'GOLD VIP',
-      price: '₹55,000'
-    },
-    {
-      number: '44444-44444',
-      category: 'SILVER VIP',
-      price: '₹35,000'
-    },
-    {
-      number: '12321-54345',
-      category: 'MIRROR',
-      price: '₹25,000'
-    },
-    {
-      number: '98787-87898',
-      category: 'PATTERN',
-      price: '₹18,000'
-    },
-    {
-      number: '91111-11111',
-      category: 'REPEATING',
-      price: '₹42,000'
-    },
-    {
-      number: '90000-00009',
-      category: 'MIRROR VIP',
-      price: '₹38,000'
-    }
-  ];
-
-  const filteredNumbers = demoNumbers.filter(number => {
-    const matchesSearch = number.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         number.category.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory = selectedCategory === 'All' ||
-                           number.category.toLowerCase().includes(selectedCategory.toLowerCase());
-
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <GalleryContainer>
-      {/* Left Sidebar */}
-      <Sidebar>
-        <SidebarTitle>Categories</SidebarTitle>
-        <CategoryList>
-          {sidebarCategories.map((category, index) => (
-            <CategoryItem key={index}>
-              <CategoryLink
-                $isActive={selectedCategory === (category.name.includes('All') ? 'All' : category.name)}
-                onClick={() => setSelectedCategory(category.name.includes('All') ? 'All' : category.name)}
+      <HeroBanner>
+        <HeroTitle>GALLERY</HeroTitle>
+      </HeroBanner>
+      
+      <GalleryContent>
+        <SectionTitle>Our Journey</SectionTitle>
+        <SectionSubtitle>
+          Explore moments from our premium numbers business, customer success stories, 
+          and professional milestones that define our excellence.
+        </SectionSubtitle>
+        
+        <ImageGrid>
+          {galleryImages.map((image) => (
+            <ImageCard key={image.id}>
+              <ImagePlaceholder 
+                $height={image.height} 
+                $gradient={image.gradient}
               >
-                <div style={{ flex: 1 }}>
-                  <CategoryInfo>
-                    <CategoryName>{category.name}</CategoryName>
-                    <CategoryCount>{category.count}</CategoryCount>
-                  </CategoryInfo>
-                </div>
-                <CategoryCheckbox
-                  type="checkbox"
-                  checked={selectedCategory === (category.name.includes('All') ? 'All' : category.name)}
-                  onChange={() => setSelectedCategory(category.name.includes('All') ? 'All' : category.name)}
-                />
-              </CategoryLink>
-            </CategoryItem>
+                <span>{image.title}</span>
+              </ImagePlaceholder>
+              <ImageCaption>
+                <ImageTitle>{image.title}</ImageTitle>
+                <ImageDescription>{image.description}</ImageDescription>
+              </ImageCaption>
+            </ImageCard>
           ))}
-        </CategoryList>
-      </Sidebar>
-
-      {/* Main Content */}
-      <MainContent>
-        {/* Search Section */}
-        <SearchSection>
-          <SearchContainer>
-            <SearchTitle>Premium Numbers Gallery</SearchTitle>
-            <SearchForm>
-              <SearchInputGroup>
-                <SearchInput
-                  type="text"
-                  placeholder="Search by number or pattern..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <SearchButton>
-                  <FaSearch />
-                  Search
-                </SearchButton>
-              </SearchInputGroup>
-              <FilterTags>
-                {filterTags.map((tag, index) => (
-                  <FilterTag
-                    key={index}
-                    $isActive={selectedCategory.toLowerCase().includes(tag.toLowerCase())}
-                    onClick={() => setSelectedCategory(tag)}
-                  >
-                    {tag}
-                  </FilterTag>
-                ))}
-              </FilterTags>
-            </SearchForm>
-          </SearchContainer>
-        </SearchSection>
-
-        {/* Numbers Grid */}
-        <NumbersSection>
-          <NumbersGrid>
-            {filteredNumbers.map((number, index) => (
-              <NumberCard key={index}>
-                <NumberDisplay>+91 {number.number}</NumberDisplay>
-                <NumberInfo>
-                  <NumberCategory>{number.category}</NumberCategory>
-                  <NumberPrice>{number.price}</NumberPrice>
-                </NumberInfo>
-                <NumberActions>
-                  <NumberAction
-                    $variant="primary"
-                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number} for ${number.price}`, '_blank')}
-                  >
-                    Buy Now
-                  </NumberAction>
-                  <NumberAction
-                    $variant="secondary"
-                    onClick={() => alert(`Number Details:\n+91 ${number.number}\nCategory: ${number.category}\nPrice: ${number.price}\n\nCall +91 97722-97722 for more details.`)}
-                  >
-                    Details
-                  </NumberAction>
-                </NumberActions>
-              </NumberCard>
-            ))}
-          </NumbersGrid>
-
-          {filteredNumbers.length === 0 && (
-            <div style={{
-              textAlign: 'center',
-              padding: theme.spacing['2xl'],
-              color: theme.colors.neutral.gray500
-            }}>
-              <p>No numbers found matching your criteria. Try adjusting your search or filters.</p>
-            </div>
-          )}
-        </NumbersSection>
-      </MainContent>
+        </ImageGrid>
+      </GalleryContent>
+      
+      <StatsSection>
+        <StatsGrid>
+          <StatItem>
+            <StatNumber>5000+</StatNumber>
+            <StatLabel>Premium Numbers</StatLabel>
+          </StatItem>
+          <StatItem>
+            <StatNumber>2500+</StatNumber>
+            <StatLabel>Happy Customers</StatLabel>
+          </StatItem>
+          <StatItem>
+            <StatNumber>100%</StatNumber>
+            <StatLabel>Satisfaction Rate</StatLabel>
+          </StatItem>
+          <StatItem>
+            <StatNumber>24/7</StatNumber>
+            <StatLabel>Support Available</StatLabel>
+          </StatItem>
+        </StatsGrid>
+      </StatsSection>
     </GalleryContainer>
   );
 };

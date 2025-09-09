@@ -1,236 +1,362 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaCrown, FaStar, FaGem, FaWhatsapp, FaSearch } from '../utils/iconComponents';
-import { theme } from '../styles/theme';
+import { FaChevronDown, FaSearch } from '../utils/iconComponents';
 
 const VVIPContainer = styled.div`
   margin-top: 70px;
-  display: flex;
   min-height: calc(100vh - 70px);
+  background: #f8f9fa;
+`;
+
+const HeroBanner = styled.section`
+  height: 300px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5, #374151);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      linear-gradient(45deg, transparent 30%, rgba(220, 38, 38, 0.2) 30%, rgba(220, 38, 38, 0.2) 33%, transparent 33%),
+      linear-gradient(-45deg, transparent 67%, rgba(59, 130, 246, 0.2) 67%, rgba(59, 130, 246, 0.2) 70%, transparent 70%);
+    z-index: 1;
+  }
+`;
+
+const HeroContent = styled.div`
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+`;
+
+const HeroTitle = styled.h1`
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  letter-spacing: 8px;
+  
+  @media (max-width: 768px) {
+    font-size: 3rem;
+    letter-spacing: 4px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0.9;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+`;
+
+const VIPBadge = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  
+  &::before {
+    content: '★';
+    margin-right: 8px;
+    color: #fbbf24;
+  }
+`;
+
+const LuxuryIcon = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  
+  &::before {
+    content: '✈';
+  }
+`;
+
+const TopSection = styled.div`
+  background: white;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+`;
+
+const SearchRow = styled.div`
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  
+  &::placeholder {
+    color: #9ca3af;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+`;
+
+const SearchButton = styled.button`
+  background: linear-gradient(135deg, #1f2937, #374151);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(135deg, #374151, #4b5563);
+    transform: translateY(-1px);
+  }
+`;
+
+const SortRow = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 15px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+`;
+
+const SortSelect = styled.select`
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+  background: white;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+  }
+`;
+
+const Breadcrumb = styled.div`
+  color: #6b7280;
+  font-size: 14px;
+  margin-left: auto;
+`;
+
+const MainLayout = styled.div`
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 20px;
+  padding: 20px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 15px;
+  }
 `;
 
 const Sidebar = styled.div`
   width: 280px;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-right: 1px solid ${theme.colors.neutral.gray200};
-  padding: ${theme.spacing.md};
-  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-
-  @media (max-width: 1024px) {
-    width: 250px;
-    padding: ${theme.spacing.sm};
-  }
-
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  height: fit-content;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
   @media (max-width: 768px) {
-    display: none;
+    width: 100%;
   }
 `;
 
-const MainContent = styled.div`
-  flex: 1;
-  background: ${theme.colors.neutral.gray50};
-`;
-
-const SidebarTitle = styled.h3`
-  color: ${theme.colors.neutral.gray800};
-  margin-bottom: ${theme.spacing.md};
-  font-size: ${theme.typography.fontSize.md};
-  font-weight: ${theme.typography.fontWeight.bold};
-  text-align: left;
-  border-bottom: 2px solid ${theme.colors.primary.orange};
-  padding-bottom: ${theme.spacing.xs};
-`;
-
-const CategoryList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const CategoryItem = styled.li`
-  margin-bottom: 0;
-`;
-
-const CategoryLink = styled.label<{ $isActive?: boolean }>`
-  display: flex;
-  align-items: center;
-  color: ${props => props.$isActive ? theme.colors.primary.orange : theme.colors.neutral.gray700};
-  background: ${props => props.$isActive
-    ? theme.colors.primary.orange + '15'
-    : 'transparent'};
-  border: 1px solid ${props => props.$isActive
-    ? theme.colors.primary.orange
-    : theme.colors.neutral.gray300};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: ${theme.typography.fontSize.sm};
-  font-weight: ${theme.typography.fontWeight.medium};
-  margin-bottom: ${theme.spacing.xs};
-
-  &:hover {
-    background: ${theme.colors.primary.orange}20;
-    border-color: ${theme.colors.primary.orange};
-    transform: translateX(2px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
+const FilterSection = styled.div`
+  margin-bottom: 30px;
+  
   &:last-child {
     margin-bottom: 0;
   }
 `;
 
-const CategoryInfo = styled.div`
+const FilterHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${theme.spacing.xs};
+  margin-bottom: 15px;
+  cursor: pointer;
+  padding: 5px 0;
 `;
 
-const CategoryName = styled.span`
-  font-weight: ${theme.typography.fontWeight.semibold};
+const FilterTitle = styled.h3`
+  color: #374151;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+`;
+
+const FilterInput = styled.input`
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  }
+`;
+
+const PriceRow = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const PriceInput = styled.input`
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  }
+`;
+
+const FilterButton = styled.button`
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  &:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+  }
+`;
+
+const CategoryList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const CategoryItem = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  
+  &:hover {
+    color: #6366f1;
+  }
+`;
+
+const CategoryCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  margin-right: 10px;
+  accent-color: #6366f1;
 `;
 
 const CategoryCount = styled.span`
-  font-size: ${theme.typography.fontSize.xs};
-  opacity: 0.8;
-  background: ${theme.colors.neutral.gray200};
-  padding: 2px ${theme.spacing.xs};
-  border-radius: ${theme.borderRadius.sm};
-  color: ${theme.colors.neutral.gray600};
+  color: #6b7280;
+  font-size: 12px;
 `;
 
-const CategoryCheckbox = styled.input`
-  width: 16px;
-  height: 16px;
-  margin-right: ${theme.spacing.sm};
-  accent-color: ${theme.colors.primary.orange};
-  cursor: pointer;
-`;
-
-const PriceRange = styled.div`
-  font-size: ${theme.typography.fontSize.xs};
-  opacity: 0.7;
-  color: ${theme.colors.neutral.gray500};
-`;
-
-const SearchSection = styled.section`
-  background: linear-gradient(135deg,
-    #667eea 0%,
-    #764ba2 100%
-  );
-  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
-  color: ${theme.colors.neutral.white};
-  text-align: center;
-`;
-
-const SearchContainer = styled.div`
-  max-width: 900px;
-  margin: 0 auto;
-`;
-
-const SearchTitle = styled.h2`
-  font-size: ${theme.typography.fontSize['2xl']};
-  margin-bottom: ${theme.spacing.lg};
-  font-weight: ${theme.typography.fontWeight.bold};
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.spacing.sm};
-`;
-
-const CrownIcon = styled(FaCrown)`
-  color: ${theme.colors.neutral.white};
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-`;
-
-const SearchForm = styled.div`
-  background: ${theme.colors.neutral.white};
-  border-radius: ${theme.borderRadius.xl};
-  padding: ${theme.spacing.lg};
-  box-shadow: ${theme.shadows.xl};
-  margin-bottom: ${theme.spacing.lg};
-`;
-
-const SearchInputGroup = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: ${theme.spacing.sm};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: ${theme.spacing.sm};
-  }
-`;
-
-const SearchInput = styled.input`
-  padding: ${theme.spacing.md};
-  border: 2px solid ${theme.colors.neutral.gray300};
-  border-radius: ${theme.borderRadius.md};
-  font-size: ${theme.typography.fontSize.md};
-  color: ${theme.colors.neutral.gray700};
-
-  &::placeholder {
-    color: ${theme.colors.neutral.gray400};
-  }
-
-  &:focus {
-    border-color: ${theme.colors.primary.orange};
-    outline: none;
-  }
-`;
-
-const SearchButton = styled.button`
-  background: ${theme.colors.primary.orange};
-  color: ${theme.colors.neutral.white};
-  border: none;
-  padding: ${theme.spacing.md} ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  transition: all 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    background: ${theme.colors.primary.yellow};
-    transform: translateY(-1px);
-  }
-
-  @media (max-width: 768px) {
-    justify-content: center;
-    width: 100%;
-  }
-`;
-
-const NumbersSection = styled.section`
-  padding: ${theme.spacing.lg} 0;
+const ContentArea = styled.div`
+  flex: 1;
 `;
 
 const NumbersGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: ${theme.spacing.lg};
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 `;
 
-const VVIPCard = styled.div`
-  background: linear-gradient(135deg,
-    #667eea 0%,
-    #764ba2 100%
-  );
-  border-radius: ${theme.borderRadius.xl};
-  padding: ${theme.spacing.xl};
-  color: ${theme.colors.neutral.white};
-  text-align: center;
-  box-shadow: ${theme.shadows.lg};
-  transition: all 0.3s ease;
+const NumberCard = styled.div`
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-radius: 12px;
+  padding: 20px;
   position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(30, 64, 175, 0.2);
   overflow: hidden;
-
+  
   &::before {
     content: '';
     position: absolute;
@@ -238,376 +364,252 @@ const VVIPCard = styled.div`
     right: -50%;
     width: 100%;
     height: 200%;
-    background: ${theme.colors.neutral.white}10;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transform: rotate(45deg);
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
   }
-
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: ${theme.shadows.xl};
-
-    &::before {
-      right: -30%;
-    }
-  }
-`;
-
-const VVIPBadge = styled.div`
-  background: ${theme.colors.neutral.white}30;
-  color: ${theme.colors.neutral.white};
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.md};
-  font-size: ${theme.typography.fontSize.xs};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  margin-bottom: ${theme.spacing.sm};
-  display: inline-block;
-  position: relative;
-  z-index: 2;
-`;
-
-const NumberDisplay = styled.div`
-  font-size: ${theme.typography.fontSize.xl};
-  font-weight: ${theme.typography.fontWeight.bold};
-  color: ${theme.colors.neutral.white};
-  margin-bottom: ${theme.spacing.md};
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const NumberInfo = styled.div`
-  position: relative;
-  z-index: 2;
-  margin-bottom: ${theme.spacing.lg};
-`;
-
-const NumberPrice = styled.div`
-  font-size: ${theme.typography.fontSize['2xl']};
-  font-weight: ${theme.typography.fontWeight.bold};
-  color: ${theme.colors.neutral.white};
-  margin-bottom: ${theme.spacing.md};
-  position: relative;
-  z-index: 2;
-`;
-
-const VVIPActions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${theme.spacing.sm};
-  position: relative;
-  z-index: 2;
-`;
-
-const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
-  background: ${props => props.$variant === 'primary'
-    ? theme.colors.neutral.white
-    : 'transparent'};
-  color: ${props => props.$variant === 'primary'
-    ? theme.colors.primary.orange
-    : theme.colors.neutral.white};
-  border: ${props => props.$variant === 'primary'
-    ? 'none'
-    : `1px solid ${theme.colors.neutral.white}`};
-  padding: ${theme.spacing.md} ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  font-size: ${theme.typography.fontSize.sm};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    background: ${props => props.$variant === 'primary'
-      ? theme.colors.neutral.gray100
-      : theme.colors.neutral.white};
-    color: ${theme.colors.primary.orange};
-    transform: translateY(-1px);
-  }
-`;
-
-const VVIPBody = styled.div`
-  padding: ${theme.spacing.xl};
-  padding-top: ${theme.spacing.lg};
-`;
-
-const FeaturesList = styled.div`
-  margin-bottom: ${theme.spacing.lg};
-`;
-
-const FeatureItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.sm};
-  color: ${theme.colors.neutral.gray700};
-
-  svg {
-    color: ${theme.colors.primary.orange};
-  }
-`;
-
-const PriceSection = styled.div`
-  text-align: center;
-  margin-bottom: ${theme.spacing.lg};
-  padding: ${theme.spacing.md};
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.orange}10,
-    ${theme.colors.primary.yellow}10
-  );
-  border-radius: ${theme.borderRadius.lg};
-  border: 1px solid ${theme.colors.primary.orange}30;
-`;
-
-const Price = styled.div`
-  font-size: ${theme.typography.fontSize['2xl']};
-  font-weight: ${theme.typography.fontWeight.bold};
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.orange},
-    ${theme.colors.primary.yellow}
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const OriginalPrice = styled.div`
-  font-size: ${theme.typography.fontSize.md};
-  color: ${theme.colors.neutral.gray400};
-  text-decoration: line-through;
-  margin-top: ${theme.spacing.xs};
-`;
-
-const SavingsTag = styled.div`
-  display: inline-block;
-  background: ${theme.colors.primary.green};
-  color: ${theme.colors.neutral.white};
-  padding: ${theme.spacing.xs} ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.sm};
-  font-size: ${theme.typography.fontSize.sm};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  margin-top: ${theme.spacing.sm};
-`;
-
-const CTAButton = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.spacing.sm};
-  width: 100%;
-  padding: ${theme.spacing.md} ${theme.spacing.lg};
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.orange},
-    ${theme.colors.primary.yellow}
-  );
-  color: ${theme.colors.neutral.white};
-  text-decoration: none;
-  border-radius: ${theme.borderRadius.lg};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  font-size: ${theme.typography.fontSize.lg};
-  transition: all 0.3s ease;
-  box-shadow: ${theme.shadows.md};
-
+  
   &:hover {
     transform: translateY(-2px);
-    box-shadow: ${theme.shadows.xl};
-    background: linear-gradient(135deg,
-      ${theme.colors.primary.yellow},
-      ${theme.colors.primary.orange}
-    );
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
+    
+    &::before {
+      animation: shine 0.5s ease-in-out;
+    }
+  }
+  
+  @keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
   }
 `;
 
-const ExclusiveFeatures = styled.section`
-  padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg,
-    ${theme.colors.neutral.gray100},
-    ${theme.colors.neutral.white}
-  );
+const PriceTag = styled.div`
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
-const FeaturesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${theme.spacing.lg};
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 ${theme.spacing.md};
+const PhoneNumber = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  
+  .highlight {
+    color: #f97316;
+  }
 `;
 
-const FeatureCard = styled.div`
-  text-align: center;
-  padding: ${theme.spacing.xl};
-  background: ${theme.colors.neutral.white};
-  border-radius: ${theme.borderRadius.xl};
-  box-shadow: ${theme.shadows.md};
-  border-top: 4px solid ${theme.colors.primary.orange};
+const SumTotal = styled.div`
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 15px;
 `;
 
-const FeatureIcon = styled.div`
-  width: 70px;
-  height: 70px;
-  margin: 0 auto ${theme.spacing.md};
+const ButtonRow = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.orange},
-    ${theme.colors.primary.yellow}
-  );
-  border-radius: ${theme.borderRadius.full};
-  color: ${theme.colors.neutral.white};
-  font-size: 1.8rem;
+  gap: 10px;
+`;
+
+const ActionButton = styled.button<{ $primary?: boolean }>`
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid #6366f1;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  ${props => props.$primary ? `
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border-color: #6366f1;
+    
+    &:hover {
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+      border-color: #4f46e5;
+    }
+  ` : `
+    background: white;
+    color: #6366f1;
+    
+    &:hover {
+      background: #f1f5f9;
+    }
+  `}
+`;
+
+
+const OwnerTag = styled.div`
+  position: absolute;
+  top: -5px;
+  right: 50px;
+  background: #3b82f6;
+  color: white;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  transform: rotate(15deg);
 `;
 
 const VVIPCollection: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState('All Numbers');
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('Sort By');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [sumTotal, setSumTotal] = useState('');
 
   const categories = [
-    { name: 'All Numbers', count: 150 },
-    { name: 'VIP Numbers', count: 45 },
-    { name: 'Premium Numbers', count: 32 },
-    { name: 'Lucky Numbers', count: 28 },
-    { name: 'Sequential Numbers', count: 25 },
-    { name: 'Repeating Numbers', count: 20 },
-    { name: 'Mirror Numbers', count: 15 },
-    { name: 'Easy to Remember', count: 12 }
+    { name: 'Numerology Without 2 4 8', count: '14178' },
+    { name: 'PENTA NUMBERS', count: '325' },
+    { name: 'HEXA NUMBER', count: '427' },
+    { name: 'SEPTA (9XY AAA AAA A)', count: '108' },
+    { name: 'OCTA NUMBERS', count: '13' },
+    { name: 'ENDING AAAA NUMBERS', count: '1078' },
+    { name: 'AB AB (XXXXXX 1212)', count: '1212' }
   ];
 
-  const vvipNumbers = [
-    {
-      number: '99999 99999',
-      category: 'VIP Numbers',
-      price: 500000
-    },
-    {
-      number: '88888 88888',
-      category: 'VIP Numbers',
-      price: 450000
-    },
-    {
-      number: '77777 77777',
-      category: 'VIP Numbers',
-      price: 350000
-    },
-    {
-      number: '11111 11111',
-      category: 'VIP Numbers',
-      price: 300000
-    },
-    {
-      number: '12345 67890',
-      category: 'Sequential Numbers',
-      price: 275000
-    },
-    {
-      number: '98765 43210',
-      category: 'Sequential Numbers',
-      price: 250000
-    }
+  const sampleNumbers = [
+    { id: 1, number: '70390 91107', price: '₹4080', highlights: [0, 1, 2, 3, 4] },
+    { id: 2, number: '914 2222288', price: '₹37200', highlights: [4, 5, 6, 7, 8, 9] },
+    { id: 3, number: '74 7777 1665', price: '₹2856', highlights: [3, 4, 5, 6] },
+    { id: 4, number: '9162203 888', price: '₹2991', highlights: [8, 9, 10] },
+    { id: 5, number: '91329 00097', price: '₹4760', highlights: [6, 7, 8, 9, 10] },
+    { id: 6, number: '905779 1234', price: '₹6800', highlights: [7, 8, 9, 10] }
   ];
 
-  const filteredNumbers = vvipNumbers.filter(number => {
-    const matchesCategory = selectedCategory === 'All Numbers' || number.category === selectedCategory;
-    const matchesSearch = number.number.includes(searchTerm) ||
-                         number.category.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const getWhatsAppLink = (number: string, price: number) => {
-    const message = `Hi! I'm interested in the VVIP number +91 ${number} for ₹${price.toLocaleString('en-IN')}. Please provide complete details.`;
-    return `https://wa.me/919772297722?text=${encodeURIComponent(message)}`;
+  const formatNumber = (number: string, highlights: number[]) => {
+    return number.split('').map((char, index) => (
+      <span key={index} className={highlights.includes(index) ? 'highlight' : ''}>
+        {char}
+      </span>
+    ));
   };
+
 
   return (
     <VVIPContainer>
-      <Sidebar>
-        <SidebarTitle>VVIP Categories</SidebarTitle>
-        <CategoryList>
-          {categories.map((category, index) => (
-            <CategoryItem key={index}>
-              <CategoryLink
-                as="label"
-                $isActive={selectedCategory === category.name}
-              >
-                <CategoryInfo>
-                  <CategoryName>{category.name}</CategoryName>
-                  <CategoryCount>{category.count}</CategoryCount>
-                </CategoryInfo>
-                <CategoryCheckbox
-                  type="checkbox"
-                  checked={selectedCategory === category.name}
-                  onChange={() => setSelectedCategory(category.name)}
-                />
-              </CategoryLink>
-            </CategoryItem>
-          ))}
-        </CategoryList>
-      </Sidebar>
+      <HeroBanner>
+        <VIPBadge>EXCLUSIVE VIP</VIPBadge>
+        <LuxuryIcon />
+        <HeroContent>
+          <HeroTitle>VIP NUMBERS</HeroTitle>
+          <HeroSubtitle>Premium • Exclusive • Prestigious</HeroSubtitle>
+        </HeroContent>
+      </HeroBanner>
+      
+      <TopSection>
+        <SearchRow>
+          <SearchInput
+            type="text"
+            placeholder="Search Your Choice Number"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <SearchButton>
+            <FaSearch style={{ marginRight: '5px' }} />
+            SEARCH
+          </SearchButton>
+        </SearchRow>
+        
+        <SortRow>
+          <SortSelect value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option>Sort By ▼</option>
+            <option>Price Low to High</option>
+            <option>Price High to Low</option>
+            <option>Latest First</option>
+          </SortSelect>
+          <SortSelect>
+            <option>Price Low to High</option>
+            <option>Price High to Low</option>
+          </SortSelect>
+          <SortSelect>
+            <option>Price High to Low</option>
+            <option>Price Low to High</option>
+          </SortSelect>
+          <Breadcrumb>HOME / VIP NUMBER</Breadcrumb>
+        </SortRow>
+      </TopSection>
 
-      <MainContent>
-        <SearchSection>
-          <SearchContainer>
-            <SearchTitle>
-              <CrownIcon />
-              Find Your Perfect VVIP Number
-            </SearchTitle>
-            <SearchForm>
-              <SearchInputGroup>
-                <SearchInput
-                  type="text"
-                  placeholder="Search by number or pattern..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <SearchButton>
-                  <FaSearch />
-                  Search
-                </SearchButton>
-              </SearchInputGroup>
-            </SearchForm>
-          </SearchContainer>
-        </SearchSection>
+      <MainLayout>
+        <Sidebar>
+          <FilterSection>
+            <FilterHeader>
+              <FilterTitle>SUM TOTAL</FilterTitle>
+              <FaChevronDown />
+            </FilterHeader>
+            <FilterInput
+              type="text"
+              placeholder="Enter Number Like 12 or 3"
+              value={sumTotal}
+              onChange={(e) => setSumTotal(e.target.value)}
+            />
+          </FilterSection>
 
-        <NumbersSection>
-          <NumbersGrid>
-            {filteredNumbers.map((number, index) => (
-              <VVIPCard key={index}>
-                <VVIPBadge>
-                  <FaCrown />
-                  {number.category}
-                </VVIPBadge>
-                <NumberDisplay>+91 {number.number}</NumberDisplay>
-                <NumberInfo>
-                  <div style={{
-                    fontSize: theme.typography.fontSize.sm,
-                    opacity: 0.9,
-                    marginBottom: theme.spacing.md
-                  }}>
-                    {number.category}
+          <FilterSection>
+            <FilterHeader>
+              <FilterTitle>PRICE</FilterTitle>
+              <FaChevronDown />
+            </FilterHeader>
+            <div style={{ marginBottom: '10px', fontSize: '14px', color: '#6b7280' }}>
+              Minimum Price
+            </div>
+            <PriceInput
+              type="text"
+              placeholder="Minimum Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+            />
+            <div style={{ marginBottom: '10px', fontSize: '14px', color: '#6b7280', marginTop: '10px' }}>
+              Maximum Price
+            </div>
+            <PriceInput
+              type="text"
+              placeholder="Maximum Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+            />
+            <FilterButton>Filter</FilterButton>
+          </FilterSection>
+
+          <FilterSection>
+            <FilterHeader>
+              <FilterTitle>CATEGORY</FilterTitle>
+              <FaChevronDown />
+            </FilterHeader>
+            <CategoryList>
+              {categories.map((category, index) => (
+                <CategoryItem key={index}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <CategoryCheckbox />
+                    {category.name}
                   </div>
-                  <NumberPrice>₹{number.price.toLocaleString('en-IN')}</NumberPrice>
-                </NumberInfo>
-                <VVIPActions>
-                  <VVIPAction
-                    $variant="primary"
-                    onClick={() => window.open(getWhatsAppLink(number.number, number.price), '_blank')}
-                  >
-                    Buy Now
-                  </VVIPAction>
-                  <VVIPAction $variant="secondary">
-                    Details
-                  </VVIPAction>
-                </VVIPActions>
-              </VVIPCard>
+                  <CategoryCount>{category.count}</CategoryCount>
+                </CategoryItem>
+              ))}
+            </CategoryList>
+          </FilterSection>
+        </Sidebar>
+
+        <ContentArea>
+          <NumbersGrid>
+            {sampleNumbers.map((item) => (
+              <NumberCard key={item.id}>
+                <PhoneNumber>{formatNumber(item.number, item.highlights)}</PhoneNumber>
+                <PriceTag>{item.price}</PriceTag>
+                <ButtonRow>
+                  <ActionButton>Details</ActionButton>
+                  <ActionButton $primary>Buy Now</ActionButton>
+                </ButtonRow>
+              </NumberCard>
             ))}
           </NumbersGrid>
-        </NumbersSection>
-      </MainContent>
+        </ContentArea>
+      </MainLayout>
     </VVIPContainer>
   );
 };

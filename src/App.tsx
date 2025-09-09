@@ -12,7 +12,7 @@ import WhatsAppButton from './components/WhatsAppButton';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
-import Home from './pages/Home';
+import Home from './pages/HomeRedesigned';
 import Gallery from './pages/Gallery';
 import VVIPCollection from './pages/VVIPCollection';
 import HowItWorks from './pages/HowItWorks';
@@ -22,6 +22,7 @@ import Contact from './pages/Contact';
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminCarousel from './pages/AdminCarousel';
 
 function App() {
   return (

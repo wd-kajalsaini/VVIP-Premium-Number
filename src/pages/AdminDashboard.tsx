@@ -5,13 +5,15 @@ import { useAuth } from '../contexts/AuthContext'
 import { theme } from '../styles/theme'
 import CategoriesManager from '../components/admin/CategoriesManager'
 import PhoneNumbersManager from '../components/admin/PhoneNumbersManager'
+import AdminCarousel from './AdminCarousel'
 import { 
   FaBars, 
   FaTimes, 
   FaUser, 
   FaPhoneAlt, 
   FaCrown,
-  FaChevronDown 
+  FaChevronDown,
+  FaImage
 } from '../utils/iconComponents'
 
 const DashboardContainer = styled.div`
@@ -238,6 +240,7 @@ const AdminDashboard: React.FC = () => {
     const path = location.pathname
     if (path.includes('/categories')) return 'Categories Management'
     if (path.includes('/phone-numbers')) return 'Phone Numbers Management'
+    if (path.includes('/carousel')) return 'Carousel Management'
     return 'Dashboard Overview'
   }
 
@@ -246,6 +249,11 @@ const AdminDashboard: React.FC = () => {
   }
 
   const navItems = [
+    {
+      path: '/admin/carousel',
+      label: 'Carousel',
+      icon: <FaImage />
+    },
     {
       path: '/admin/categories',
       label: 'Categories',
@@ -310,7 +318,8 @@ const AdminDashboard: React.FC = () => {
 
         <ContentArea>
           <Routes>
-            <Route path="/" element={<Navigate to="/admin/categories" replace />} />
+            <Route path="/" element={<Navigate to="/admin/carousel" replace />} />
+            <Route path="/carousel" element={<AdminCarousel />} />
             <Route path="/categories" element={<CategoriesManager />} />
             <Route path="/phone-numbers" element={<PhoneNumbersManager />} />
           </Routes>

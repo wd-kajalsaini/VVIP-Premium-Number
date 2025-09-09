@@ -4,29 +4,74 @@ import { FaWhatsapp } from '../utils/iconComponents';
 import { theme } from '../styles/theme';
 
 const FloatingButton = styled.a`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #25D366, #128C7E);
-  border-radius: ${theme.borderRadius.full};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${theme.colors.neutral.white};
-  font-size: 30px;
-  box-shadow: ${theme.shadows.lg};
-  z-index: 1000;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  animation: pulse 2s infinite;
+  /* Position and size - highest priority */
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 60px !important;
+  height: 60px !important;
+  z-index: 9999 !important;
 
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: ${theme.shadows.xl};
-    color: ${theme.colors.neutral.white};
-    opacity: 1;
+  /* Background - force green, override any theme colors */
+  background: #25D366 !important;
+  background-color: #25D366 !important;
+  background-image: none !important;
+
+  /* Shape and display */
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* Typography and colors */
+  color: white !important;
+  font-size: 30px !important;
+  text-decoration: none !important;
+
+  /* Remove any inherited styles */
+  border: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+
+  /* Effects */
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3) !important;
+  transition: all 0.3s ease !important;
+  animation: pulse 2s infinite !important;
+
+  /* Force icon color */
+  svg,
+  * {
+    color: white !important;
+    fill: white !important;
+  }
+
+  /* Hover state */
+  &:hover,
+  &:hover * {
+    transform: scale(1.1) !important;
+    background: #128C7E !important;
+    background-color: #128C7E !important;
+    background-image: none !important;
+    color: white !important;
+    fill: white !important;
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4) !important;
+  }
+
+  /* All interactive states */
+  &:visited,
+  &:active,
+  &:focus,
+  &:link,
+  &:visited *,
+  &:active *,
+  &:focus *,
+  &:link * {
+    background: #25D366 !important;
+    background-color: #25D366 !important;
+    background-image: none !important;
+    color: white !important;
+    fill: white !important;
+    text-decoration: none !important;
   }
 
   @keyframes pulse {
@@ -55,9 +100,9 @@ interface WhatsAppButtonProps {
   message?: string;
 }
 
-const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ 
-  phoneNumber = "+919876543210", 
-  message = "Hi! I'm interested in premium numbers." 
+const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
+  phoneNumber = "+919876543210",
+  message = "Hi! I'm interested in premium numbers."
 }) => {
   const whatsappUrl = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
 
