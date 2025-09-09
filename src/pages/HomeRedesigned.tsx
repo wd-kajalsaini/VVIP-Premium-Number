@@ -114,12 +114,16 @@ const FeaturedButton = styled.button<{ $primary?: boolean }>`
 const CarouselSection = styled.section`
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 600px;
   overflow: hidden;
   background: #1e3a5f;
 
   @media (max-width: 768px) {
-    height: 300px;
+    height: 450px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 350px;
   }
 `;
 
@@ -135,7 +139,15 @@ const CarouselSlide = styled.div<{ $active: boolean }>`
   align-items: center;
   justify-content: center;
   background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 `;
 
 const CarouselContent = styled.div`

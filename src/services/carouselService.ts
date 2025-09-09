@@ -27,12 +27,6 @@ export const carouselService = {
           image: "/hero3.jpeg",
           isActive: true,
           createdAt: new Date().toISOString()
-        },
-        {
-          id: 3,
-          image: "/hero4.jpeg",
-          isActive: true,
-          createdAt: new Date().toISOString()
         }
       ];
       
