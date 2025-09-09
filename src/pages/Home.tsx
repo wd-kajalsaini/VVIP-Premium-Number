@@ -158,7 +158,7 @@ const CarouselSlide = styled.div<{ $isActive: boolean }>`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -166,7 +166,7 @@ const CarouselSlide = styled.div<{ $isActive: boolean }>`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.$isActive 
+    background: ${props => props.$isActive
       ? 'linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.05) 100%)'
       : 'linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(255,255,255,0.1) 100%)'};
     transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -210,7 +210,7 @@ const CarouselOverlay = styled.div`
   z-index: 1;
   transition: all 1s ease-in-out;
   opacity: 0.9;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -251,8 +251,8 @@ const CarouselDot = styled.button<{ $isActive: boolean }>`
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: ${props => props.$isActive ? 1 : 0.7};
-  box-shadow: ${props => props.$isActive 
-    ? '0 4px 15px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4)' 
+  box-shadow: ${props => props.$isActive
+    ? '0 4px 15px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4)'
     : '0 2px 8px rgba(0, 0, 0, 0.3)'};
   position: relative;
   overflow: hidden;
@@ -264,7 +264,7 @@ const CarouselDot = styled.button<{ $isActive: boolean }>`
     left: -50%;
     width: 200%;
     height: 200%;
-    background: ${props => props.$isActive 
+    background: ${props => props.$isActive
       ? 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%)'
       : 'transparent'};
     animation: ${props => props.$isActive ? 'pulse 2s ease-in-out infinite' : 'none'};
@@ -1856,7 +1856,7 @@ const Home: React.FC = () => {
                     $variant="primary"
                     onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
                   >
-                    Buy Now
+                    Buy Nowc
                   </NumberAction>
                   <NumberAction
                     $variant="secondary"

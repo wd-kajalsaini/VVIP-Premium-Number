@@ -1,185 +1,379 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaEnvelope } from '../utils/iconComponents';
-import { theme } from '../styles/theme';
+import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaEnvelope, FaArrowRight, FaStar, FaShieldAlt, FaRocket } from '../utils/iconComponents';
 
 const FooterContainer = styled.footer`
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray800}, 
-    ${theme.colors.neutral.gray900}
-  );
-  color: ${theme.colors.neutral.white};
-  padding: ${theme.spacing['2xl']} 0 ${theme.spacing.lg};
+  background: linear-gradient(135deg, #1e40af, #3b82f6, #06b6d4, #10b981);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
 `;
 
 const FooterContent = styled.div`
-  max-width: 1200px;
+  position: relative;
+  z-index: 2;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 ${theme.spacing.md};
+  padding: 60px 20px 0;
+  color: white;
+`;
+
+const TopSection = styled.div`
+  text-align: center;
+  margin-bottom: 60px;
+`;
+
+const FooterTitle = styled.h2`
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+`;
+
+const FooterSubtitle = styled.p`
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+`;
+
+const StatsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${theme.spacing.xl};
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+`;
+
+const StatCard = styled.div`
+  text-align: center;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+  }
+`;
+
+const StatIcon = styled.div`
+  font-size: 2rem;
+  color: #ffd700;
+  margin-bottom: 15px;
+`;
+
+const StatNumber = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+`;
+
+const StatLabel = styled.div`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+const MainFooterContent = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 50px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 `;
 
 const FooterSection = styled.div`
   h3 {
-    color: ${theme.colors.neutral.white};
-    margin-bottom: ${theme.spacing.md};
-    font-size: ${theme.typography.fontSize.lg};
-    background: linear-gradient(135deg, 
-      ${theme.colors.primary.green}, 
-      ${theme.colors.primary.skyBlue}
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b35, #ffd700);
+      border-radius: 2px;
+    }
+  }
+`;
+
+const CompanySection = styled(FooterSection)`
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+`;
+
+const CompanyDescription = styled.p`
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.7;
+  margin-bottom: 25px;
+  font-size: 1rem;
+`;
+
+const ContactItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #ffd700;
+    transform: translateX(5px);
+  }
+
+  svg {
+    font-size: 1.1rem;
+    color: #ff6b35;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `;
 
 const FooterLink = styled(Link)`
-  color: ${theme.colors.neutral.gray300};
-  display: block;
-  margin-bottom: ${theme.spacing.sm};
-  transition: color 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 8px 0;
 
   &:hover {
-    color: ${theme.colors.primary.skyBlue};
-  }
-`;
+    color: #ffd700;
+    transform: translateX(5px);
 
-const ContactInfo = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.md};
-  color: ${theme.colors.neutral.gray300};
-  line-height: 1.6;
+    svg {
+      transform: translateX(3px);
+    }
+  }
 
   svg {
-    margin-top: 2px;
-    color: ${theme.colors.primary.green};
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
   }
 `;
 
-const ShopInfo = styled.div`
-  margin-bottom: ${theme.spacing.lg};
-  padding: ${theme.spacing.md};
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: ${theme.borderRadius.md};
-  border-left: 4px solid ${theme.colors.primary.orange};
+const ScrollToTopLink = styled(FooterLink)``;
 
-  h4 {
-    color: ${theme.colors.primary.orange};
-    margin-bottom: ${theme.spacing.sm};
-    font-size: ${theme.typography.fontSize.md};
+const LocationCard = styled.div`
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
   }
+`;
+
+const LocationTitle = styled.h4`
+  color: #ffd700;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+
+const LocationAddress = styled.div`
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  font-size: 0.9rem;
+`;
+
+const BottomSection = styled.div`
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 30px 0;
+  text-align: center;
 `;
 
 const Copyright = styled.div`
-  text-align: center;
-  padding-top: ${theme.spacing.lg};
-  margin-top: ${theme.spacing.lg};
-  border-top: 1px solid ${theme.colors.neutral.gray700};
-  color: ${theme.colors.neutral.gray400};
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+`;
+
+const BottomLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+  }
+`;
+
+const BottomLink = styled(Link)`
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ffd700;
+  }
 `;
 
 const Footer: React.FC = () => {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <FooterContainer>
       <FooterContent>
-        <FooterSection>
-          <h3>Premium Numbers</h3>
-          <p style={{ color: theme.colors.neutral.gray300, marginBottom: theme.spacing.md }}>
-            Your trusted partner for premium and VIP mobile numbers. 
-            Find the perfect number that matches your personality and brings you luck.
-          </p>
-          <ContactInfo>
-            <FaWhatsapp />
-            <div>
-              <a 
-                href="https://wa.me/919876543210" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{ color: theme.colors.neutral.gray300, textDecoration: 'none' }}
-              >
-                +91 98765 43210
+        <TopSection>
+          <FooterTitle>Premium Numbers Hub</FooterTitle>
+          <FooterSubtitle>
+            India's Leading Premium & VIP Mobile Numbers Provider
+          </FooterSubtitle>
+
+          <StatsContainer>
+            <StatCard>
+              <StatIcon><FaStar /></StatIcon>
+              <StatNumber>5000+</StatNumber>
+              <StatLabel>Premium Numbers</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatIcon><FaShieldAlt /></StatIcon>
+              <StatNumber>100%</StatNumber>
+              <StatLabel>Guaranteed Delivery</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatIcon><FaRocket /></StatIcon>
+              <StatNumber>2500+</StatNumber>
+              <StatLabel>Happy Customers</StatLabel>
+            </StatCard>
+          </StatsContainer>
+        </TopSection>
+
+        <MainFooterContent>
+          <CompanySection>
+            <h3>About Premium Numbers</h3>
+            <CompanyDescription>
+              We are India's most trusted premium and VIP mobile numbers provider,
+              offering exclusive collections of lucky numbers, sequential patterns,
+              and personalized digits that match your personality and bring prosperity.
+            </CompanyDescription>
+            <ContactItem>
+              <FaWhatsapp />
+              <a href="https://wa.me/919772297722" target="_blank" rel="noopener noreferrer">
+                +91 97722-97722
               </a>
-            </div>
-          </ContactInfo>
-        </FooterSection>
+            </ContactItem>
+            <ContactItem>
+              <FaPhone />
+              <a href="tel:+919772297722">+91 97722-97722</a>
+            </ContactItem>
+            <ContactItem>
+              <FaEnvelope />
+              <span>info@premiumnumbers.com</span>
+            </ContactItem>
+          </CompanySection>
 
-        <FooterSection>
-          <h3>Quick Links</h3>
-          <FooterLink to="/">Home</FooterLink>
-          <FooterLink to="/gallery">Gallery</FooterLink>
-          <FooterLink to="/vvip-collection">VVIP Collection</FooterLink>
-          <FooterLink to="/how-it-works">How it Works</FooterLink>
-          <FooterLink to="/numerology">Numerology</FooterLink>
-          <FooterLink to="/contact">Contact Us</FooterLink>
-        </FooterSection>
+          <FooterSection>
+            <h3>Quick Links</h3>
+            <ScrollToTopLink to="/" onClick={scrollToTop}><FaArrowRight />Home</ScrollToTopLink>
+            <ScrollToTopLink to="/gallery" onClick={scrollToTop}><FaArrowRight />Gallery</ScrollToTopLink>
+            <ScrollToTopLink to="/vvip-collection" onClick={scrollToTop}><FaArrowRight />VVIP Collection</ScrollToTopLink>
+            <ScrollToTopLink to="/how-it-works" onClick={scrollToTop}><FaArrowRight />How it Works</ScrollToTopLink>
+            <ScrollToTopLink to="/numerology" onClick={scrollToTop}><FaArrowRight />Numerology</ScrollToTopLink>
+            <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Contact Us</ScrollToTopLink>
+          </FooterSection>
 
-        <FooterSection>
-          <h3>Our Locations</h3>
-          
-          <ShopInfo>
-            <h4>Elite Vip Numbers</h4>
-            <ContactInfo>
-              <FaMapMarkerAlt />
-              <div>
+          <FooterSection>
+            <h3>Our Services</h3>
+            <ScrollToTopLink to="/gallery" onClick={scrollToTop}><FaArrowRight />Premium Numbers</ScrollToTopLink>
+            <ScrollToTopLink to="/vvip-collection" onClick={scrollToTop}><FaArrowRight />VIP Collections</ScrollToTopLink>
+            <ScrollToTopLink to="/numerology" onClick={scrollToTop}><FaArrowRight />Lucky Numbers</ScrollToTopLink>
+            <ScrollToTopLink to="/how-it-works" onClick={scrollToTop}><FaArrowRight />Number Porting</ScrollToTopLink>
+            <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Custom Requests</ScrollToTopLink>
+            <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Bulk Orders</ScrollToTopLink>
+          </FooterSection>
+
+          <FooterSection>
+            <h3>Our Locations</h3>
+            <LocationCard>
+              <LocationTitle>Elite VIP Numbers</LocationTitle>
+              <LocationAddress>
+                <FaMapMarkerAlt style={{ marginRight: '8px', color: '#ff6b35' }} />
                 Shop 1, Akalsar Road<br />
                 Moga, Punjab - 142001
-              </div>
-            </ContactInfo>
-          </ShopInfo>
+              </LocationAddress>
+            </LocationCard>
 
-          <ShopInfo>
-            <h4>Happy Communication</h4>
-            <ContactInfo>
-              <FaMapMarkerAlt />
-              <div>
+            <LocationCard>
+              <LocationTitle>Happy Communication</LocationTitle>
+              <LocationAddress>
+                <FaMapMarkerAlt style={{ marginRight: '8px', color: '#ff6b35' }} />
                 Booth No. 20, Main Market<br />
                 Opp. Nijjer Tourist, Sunny Enclave<br />
                 Kharar, Punjab - 140301
-              </div>
-            </ContactInfo>
-          </ShopInfo>
-        </FooterSection>
+              </LocationAddress>
+            </LocationCard>
+          </FooterSection>
+        </MainFooterContent>
 
-        <FooterSection>
-          <h3>Contact Info</h3>
-          <ContactInfo>
-            <FaPhone />
-            <div>+91 98765 43210</div>
-          </ContactInfo>
-          <ContactInfo>
-            <FaEnvelope />
-            <div>info@premiumnumbers.com</div>
-          </ContactInfo>
-          <ContactInfo>
-            <FaWhatsapp />
-            <div>
-              <a 
-                href="https://wa.me/919876543210" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{ color: theme.colors.neutral.gray300, textDecoration: 'none' }}
-              >
-                Chat on WhatsApp
-              </a>
-            </div>
-          </ContactInfo>
-        </FooterSection>
+        <BottomSection>
+          <Copyright>
+            &copy; {new Date().getFullYear()} Premium Numbers Hub. All rights reserved.
+          </Copyright>
+          <BottomLinks>
+            <BottomLink to="/privacy" onClick={scrollToTop}>Privacy Policy</BottomLink>
+            <BottomLink to="/terms" onClick={scrollToTop}>Terms & Conditions</BottomLink>
+            <BottomLink to="/refund" onClick={scrollToTop}>Refund Policy</BottomLink>
+            <BottomLink to="/sitemap" onClick={scrollToTop}>Sitemap</BottomLink>
+          </BottomLinks>
+        </BottomSection>
       </FooterContent>
-
-      <Copyright>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
-          <p>&copy; {new Date().getFullYear()} Premium Numbers. All rights reserved.</p>
-          <p style={{ marginTop: theme.spacing.sm, fontSize: theme.typography.fontSize.sm }}>
-            Designed with ❤️ for premium number enthusiasts
-          </p>
-        </div>
-      </Copyright>
     </FooterContainer>
   );
 };
