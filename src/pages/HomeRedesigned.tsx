@@ -115,17 +115,23 @@ const FeaturedButton = styled.button<{ $primary?: boolean }>`
 // Carousel Section
 const CarouselSection = styled.section`
   position: relative;
-  width: 100%;
+  width: calc(100% - 40px);
   height: 600px;
   overflow: hidden;
   background: #1e3a5f;
+  margin: 0 20px;
+  border-radius: 8px;
 
   @media (max-width: 768px) {
     height: 450px;
+    width: calc(100% - 30px);
+    margin: 0 15px;
   }
-  
+
   @media (max-width: 480px) {
     height: 350px;
+    width: calc(100% - 20px);
+    margin: 0 10px;
   }
 `;
 
@@ -142,13 +148,13 @@ const CarouselSlide = styled.div<{ $active: boolean }>`
   justify-content: center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-  
+  background-position: center top;
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center top;
   }
 `;
 
@@ -253,42 +259,55 @@ const ArrowButton = styled.button`
 // Search Bar Section
 const SearchSection = styled.section`
   background: white;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 40px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 70px;
   z-index: 100;
+  border-bottom: 3px solid #ff6b35;
+
+  @media (max-width: 768px) {
+    padding: 30px 15px;
+  }
 `;
 
 const SearchContainer = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: center;
 
   @media (max-width: 768px) {
     flex-direction: column;
+    gap: 15px;
   }
 `;
 
 const SortSelect = styled.select`
-  padding: 12px 16px;
+  padding: 16px 20px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 150px;
+  min-width: 180px;
+  font-weight: 500;
 
   &:focus {
     outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  &:hover {
     border-color: #6366f1;
   }
 
   @media (max-width: 768px) {
     width: 100%;
+    padding: 14px 18px;
   }
 `;
 
@@ -297,7 +316,7 @@ const BreadcrumbText = styled.div`
   font-size: 0.9rem;
   font-weight: 500;
   margin-left: auto;
-  
+
   @media (max-width: 768px) {
     margin-left: 0;
     margin-top: 10px;
@@ -306,29 +325,44 @@ const BreadcrumbText = styled.div`
 
 const SearchInput = styled.input`
   flex: 1;
-  padding: 12px 20px;
+  padding: 16px 24px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
   transition: all 0.3s ease;
+  font-weight: 500;
+  min-height: 56px;
+
+  &::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+  }
 
   &:focus {
     outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  }
+
+  &:hover {
     border-color: #ff6b35;
   }
 
   @media (max-width: 768px) {
     width: 100%;
+    padding: 14px 20px;
+    min-height: 50px;
   }
 `;
 
 const SearchButton = styled.button`
-  padding: 12px 30px;
+  padding: 16px 40px;
   background: #ff6b35;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -419,7 +453,7 @@ const SidebarTitle = styled.h3`
   text-align: left;
   position: relative;
   padding: 24px 24px 0;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -477,13 +511,13 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
   }
 
   &:hover {
-    background: ${props => props.$isActive 
-      ? 'linear-gradient(135deg, #eff6ff, #dbeafe)' 
+    background: ${props => props.$isActive
+      ? 'linear-gradient(135deg, #eff6ff, #dbeafe)'
       : '#f9fafb'};
     color: ${props => props.$isActive ? '#6366f1' : '#374151'};
     transform: translateX(2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-    
+
     &::before {
       background: ${props => props.$isActive ? '#6366f1' : '#d1d5db'};
     }
@@ -1036,6 +1070,123 @@ const AdditionalSectionSubtitle = styled.p`
   line-height: 1.6;
 `;
 
+// Animated Phone Number Components - Horizontal Banner Style
+const AnimatedPhoneSection = styled.section`
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  padding: 20px 0;
+  margin: 20px 20px 0 20px;
+  position: relative;
+  text-align: center;
+  border-radius: 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 53, 0.1) 0%, transparent 50%, rgba(255, 107, 53, 0.1) 100%);
+    border-radius: 8px;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    margin: 15px 15px 0 15px;
+  }
+
+  @media (max-width: 480px) {
+    margin: 10px 10px 0 10px;
+  }
+`;
+
+const AnimatedPhoneContainer = styled.div`
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+`;
+
+const PhoneTitle = styled.div`
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const PhoneNumberRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    flex-direction: column;
+  }
+`;
+
+const WhatsAppIcon = styled.span`
+  color: #FF6B35;
+  font-size: 1.8rem;
+  margin-right: 10px;
+`;
+
+const AnimatedNumber = styled.div`
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+`;
+
+const AnimatedDigit = styled.span<{ $isHighlighted: boolean; $delay: number }>`
+  color: ${props => props.$isHighlighted ? '#FF6B35' : '#FFFFFF'};
+  background: ${props => props.$isHighlighted ? 'rgba(255, 107, 53, 0.3)' : 'transparent'};
+  padding: 4px 2px;
+  border-radius: 4px;
+  border: ${props => props.$isHighlighted ? '2px solid #FF6B35' : '2px solid transparent'};
+  transition: all 0.4s ease;
+  display: inline-block;
+  transform: ${props => props.$isHighlighted ? 'scale(1.2)' : 'scale(1)'};
+  text-shadow: ${props => props.$isHighlighted ? '0 0 15px rgba(255, 107, 53, 0.8)' : '0 2px 4px rgba(0, 0, 0, 0.3)'};
+  animation: ${props => props.$isHighlighted ? 'highlight 0.6s ease-in-out' : 'none'};
+
+  @keyframes highlight {
+    0% {
+      transform: scale(1);
+      background: transparent;
+      box-shadow: none;
+      border-color: transparent;
+    }
+    50% {
+      transform: scale(1.3);
+      background: rgba(255, 107, 53, 0.5);
+      box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+      border-color: #FF6B35;
+    }
+    100% {
+      transform: scale(1.2);
+      background: rgba(255, 107, 53, 0.3);
+      box-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
+      border-color: #FF6B35;
+    }
+  }
+`;
+
 // Visitor Counter Section
 const VisitorCounterSection = styled.section`
   background: #ffffff;
@@ -1120,16 +1271,16 @@ const VisitorCounterSubtitle = styled.p`
 const calculateSumTotal = (phoneNumber: string): string => {
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
-  
+
   // Calculate sum of all digits (first sum)
   const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the first sum (second sum)
   const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the second sum (third sum)
   const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Return format: "firstSum-secondSum-thirdSum"
   return `${firstSum}-${secondSum}-${thirdSum}`;
 };
@@ -1144,6 +1295,7 @@ const Home: React.FC = () => {
   const [priceFilter, setPriceFilter] = useState('Price Low to High');
   const [carouselSlides, setCarouselSlides] = useState<CarouselSlideType[]>([]);
   const [isLoadingCarousel, setIsLoadingCarousel] = useState(true);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   // Format number with highlights
   const formatNumberDisplay = (number: string, highlights: number[]): React.ReactElement => {
@@ -1507,13 +1659,59 @@ const Home: React.FC = () => {
   // Auto-slide carousel
   useEffect(() => {
     if (carouselSlides.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
     }, 5000);
 
     return () => clearInterval(interval);
   }, [carouselSlides.length]);
+
+  // Animation for phone number highlighting
+  useEffect(() => {
+    const phoneNumber = "+91-97222-97222";
+    const digits = phoneNumber.split('');
+    let currentInterval: NodeJS.Timeout | null = null;
+    let repeatInterval: NodeJS.Timeout | null = null;
+    let initialDelay: NodeJS.Timeout | null = null;
+
+    const animateDigits = () => {
+      let index = 0;
+      setHighlightedIndex(-1); // Reset highlighting
+
+      currentInterval = setInterval(() => {
+        if (index < digits.length) {
+          setHighlightedIndex(index);
+          index++;
+        } else {
+          // Animation complete, clear highlight
+          setHighlightedIndex(-1);
+          if (currentInterval) {
+            clearInterval(currentInterval);
+            currentInterval = null;
+          }
+        }
+      }, 500); // Highlight each digit for 500ms
+    };
+
+    // Start animation immediately (minimal delay)
+    initialDelay = setTimeout(() => {
+      animateDigits();
+
+      // Repeat animation every 8 seconds (enough time for animation to complete + pause)
+      repeatInterval = setInterval(() => {
+        animateDigits();
+      }, 8000);
+    }, 100);
+
+    // Cleanup function
+    return () => {
+      if (initialDelay) clearTimeout(initialDelay);
+      if (currentInterval) clearInterval(currentInterval);
+      if (repeatInterval) clearInterval(repeatInterval);
+      setHighlightedIndex(-1);
+    };
+  }, []);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
@@ -1562,16 +1760,44 @@ const Home: React.FC = () => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
+  // Component for rendering animated phone number
+  const AnimatedPhoneNumber: React.FC = () => {
+    const phoneNumber = "+91-97222-97722";
+    const digits = phoneNumber.split('');
+
+    return (
+      <AnimatedPhoneContainer>
+        <PhoneTitle>Premium VIP Mobile Numbers</PhoneTitle>
+        <PhoneNumberRow>
+          <WhatsAppIcon>
+            <FaWhatsapp />
+          </WhatsAppIcon>
+          <AnimatedNumber>
+            {digits.map((digit, index) => (
+              <AnimatedDigit
+                key={index}
+                $isHighlighted={highlightedIndex === index}
+                $delay={index}
+              >
+                {digit}
+              </AnimatedDigit>
+            ))}
+          </AnimatedNumber>
+        </PhoneNumberRow>
+      </AnimatedPhoneContainer>
+    );
+  };
+
   return (
     <HomeContainer>
       <MainContent>
         {/* Carousel Section */}
         <CarouselSection>
           {isLoadingCarousel ? (
-            <div style={{ 
-              height: '500px', 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              height: '500px',
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
               background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
               color: 'white',
@@ -1614,10 +1840,10 @@ const Home: React.FC = () => {
               )}
             </>
           ) : (
-            <div style={{ 
-              height: '500px', 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              height: '500px',
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
               background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
               color: 'white',
@@ -1627,6 +1853,11 @@ const Home: React.FC = () => {
             </div>
           )}
         </CarouselSection>
+
+        {/* Animated Phone Number Section */}
+        <AnimatedPhoneSection>
+          <AnimatedPhoneNumber />
+        </AnimatedPhoneSection>
 
         {/* Search Section */}
         <SearchSection>
@@ -1654,7 +1885,6 @@ const Home: React.FC = () => {
               <FaSearch />
               SEARCH
             </SearchButton>
-            <BreadcrumbText>HOME / VIP NUMBER</BreadcrumbText>
           </SearchContainer>
         </SearchSection>
 
