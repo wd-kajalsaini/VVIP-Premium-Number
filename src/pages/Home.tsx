@@ -824,6 +824,162 @@ const CategoryNavigation = styled.div`
   }
 `;
 
+// Animated Phone Number Components
+const AnimatedPhoneContainer = styled.div`
+  background: linear-gradient(135deg, #4A90E2, #2563EB);
+  border: 3px solid #FFD700;
+  border-radius: ${theme.borderRadius.xl};
+  padding: ${theme.spacing.xl};
+  margin: ${theme.spacing.xl} auto ${theme.spacing.xl} auto;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(74, 144, 226, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  z-index: 10;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FFD700, #FF6B35, #FFD700);
+    border-radius: ${theme.borderRadius.xl};
+    z-index: -1;
+    animation: borderGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes borderGlow {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    margin: ${theme.spacing.lg} ${theme.spacing.md};
+    padding: ${theme.spacing.lg};
+    width: calc(100% - 2rem);
+  }
+`;
+
+const PhoneTitle = styled.div`
+  color: #FFFFFF;
+  font-size: ${theme.typography.fontSize.xl};
+  font-weight: ${theme.typography.fontWeight.bold};
+  margin-bottom: ${theme.spacing.lg};
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+`;
+
+const AnimatedNumber = styled.div`
+  font-size: 3rem;
+  font-weight: ${theme.typography.fontWeight.bold};
+  font-family: 'Courier New', monospace;
+  letter-spacing: 4px;
+  margin-bottom: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    letter-spacing: 3px;
+  }
+`;
+
+const AnimatedDigit = styled.span<{ $isHighlighted: boolean; $delay: number }>`
+  color: ${props => props.$isHighlighted ? '#FFD700' : '#FFFFFF'};
+  background: ${props => props.$isHighlighted ? 'rgba(255, 215, 0, 0.3)' : 'rgba(255, 255, 255, 0.1)'};
+  padding: 6px 4px;
+  border-radius: 6px;
+  border: ${props => props.$isHighlighted ? '2px solid #FFD700' : '2px solid transparent'};
+  transition: all 0.4s ease;
+  display: inline-block;
+  transform: ${props => props.$isHighlighted ? 'scale(1.3)' : 'scale(1)'};
+  text-shadow: ${props => props.$isHighlighted ? '0 0 15px rgba(255, 215, 0, 0.8)' : '0 2px 4px rgba(0, 0, 0, 0.3)'};
+  animation: ${props => props.$isHighlighted ? 'highlight 0.8s ease-in-out' : 'none'};
+
+  @keyframes highlight {
+    0% {
+      transform: scale(1);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+      border-color: transparent;
+    }
+    50% {
+      transform: scale(1.4);
+      background: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
+      border-color: #FFD700;
+    }
+    100% {
+      transform: scale(1.3);
+      background: rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+      border-color: #FFD700;
+    }
+  }
+`;
+
+const ContactSubtitle = styled.div`
+  color: #FFFFFF;
+  font-size: ${theme.typography.fontSize.lg};
+  font-weight: ${theme.typography.fontWeight.medium};
+  margin-bottom: ${theme.spacing.lg};
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  opacity: 0.95;
+`;
+
+const WhatsAppButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: ${theme.spacing.md};
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  padding: ${theme.spacing.lg} ${theme.spacing.xl};
+  border-radius: ${theme.borderRadius.xl};
+  text-decoration: none;
+  font-weight: ${theme.typography.fontWeight.bold};
+  font-size: ${theme.typography.fontSize.lg};
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  span {
+    font-size: 1.5rem;
+  }
+`;
+
+const AnimatedPhoneSection = styled.section`
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+  padding: ${theme.spacing.xl} 0;
+  margin-bottom: ${theme.spacing.lg};
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 1;
+  }
+
+  > div {
+    position: relative;
+    z-index: 2;
+  }
+`;
+
 
 
 
@@ -1498,16 +1654,16 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
 const calculateSumTotal = (phoneNumber: string): string => {
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
-  
+
   // Calculate sum of all digits (first sum)
   const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the first sum (second sum)
   const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the second sum (third sum)
   const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Return format: "firstSum-secondSum-thirdSum"
   return `${firstSum}-${secondSum}-${thirdSum}`;
 };
@@ -1516,6 +1672,7 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const heroImages = [
     '/hero2.jpeg',
@@ -1529,6 +1686,81 @@ const Home: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
+
+  // Animation for phone number highlighting
+  useEffect(() => {
+    const phoneNumber = "+91-97222-97222";
+    const digits = phoneNumber.split('');
+
+    const animateDigits = () => {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < digits.length) {
+          setHighlightedIndex(index);
+          index++;
+        } else {
+          setHighlightedIndex(-1);
+          // Wait 2 seconds before restarting
+          setTimeout(() => {
+            index = 0;
+          }, 2000);
+        }
+      }, 500); // Highlight each digit for 500ms
+
+      return interval;
+    };
+
+    // Start animation after 1 second
+    const initialDelay = setTimeout(() => {
+      const interval = animateDigits();
+
+      // Repeat animation every 8 seconds
+      const repeatInterval = setInterval(() => {
+        clearInterval(interval);
+        animateDigits();
+      }, 8000);
+
+      return () => {
+        clearInterval(interval);
+        clearInterval(repeatInterval);
+      };
+    }, 1000);
+
+    return () => {
+      clearTimeout(initialDelay);
+    };
+  }, []);
+
+  // Component for rendering animated phone number
+  const AnimatedPhoneNumber: React.FC = () => {
+    const phoneNumber = "+91-97222-97722";
+    const digits = phoneNumber.split('');
+
+    return (
+      <AnimatedPhoneContainer>
+        <PhoneTitle>Premium VIP Mobile Numbers</PhoneTitle>
+        <AnimatedNumber>
+          {digits.map((digit, index) => (
+            <AnimatedDigit
+              key={index}
+              $isHighlighted={highlightedIndex === index}
+              $delay={index}
+            >
+              {digit}
+            </AnimatedDigit>
+          ))}
+        </AnimatedNumber>
+        <ContactSubtitle>Contact us for premium numbers</ContactSubtitle>
+        <WhatsAppButton
+          href="https://wa.me/919772297722?text=Hi! I'm interested in premium mobile numbers"
+          target="_blank"
+        >
+          <span>📱</span>
+          WhatsApp Now
+        </WhatsAppButton>
+      </AnimatedPhoneContainer>
+    );
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroImages.length);
@@ -1826,6 +2058,10 @@ const Home: React.FC = () => {
         </Sidebar>
 
         <MainContent>
+        {/* Animated Phone Number Section */}
+        <AnimatedPhoneSection>
+          <AnimatedPhoneNumber />
+        </AnimatedPhoneSection>
 
         {/* Search Section */}
         <SearchSection>
