@@ -1448,6 +1448,13 @@ const NumberPrice = styled.div`
   margin-bottom: ${theme.spacing.sm};
 `;
 
+const SumTotal = styled.div`
+  font-size: ${theme.typography.fontSize.sm};
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: ${theme.spacing.sm};
+  font-weight: ${theme.typography.fontWeight.medium};
+`;
+
 const NumberActions = styled.div`
   display: flex;
   gap: ${theme.spacing.sm};
@@ -1486,6 +1493,24 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
     transform: translateY(0);
   }
 `;
+
+// Function to calculate sum total of digits in a phone number
+const calculateSumTotal = (phoneNumber: string): string => {
+  // Remove all non-digit characters
+  const digits = phoneNumber.replace(/\D/g, '');
+  
+  // Calculate sum of all digits (first sum)
+  const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the first sum (second sum)
+  const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the second sum (third sum)
+  const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Return format: "firstSum-secondSum-thirdSum"
+  return `${firstSum}-${secondSum}-${thirdSum}`;
+};
 
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -1850,6 +1875,7 @@ const Home: React.FC = () => {
                 <NumberInfo>
                   <NumberCategory>{number.category}</NumberCategory>
                   <NumberPrice>{number.price}</NumberPrice>
+                  <SumTotal>Sum Total = {calculateSumTotal(number.number)}</SumTotal>
                 </NumberInfo>
                 <NumberActions>
                   <NumberAction
@@ -1889,6 +1915,7 @@ const Home: React.FC = () => {
                   <VVIPNumberDisplay>{number.number}</VVIPNumberDisplay>
                   <VVIPPriceInfo>
                     <VVIPCurrentPrice>{number.price}</VVIPCurrentPrice>
+                    <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>Sum Total = {calculateSumTotal(number.number)}</div>
                   </VVIPPriceInfo>
                   <VVIPCardActions>
                     <VVIPBuyButton

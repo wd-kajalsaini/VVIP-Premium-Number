@@ -66,9 +66,11 @@ const FeaturedNumber = styled.div`
 `;
 
 const FeaturedSum = styled.div`
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 8px;
+  text-align: center;
+  font-weight: 500;
 `;
 
 const FeaturedPrice = styled.div`
@@ -524,12 +526,12 @@ const FeaturedContent = styled.div`
 
 const NumbersGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
   margin-bottom: 50px;
 
   @media (max-width: 1800px) {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 
   @media (max-width: 1500px) {
@@ -1114,6 +1116,24 @@ const VisitorCounterSubtitle = styled.p`
   margin: 0;
 `;
 
+// Function to calculate sum total of digits in a phone number
+const calculateSumTotal = (phoneNumber: string): string => {
+  // Remove all non-digit characters
+  const digits = phoneNumber.replace(/\D/g, '');
+  
+  // Calculate sum of all digits (first sum)
+  const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the first sum (second sum)
+  const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Calculate sum of the second sum (third sum)
+  const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  
+  // Return format: "firstSum-secondSum-thirdSum"
+  return `${firstSum}-${secondSum}-${thirdSum}`;
+};
+
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -1648,6 +1668,7 @@ const Home: React.FC = () => {
                     <NumberDisplay>
                       {formatNumberDisplay(item.number, item.highlights)}
                     </NumberDisplay>
+                    <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
                     <NumberPrice>{item.price}</NumberPrice>
                     <CardActions>
                       <CardButton>Details</CardButton>
@@ -1680,6 +1701,7 @@ const Home: React.FC = () => {
                   <NumberDisplay>
                     {formatNumberDisplay(item.number, item.highlights)}
                   </NumberDisplay>
+                  <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
                   <NumberPrice>{item.price}</NumberPrice>
                   <CardActions>
                     <CardButton>Details</CardButton>
