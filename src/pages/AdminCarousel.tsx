@@ -8,6 +8,15 @@ const AdminContainer = styled.div`
   min-height: calc(100vh - 70px);
   background: #f8f9fa;
   padding: 20px;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-top: 60px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
 `;
 
 const AdminHeader = styled.div`
@@ -23,6 +32,14 @@ const HeaderTitle = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 10px;
+  
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const HeaderSubtitle = styled.p`
@@ -36,6 +53,12 @@ const ActionBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
 `;
 
 const AddButton = styled.button`
@@ -69,6 +92,10 @@ const SearchInput = styled.input`
     border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const CarouselGrid = styled.div`
@@ -76,6 +103,16 @@ const CarouselGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
 `;
 
 const CarouselCard = styled.div`
@@ -111,6 +148,10 @@ const CardImage = styled.div<{ $image: string }>`
 
 const CardContent = styled.div`
   padding: 20px;
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const CardTitle = styled.h3`
@@ -118,6 +159,10 @@ const CardTitle = styled.h3`
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 8px;
+  
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const CardMeta = styled.div`
@@ -144,6 +189,11 @@ const DateText = styled.span`
 const CardActions = styled.div`
   display: flex;
   gap: 8px;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 6px;
+  }
 `;
 
 const ActionButton = styled.button<{ $variant?: 'edit' | 'delete' | 'view' }>`
@@ -208,6 +258,12 @@ const ModalContent = styled.div`
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  
+  @media (max-width: 768px) {
+    width: 95%;
+    max-width: none;
+    margin: 10px;
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -216,6 +272,10 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const ModalTitle = styled.h2`
@@ -223,10 +283,18 @@ const ModalTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
+  
+  @media (max-width: 480px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const ModalBody = styled.div`
   padding: 20px;
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -335,6 +403,12 @@ const ModalFooter = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const ModalButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
@@ -381,6 +455,10 @@ const EmptyTitle = styled.h3`
   color: #374151;
   font-size: 1.5rem;
   margin-bottom: 10px;
+  
+  @media (max-width: 480px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const EmptyText = styled.p`
