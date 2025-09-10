@@ -408,7 +408,12 @@ const VVIPHeader = styled.div`
 const VVIPTitle = styled.h2`
   font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
-  color: ${theme.colors.neutral.gray800};
+  color: ${theme.colors.neutral.white};
+  background: linear-gradient(135deg, #FF6B35, #FFA500);
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.lg};
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 `;
 
 const ViewAllButton = styled(Link)`
@@ -826,13 +831,13 @@ const CategoryNavigation = styled.div`
 
 // Animated Phone Number Components
 const AnimatedPhoneContainer = styled.div`
-  background: linear-gradient(135deg, #4A90E2, #2563EB);
+  background: linear-gradient(135deg, #FF6B35, #FF8C42, #FFA500);
   border: 3px solid #FFD700;
   border-radius: ${theme.borderRadius.xl};
   padding: ${theme.spacing.xl};
   margin: ${theme.spacing.xl} auto ${theme.spacing.xl} auto;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(74, 144, 226, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(255, 107, 53, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
   max-width: 600px;
   width: 90%;
   position: relative;

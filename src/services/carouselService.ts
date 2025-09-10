@@ -13,7 +13,7 @@ export const carouselService = {
       // This would be replaced with actual API call
       // const response = await fetch('/api/carousel-slides');
       // const data = await response.json();
-      
+
       // Mock data for now - these would come from admin panel
       const mockSlides: CarouselSlide[] = [
         {
@@ -29,7 +29,7 @@ export const carouselService = {
           createdAt: new Date().toISOString()
         }
       ];
-      
+
       return mockSlides.filter(slide => slide.isActive);
     } catch (error) {
       console.error('Error fetching carousel slides:', error);
@@ -47,13 +47,13 @@ export const carouselService = {
       //   body: JSON.stringify(slide)
       // });
       // return await response.json();
-      
+
       const newSlide: CarouselSlide = {
         ...slide,
         id: Date.now(),
         createdAt: new Date().toISOString()
       };
-      
+
       return newSlide;
     } catch (error) {
       console.error('Error adding carousel slide:', error);
@@ -71,14 +71,14 @@ export const carouselService = {
       //   body: JSON.stringify(updates)
       // });
       // return await response.json();
-      
+
       const updatedSlide: CarouselSlide = {
         id,
         image: updates.image || '',
         isActive: updates.isActive !== undefined ? updates.isActive : true,
         createdAt: updates.createdAt || new Date().toISOString()
       };
-      
+
       return updatedSlide;
     } catch (error) {
       console.error('Error updating carousel slide:', error);
@@ -94,7 +94,7 @@ export const carouselService = {
       //   method: 'DELETE'
       // });
       // return response.ok;
-      
+
       return true;
     } catch (error) {
       console.error('Error deleting carousel slide:', error);

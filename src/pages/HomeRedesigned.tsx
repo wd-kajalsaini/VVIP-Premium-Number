@@ -146,9 +146,6 @@ const CarouselSlide = styled.div<{ $active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center top;
 
   img {
     width: 100%;
@@ -256,39 +253,132 @@ const ArrowButton = styled.button`
   }
 `;
 
+// VIP Search Section Components
+const VipTitle = styled.h2`
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+  
+  span {
+    color: #ff6b35;
+    font-size: 1.2rem;
+  }
+`;
+
+const VipDescription = styled.p`
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const SearchButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+  width: 100%;
+`;
+
+const SearchTabButton = styled.button<{ $active?: boolean }>`
+  background: ${props => props.$active ? '#ff6b35' : '#f5f5f5'};
+  color: ${props => props.$active ? 'white' : '#666'};
+  border: 1px solid ${props => props.$active ? '#ff6b35' : '#ddd'};
+  border-bottom: none;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  
+  &:first-child {
+    border-top-left-radius: 8px;
+    border-right: ${props => props.$active ? '1px solid #ff6b35' : '1px solid #ddd'};
+  }
+  
+  &:last-child {
+    border-top-right-radius: 8px;
+    border-left: none;
+  }
+  
+  &:hover {
+    background: ${props => props.$active ? '#e55a2b' : '#e9e9e9'};
+  }
+`;
+
+const SearchInputContainer = styled.div`
+  display: flex;
+  width: 100%;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+
+const SearchInputField = styled.input`
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  
+  &::placeholder {
+    color: #999;
+  }
+`;
+
+const SearchIconButton = styled.button`
+  background: #ff6b35;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  
+  &:hover {
+    background: #e55a2b;
+  }
+  
+  svg {
+    font-size: 1.2rem;
+  }
+`;
+
 // Search Bar Section
 const SearchSection = styled.section`
   background: white;
   padding: 40px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   border-bottom: 3px solid #ff6b35;
-  
-  /* Only apply sticky behavior on desktop */
-  @media (min-width: 769px) {
-    position: sticky;
-    top: 70px;
-    z-index: 100;
-  }
+  position: relative;
+  z-index: 10;
 
-  /* Mobile styling without sticky behavior */
   @media (max-width: 768px) {
     padding: 30px 15px;
-    position: relative;
-    z-index: 10;
   }
 `;
 
 const SearchContainer = styled.div`
-  max-width: 1400px;
+  max-width: 600px;
   margin: 0 auto;
   display: flex;
-  gap: 20px;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 15px;
-  }
+  flex-direction: column;
+  gap: 0;
 `;
 
 const SortSelect = styled.select`
@@ -614,34 +704,17 @@ const MoreButton = styled.button`
 
 // VIP Auto-Scroll Container
 const VipScrollContainer = styled.div`
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   padding: 20px 0;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+  position: relative;
 `;
 
 const VipScrollWrapper = styled.div`
   display: flex;
   gap: 25px;
   width: max-content;
-  animation: autoScroll 60s linear infinite;
+  animation: autoScroll 80s linear infinite;
+  will-change: transform;
 
   &:hover {
     animation-play-state: paused;
@@ -655,17 +728,21 @@ const VipScrollWrapper = styled.div`
       transform: translateX(-50%);
     }
   }
+
+  /* Ensure this doesn't interfere with page scroll */
+  pointer-events: auto;
+  touch-action: pan-y;
 `;
 
 const VipCard = styled.div`
-  background: linear-gradient(135deg, #6366f1, #4f46e5, #374151);
-  border: 2px solid #6366f1;
+  background: linear-gradient(135deg, #2c5282, #1e3a5f);
+  border: 2px solid #1e3a5f;
   border-radius: 12px;
   padding: 25px;
   min-width: 340px;
   flex-shrink: 0;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+  box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
   overflow: hidden;
   position: relative;
 
@@ -685,24 +762,24 @@ const VipCard = styled.div`
     position: absolute;
     top: 15px;
     right: 15px;
-    background: linear-gradient(135deg, #6366f1, #6b7280);
-    color: white;
+    background: linear-gradient(135deg, #FFD700, #FFC700);
+    color: #1e3a5f;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 700;
     z-index: 3;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
   }
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
-    border-color: #6b7280;
+    box-shadow: 0 8px 25px rgba(30, 58, 95, 0.4);
+    border-color: #2563eb;
 
     &::before {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 199, 0, 0.1));
     }
   }
 `;
@@ -739,23 +816,27 @@ const NumberCard = styled.div`
 `;
 
 const NumberDisplay = styled.div`
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: white;
   margin-bottom: 10px;
   text-align: center;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   position: relative;
   z-index: 2;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   span.highlight {
-    color: #ff6b35;
-    text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+    color: #e67e50;
+    text-shadow: 0 0 10px rgba(230, 126, 80, 0.5);
   }
 
   @media (max-width: 1200px) {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
   }
 `;
 
@@ -775,40 +856,81 @@ const NumberPrice = styled.div`
 `;
 
 const CardActions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: flex;
+  justify-content: center;
   position: relative;
   z-index: 2;
 `;
 
 const CardButton = styled.button<{ $primary?: boolean }>`
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border: 2px solid white;
+  padding: 10px 24px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 2px solid #e67e50;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 120px;
 
   @media (max-width: 1200px) {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    min-width: 100px;
   }
 
   ${props => props.$primary ? `
-    background: white;
-    color: #2c5282;
+    background: #e67e50;
+    color: white;
+    box-shadow: 0 2px 8px rgba(230, 126, 80, 0.2);
 
     &:hover {
-      background: #f0f0f0;
+      background: #d16840;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(230, 126, 80, 0.3);
     }
   ` : `
     background: transparent;
-    color: white;
+    color: #e67e50;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(230, 126, 80, 0.1);
+    }
+  `}
+`;
+
+const VipCardButton = styled.button<{ $primary?: boolean }>`
+  padding: 10px 24px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 2px solid #f4c430;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+
+  @media (max-width: 1200px) {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+
+  ${props => props.$primary ? `
+    background: #f4c430;
+    color: #1e3a5f;
+    box-shadow: 0 2px 8px rgba(244, 196, 48, 0.3);
+    font-weight: 800;
+
+    &:hover {
+      background: #e6b61f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 196, 48, 0.4);
+    }
+  ` : `
+    background: transparent;
+    color: #f4c430;
+
+    &:hover {
+      background: rgba(244, 196, 48, 0.1);
     }
   `}
 `;
@@ -1199,6 +1321,7 @@ const Home: React.FC = () => {
   const [priceFilter, setPriceFilter] = useState('Price Low to High');
   const [carouselSlides, setCarouselSlides] = useState<CarouselSlideType[]>([]);
   const [isLoadingCarousel, setIsLoadingCarousel] = useState(true);
+  const [activeSearchTab, setActiveSearchTab] = useState('global');
   // Removed highlightedIndex state
 
   // Format number with highlights
@@ -1645,8 +1768,8 @@ const Home: React.FC = () => {
                 <CarouselSlide
                   key={slide.id}
                   $active={index === currentSlide}
-                  style={{ backgroundImage: `url(${slide.image})` }}
                 >
+                  <img src={slide.image} alt="Banner" />
                 </CarouselSlide>
               ))}
 
@@ -1693,29 +1816,32 @@ const Home: React.FC = () => {
         {/* Search Section */}
         <SearchSection>
           <SearchContainer>
-            <SortSelect value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option>Sort By</option>
-              <option>Latest First</option>
-              <option>Most Popular</option>
-              <option>Best Value</option>
-            </SortSelect>
-            <SortSelect value={priceFilter} onChange={(e) => setPriceFilter(e.target.value)}>
-              <option>Price Low to High</option>
-              <option>Price High to Low</option>
-              <option>Under ₹10,000</option>
-              <option>₹10,000 - ₹50,000</option>
-              <option>Above ₹50,000</option>
-            </SortSelect>
-            <SearchInput
-              type="text"
-              placeholder="Search Your Choice Number"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <SearchButton onClick={() => window.location.href = `/gallery?search=${searchTerm}`}>
-              <FaSearch />
-              SEARCH
-            </SearchButton>
+            <SearchButtonsContainer>
+              <SearchTabButton 
+                $active={activeSearchTab === 'global'}
+                onClick={() => setActiveSearchTab('global')}
+              >
+                Global Search
+              </SearchTabButton>
+              <SearchTabButton 
+                $active={activeSearchTab === 'advanced'}
+                onClick={() => setActiveSearchTab('advanced')}
+              >
+                Advanced Search
+              </SearchTabButton>
+            </SearchButtonsContainer>
+
+            <SearchInputContainer>
+              <SearchInputField
+                type="text"
+                placeholder="Search Any Number"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <SearchIconButton onClick={() => window.location.href = `/gallery?search=${searchTerm}`}>
+                <FaSearch />
+              </SearchIconButton>
+            </SearchInputContainer>
           </SearchContainer>
         </SearchSection>
 
@@ -1732,7 +1858,6 @@ const Home: React.FC = () => {
                     <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
                     <NumberPrice>{item.price}</NumberPrice>
                     <CardActions>
-                      <CardButton>Details</CardButton>
                       <CardButton
                         $primary
                         onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
@@ -1754,7 +1879,7 @@ const Home: React.FC = () => {
 
         {/* VIP Numbers Auto-Scroll Section */}
         <NumbersSection>
-          <SectionTitle>Premium VIP Numbers</SectionTitle>
+          <SectionTitle>Today's Offers</SectionTitle>
           <VipScrollContainer>
             <VipScrollWrapper>
               {[...vipNumbers, ...vipNumbers].map((item, index) => (
@@ -1765,13 +1890,12 @@ const Home: React.FC = () => {
                   <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
                   <NumberPrice>{item.price}</NumberPrice>
                   <CardActions>
-                    <CardButton>Details</CardButton>
-                    <CardButton
+                    <VipCardButton
                       $primary
                       onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
                     >
                       Buy Now
-                    </CardButton>
+                    </VipCardButton>
                   </CardActions>
                 </VipCard>
               ))}

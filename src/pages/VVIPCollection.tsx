@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { FaChevronDown, FaSearch } from '../utils/iconComponents';
 
 const VVIPContainer = styled.div`
   margin-top: 70px;
@@ -209,15 +208,12 @@ const Breadcrumb = styled.div`
 `;
 
 const MainLayout = styled.div`
-  display: flex;
   max-width: 1400px;
   margin: 0 auto;
-  gap: 20px;
-  padding: 20px;
+  padding: 40px 20px;
   
   @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 15px;
+    padding: 30px 15px;
   }
 `;
 
@@ -394,14 +390,19 @@ const PriceTag = styled.div`
 `;
 
 const PhoneNumber = styled.div`
-  font-size: 24px;
+  font-size: 1.8rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   text-align: center;
+  letter-spacing: 1px;
   
   .highlight {
-    color: #f97316;
+    color: #FFD700;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
@@ -415,33 +416,38 @@ const SumTotal = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  gap: 10px;
+  justify-content: center;
 `;
 
 const ActionButton = styled.button<{ $primary?: boolean }>`
-  flex: 1;
-  padding: 10px 16px;
-  border: 2px solid #6366f1;
-  border-radius: 8px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border: 2px solid #f4c430;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 120px;
   
   ${props => props.$primary ? `
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white;
-    border-color: #6366f1;
+    background: #f4c430;
+    color: #1e3a5f;
+    border-color: #f4c430;
+    box-shadow: 0 2px 8px rgba(244, 196, 48, 0.3);
+    font-weight: 800;
     
     &:hover {
-      background: linear-gradient(135deg, #4f46e5, #4338ca);
-      border-color: #4f46e5;
+      background: #e6b61f;
+      border-color: #e6b61f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 196, 48, 0.4);
     }
   ` : `
     background: white;
-    color: #6366f1;
+    color: #f4c430;
     
     &:hover {
-      background: #f1f5f9;
+      background: #f9f7f0;
     }
   `}
 `;
@@ -479,29 +485,32 @@ const calculateSumTotal = (phoneNumber: string): string => {
 };
 
 const VVIPCollection: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('Sort By');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [sumTotal, setSumTotal] = useState('');
-
-  const categories = [
-    { name: 'Numerology Without 2 4 8', count: '14178' },
-    { name: 'PENTA NUMBERS', count: '325' },
-    { name: 'HEXA NUMBER', count: '427' },
-    { name: 'SEPTA (9XY AAA AAA A)', count: '108' },
-    { name: 'OCTA NUMBERS', count: '13' },
-    { name: 'ENDING AAAA NUMBERS', count: '1078' },
-    { name: 'AB AB (XXXXXX 1212)', count: '1212' }
-  ];
-
   const sampleNumbers = [
-    { id: 1, number: '70390 91107', price: '₹4080', highlights: [0, 1, 2, 3, 4] },
-    { id: 2, number: '914 2222288', price: '₹37200', highlights: [4, 5, 6, 7, 8, 9] },
-    { id: 3, number: '74 7777 1665', price: '₹2856', highlights: [3, 4, 5, 6] },
-    { id: 4, number: '9162203 888', price: '₹2991', highlights: [8, 9, 10] },
-    { id: 5, number: '91329 00097', price: '₹4760', highlights: [6, 7, 8, 9, 10] },
-    { id: 6, number: '905779 1234', price: '₹6800', highlights: [7, 8, 9, 10] }
+    { id: 1, number: '70390 91107', price: '₹4,080', highlights: [0, 1, 2, 3, 4] },
+    { id: 2, number: '914 2222288', price: '₹37,200', highlights: [4, 5, 6, 7, 8, 9] },
+    { id: 3, number: '74 7777 1665', price: '₹2,856', highlights: [3, 4, 5, 6] },
+    { id: 4, number: '9162203 888', price: '₹2,991', highlights: [8, 9, 10] },
+    { id: 5, number: '91329 00097', price: '₹4,760', highlights: [6, 7, 8, 9, 10] },
+    { id: 6, number: '905779 1234', price: '₹6,800', highlights: [7, 8, 9, 10] },
+    { id: 7, number: '98 555555 21', price: '₹1,20,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 8, number: '9876 777777', price: '₹5,40,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 9, number: '91 888888 45', price: '₹4,80,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 10, number: '8452 000000', price: '₹4,80,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 11, number: '9 510 999999', price: '₹12,00,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 12, number: '9561 444444', price: '₹3,00,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 13, number: '917 0000001', price: '₹15,60,000', highlights: [4, 5, 6, 7, 8] },
+    { id: 14, number: '94 000000 36', price: '₹2,88,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 15, number: '8888 999999', price: '₹12,50,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 16, number: '999 666666 9', price: '₹7,20,000', highlights: [4, 5, 6, 7, 8, 9] },
+    { id: 17, number: '80 000000 99', price: '₹8,40,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 18, number: '9999 888888', price: '₹18,00,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 19, number: '7777 333333', price: '₹4,80,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 20, number: '9123 444444', price: '₹3,60,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 21, number: '84 888888 12', price: '₹4,92,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 22, number: '9234 999999', price: '₹12,60,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 23, number: '85 222222 89', price: '₹1,80,000', highlights: [3, 4, 5, 6, 7, 8] },
+    { id: 24, number: '8345 111111', price: '₹1,92,000', highlights: [5, 6, 7, 8, 9, 10] },
+    { id: 25, number: '96 444444 89', price: '₹2,64,000', highlights: [3, 4, 5, 6, 7, 8] }
   ];
 
   const formatNumber = (number: string, highlights: number[]) => {
@@ -523,100 +532,8 @@ const VVIPCollection: React.FC = () => {
           <HeroSubtitle>Premium • Exclusive • Prestigious</HeroSubtitle>
         </HeroContent>
       </HeroBanner>
-      
-      <TopSection>
-        <SearchRow>
-          <SearchInput
-            type="text"
-            placeholder="Search Your Choice Number"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <SearchButton>
-            <FaSearch style={{ marginRight: '5px' }} />
-            SEARCH
-          </SearchButton>
-        </SearchRow>
-        
-        <SortRow>
-          <SortSelect value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option>Sort By ▼</option>
-            <option>Price Low to High</option>
-            <option>Price High to Low</option>
-            <option>Latest First</option>
-          </SortSelect>
-          <SortSelect>
-            <option>Price Low to High</option>
-            <option>Price High to Low</option>
-          </SortSelect>
-          <SortSelect>
-            <option>Price High to Low</option>
-            <option>Price Low to High</option>
-          </SortSelect>
-          <Breadcrumb>HOME / VIP NUMBER</Breadcrumb>
-        </SortRow>
-      </TopSection>
 
       <MainLayout>
-        <Sidebar>
-          <FilterSection>
-            <FilterHeader>
-              <FilterTitle>SUM TOTAL</FilterTitle>
-              <FaChevronDown />
-            </FilterHeader>
-            <FilterInput
-              type="text"
-              placeholder="Enter Number Like 12 or 3"
-              value={sumTotal}
-              onChange={(e) => setSumTotal(e.target.value)}
-            />
-          </FilterSection>
-
-          <FilterSection>
-            <FilterHeader>
-              <FilterTitle>PRICE</FilterTitle>
-              <FaChevronDown />
-            </FilterHeader>
-            <div style={{ marginBottom: '10px', fontSize: '14px', color: '#6b7280' }}>
-              Minimum Price
-            </div>
-            <PriceInput
-              type="text"
-              placeholder="Minimum Price"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-            <div style={{ marginBottom: '10px', fontSize: '14px', color: '#6b7280', marginTop: '10px' }}>
-              Maximum Price
-            </div>
-            <PriceInput
-              type="text"
-              placeholder="Maximum Price"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
-            <FilterButton>Filter</FilterButton>
-          </FilterSection>
-
-          <FilterSection>
-            <FilterHeader>
-              <FilterTitle>CATEGORY</FilterTitle>
-              <FaChevronDown />
-            </FilterHeader>
-            <CategoryList>
-              {categories.map((category, index) => (
-                <CategoryItem key={index}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <CategoryCheckbox />
-                    {category.name}
-                  </div>
-                  <CategoryCount>{category.count}</CategoryCount>
-                </CategoryItem>
-              ))}
-            </CategoryList>
-          </FilterSection>
-        </Sidebar>
-
         <ContentArea>
           <NumbersGrid>
             {sampleNumbers.map((item) => (
@@ -625,8 +542,12 @@ const VVIPCollection: React.FC = () => {
                 <SumTotal>Sum Total = {calculateSumTotal(item.number)}</SumTotal>
                 <PriceTag>{item.price}</PriceTag>
                 <ButtonRow>
-                  <ActionButton>Details</ActionButton>
-                  <ActionButton $primary>Buy Now</ActionButton>
+                  <ActionButton 
+                    $primary
+                    onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
+                  >
+                    Buy Now
+                  </ActionButton>
                 </ButtonRow>
               </NumberCard>
             ))}
