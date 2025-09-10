@@ -9,7 +9,7 @@ const HeaderContainer = styled.header<{ $isScrolled: boolean }>`
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1001;
   background: ${props => props.$isScrolled
     ? 'rgba(255, 255, 255, 0.95)'
     : 'rgba(255, 255, 255, 0.9)'};
@@ -89,17 +89,18 @@ const MobileOverlay = styled.div<{ $isOpen: boolean }>`
   display: none;
   
   @media (max-width: 768px) {
-    display: ${props => props.$isOpen ? 'block' : 'none'};
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.$isOpen ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)'};
-    z-index: 999;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
     opacity: ${props => props.$isOpen ? '1' : '0'};
     visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.3s ease;
+    pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
   }
 `;
 
@@ -124,7 +125,7 @@ const NavLinks = styled.div<{ $isOpen: boolean }>`
                 opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 visibility 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     gap: ${theme.spacing.md};
-    z-index: 1000;
+    z-index: 999;
   }
 `;
 
@@ -196,12 +197,20 @@ const ContactButton = styled.a`
 const MobileMenuButton = styled.button`
   display: none;
   background: none;
+  border: none;
   color: ${theme.colors.neutral.gray700};
   font-size: ${theme.typography.fontSize.xl};
   padding: ${theme.spacing.sm};
+  cursor: pointer;
+  z-index: 1002;
+  position: relative;
 
   @media (max-width: 768px) {
     display: block;
+  }
+
+  &:hover {
+    color: ${theme.colors.primary.skyBlue};
   }
 `;
 
