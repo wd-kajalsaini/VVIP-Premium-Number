@@ -261,13 +261,20 @@ const SearchSection = styled.section`
   background: white;
   padding: 40px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 70px;
-  z-index: 100;
   border-bottom: 3px solid #ff6b35;
+  
+  /* Only apply sticky behavior on desktop */
+  @media (min-width: 769px) {
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+  }
 
+  /* Mobile styling without sticky behavior */
   @media (max-width: 768px) {
     padding: 30px 15px;
+    position: relative;
+    z-index: 10;
   }
 `;
 
@@ -1070,122 +1077,19 @@ const AdditionalSectionSubtitle = styled.p`
   line-height: 1.6;
 `;
 
-// Animated Phone Number Components - Horizontal Banner Style
-const AnimatedPhoneSection = styled.section`
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  padding: 20px 0;
-  margin: 20px 20px 0 20px;
-  position: relative;
-  text-align: center;
-  border-radius: 8px;
+// Removed AnimatedPhoneSection
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(255, 107, 53, 0.1) 0%, transparent 50%, rgba(255, 107, 53, 0.1) 100%);
-    border-radius: 8px;
-    z-index: 1;
-  }
+// Removed AnimatedPhoneContainer
 
-  @media (max-width: 768px) {
-    margin: 15px 15px 0 15px;
-  }
+// Removed PhoneTitle
 
-  @media (max-width: 480px) {
-    margin: 10px 10px 0 10px;
-  }
-`;
+// Removed PhoneNumberRow
 
-const AnimatedPhoneContainer = styled.div`
-  position: relative;
-  z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-`;
+// Removed WhatsAppIcon
 
-const PhoneTitle = styled.div`
-  color: #FFFFFF;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+// Removed AnimatedNumber
 
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-`;
-
-const PhoneNumberRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    gap: 10px;
-    flex-direction: column;
-  }
-`;
-
-const WhatsAppIcon = styled.span`
-  color: #FF6B35;
-  font-size: 1.8rem;
-  margin-right: 10px;
-`;
-
-const AnimatedNumber = styled.div`
-  font-size: 2rem;
-  font-weight: bold;
-  font-family: 'Courier New', monospace;
-  letter-spacing: 3px;
-
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-  }
-`;
-
-const AnimatedDigit = styled.span<{ $isHighlighted: boolean; $delay: number }>`
-  color: ${props => props.$isHighlighted ? '#FF6B35' : '#FFFFFF'};
-  background: ${props => props.$isHighlighted ? 'rgba(255, 107, 53, 0.3)' : 'transparent'};
-  padding: 4px 2px;
-  border-radius: 4px;
-  border: ${props => props.$isHighlighted ? '2px solid #FF6B35' : '2px solid transparent'};
-  transition: all 0.4s ease;
-  display: inline-block;
-  transform: ${props => props.$isHighlighted ? 'scale(1.2)' : 'scale(1)'};
-  text-shadow: ${props => props.$isHighlighted ? '0 0 15px rgba(255, 107, 53, 0.8)' : '0 2px 4px rgba(0, 0, 0, 0.3)'};
-  animation: ${props => props.$isHighlighted ? 'highlight 0.6s ease-in-out' : 'none'};
-
-  @keyframes highlight {
-    0% {
-      transform: scale(1);
-      background: transparent;
-      box-shadow: none;
-      border-color: transparent;
-    }
-    50% {
-      transform: scale(1.3);
-      background: rgba(255, 107, 53, 0.5);
-      box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
-      border-color: #FF6B35;
-    }
-    100% {
-      transform: scale(1.2);
-      background: rgba(255, 107, 53, 0.3);
-      box-shadow: 0 0 15px rgba(255, 107, 53, 0.6);
-      border-color: #FF6B35;
-    }
-  }
-`;
+// Removed AnimatedDigit
 
 // Visitor Counter Section
 const VisitorCounterSection = styled.section`
@@ -1295,7 +1199,7 @@ const Home: React.FC = () => {
   const [priceFilter, setPriceFilter] = useState('Price Low to High');
   const [carouselSlides, setCarouselSlides] = useState<CarouselSlideType[]>([]);
   const [isLoadingCarousel, setIsLoadingCarousel] = useState(true);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  // Removed highlightedIndex state
 
   // Format number with highlights
   const formatNumberDisplay = (number: string, highlights: number[]): React.ReactElement => {
@@ -1667,51 +1571,7 @@ const Home: React.FC = () => {
     return () => clearInterval(interval);
   }, [carouselSlides.length]);
 
-  // Animation for phone number highlighting
-  useEffect(() => {
-    const phoneNumber = "+91-97222-97222";
-    const digits = phoneNumber.split('');
-    let currentInterval: NodeJS.Timeout | null = null;
-    let repeatInterval: NodeJS.Timeout | null = null;
-    let initialDelay: NodeJS.Timeout | null = null;
-
-    const animateDigits = () => {
-      let index = 0;
-      setHighlightedIndex(-1); // Reset highlighting
-
-      currentInterval = setInterval(() => {
-        if (index < digits.length) {
-          setHighlightedIndex(index);
-          index++;
-        } else {
-          // Animation complete, clear highlight
-          setHighlightedIndex(-1);
-          if (currentInterval) {
-            clearInterval(currentInterval);
-            currentInterval = null;
-          }
-        }
-      }, 500); // Highlight each digit for 500ms
-    };
-
-    // Start animation immediately (minimal delay)
-    initialDelay = setTimeout(() => {
-      animateDigits();
-
-      // Repeat animation every 8 seconds (enough time for animation to complete + pause)
-      repeatInterval = setInterval(() => {
-        animateDigits();
-      }, 8000);
-    }, 100);
-
-    // Cleanup function
-    return () => {
-      if (initialDelay) clearTimeout(initialDelay);
-      if (currentInterval) clearInterval(currentInterval);
-      if (repeatInterval) clearInterval(repeatInterval);
-      setHighlightedIndex(-1);
-    };
-  }, []);
+  // Animation for phone number highlighting - removed
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
@@ -1760,33 +1620,7 @@ const Home: React.FC = () => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
-  // Component for rendering animated phone number
-  const AnimatedPhoneNumber: React.FC = () => {
-    const phoneNumber = "+91-97222-97722";
-    const digits = phoneNumber.split('');
-
-    return (
-      <AnimatedPhoneContainer>
-        <PhoneTitle>Premium VIP Mobile Numbers</PhoneTitle>
-        <PhoneNumberRow>
-          <WhatsAppIcon>
-            <FaWhatsapp />
-          </WhatsAppIcon>
-          <AnimatedNumber>
-            {digits.map((digit, index) => (
-              <AnimatedDigit
-                key={index}
-                $isHighlighted={highlightedIndex === index}
-                $delay={index}
-              >
-                {digit}
-              </AnimatedDigit>
-            ))}
-          </AnimatedNumber>
-        </PhoneNumberRow>
-      </AnimatedPhoneContainer>
-    );
-  };
+  // Component for rendering animated phone number - removed
 
   return (
     <HomeContainer>
@@ -1854,10 +1688,7 @@ const Home: React.FC = () => {
           )}
         </CarouselSection>
 
-        {/* Animated Phone Number Section */}
-        <AnimatedPhoneSection>
-          <AnimatedPhoneNumber />
-        </AnimatedPhoneSection>
+        {/* Animated Phone Number Section - Removed */}
 
         {/* Search Section */}
         <SearchSection>
