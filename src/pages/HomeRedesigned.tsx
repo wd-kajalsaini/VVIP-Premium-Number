@@ -329,22 +329,6 @@ const SearchInputContainer = styled.div`
   }
 `;
 
-const LocationSelect = styled.select`
-  padding: 15px 20px;
-  border: none;
-  background: #f8f9fa;
-  border-right: 1px solid #e0e0e0;
-  font-size: 1rem;
-  color: #666;
-  cursor: pointer;
-  outline: none;
-  min-width: 120px;
-  
-  @media (max-width: 768px) {
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-  }
-`;
 
 const SearchInputField = styled.input`
   flex: 1;
@@ -1848,14 +1832,6 @@ const Home: React.FC = () => {
             </SearchButtonsContainer>
 
             <SearchInputContainer>
-              <LocationSelect>
-                <option>Anywhere</option>
-                <option>Punjab</option>
-                <option>Delhi</option>
-                <option>Mumbai</option>
-                <option>Bangalore</option>
-                <option>Chennai</option>
-              </LocationSelect>
               <SearchInputField
                 type="text"
                 placeholder="Search Any Number"
