@@ -30,40 +30,62 @@ const MainContent = styled.div`
 `;
 
 const StepsSection = styled.div`
-  margin-bottom: ${theme.spacing['3xl']};
+  margin-bottom: ${theme.spacing.xl};
+`;
+
+const StepsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: ${theme.spacing.md};
+  margin-top: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing.sm};
+  }
 `;
 
 const StepCard = styled.div`
   background: ${theme.colors.neutral.white};
   border-radius: ${theme.borderRadius.lg};
   border: 1px solid ${theme.colors.neutral.gray200};
-  margin-bottom: ${theme.spacing.md};
-  padding: ${theme.spacing.xl};
-  display: flex;
-  align-items: flex-start;
-  gap: ${theme.spacing.lg};
+  padding: ${theme.spacing.lg};
+  text-align: center;
+  position: relative;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   &:hover {
-    box-shadow: ${theme.shadows.md};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     border-color: ${theme.colors.primary.orange};
   }
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: ${theme.spacing.md};
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, ${theme.colors.primary.orange}, ${theme.colors.primary.yellow});
+    border-radius: ${theme.borderRadius.lg} ${theme.borderRadius.lg} 0 0;
   }
 `;
 
 const StepNumber = styled.div`
-  background: ${theme.colors.primary.orange};
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, ${theme.colors.primary.orange}, ${theme.colors.primary.yellow});
   color: ${theme.colors.neutral.white};
   font-weight: ${theme.typography.fontWeight.bold};
   font-size: ${theme.typography.fontSize.xl};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  min-width: 100px;
-  text-align: center;
+  border-radius: ${theme.borderRadius.full};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto ${theme.spacing.md} auto;
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.3);
 `;
 
 const StepContent = styled.div`
@@ -74,13 +96,16 @@ const StepTitle = styled.h3`
   color: ${theme.colors.neutral.gray800};
   font-size: ${theme.typography.fontSize.xl};
   font-weight: ${theme.typography.fontWeight.bold};
-  margin-bottom: ${theme.spacing.xs};
+  margin-bottom: ${theme.spacing.sm};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const StepDescription = styled.p`
   color: ${theme.colors.neutral.gray600};
   line-height: 1.6;
   margin: 0;
+  font-size: ${theme.typography.fontSize.md};
 `;
 
 const BottomSection = styled.div`
@@ -299,15 +324,16 @@ const HowItWorks: React.FC = () => {
 
       <MainContent>
         <StepsSection>
-          {steps.map((step, index) => (
-            <StepCard key={index}>
-              <StepNumber>STEP {step.number}</StepNumber>
-              <StepContent>
+          <SectionTitle>Our Simple 5-Step Process</SectionTitle>
+          <StepsGrid>
+            {steps.map((step, index) => (
+              <StepCard key={index}>
+                <StepNumber>{step.number}</StepNumber>
                 <StepTitle>{step.title}</StepTitle>
                 <StepDescription>{step.description}</StepDescription>
-              </StepContent>
-            </StepCard>
-          ))}
+              </StepCard>
+            ))}
+          </StepsGrid>
         </StepsSection>
 
         <BottomSection>

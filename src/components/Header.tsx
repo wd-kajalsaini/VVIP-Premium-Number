@@ -36,7 +36,18 @@ const Nav = styled.nav`
   }
 `;
 
-const Logo = styled(Link)`
+const LogoContainer = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const Logo = styled.div`
   font-size: ${theme.typography.fontSize['2xl']};
   font-weight: ${theme.typography.fontWeight.bold};
   background: linear-gradient(135deg,
@@ -46,13 +57,8 @@ const Logo = styled(Link)`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-decoration: none;
   white-space: nowrap;
-  flex-shrink: 0;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  line-height: 1.2;
 
   @media (max-width: 768px) {
     font-size: ${theme.typography.fontSize.xl};
@@ -60,6 +66,40 @@ const Logo = styled(Link)`
 
   @media (max-width: 480px) {
     font-size: ${theme.typography.fontSize.lg};
+  }
+`;
+
+const Tagline = styled.div`
+  font-size: ${theme.typography.fontSize.sm};
+  color: ${theme.colors.primary.orange};
+  font-weight: ${theme.typography.fontWeight.medium};
+  margin-top: -2px;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: ${theme.typography.fontSize.xs};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${theme.typography.fontSize.xs};
+  }
+`;
+
+const MobileOverlay = styled.div<{ $isOpen: boolean }>`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: ${props => props.$isOpen ? 'block' : 'none'};
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${props => props.$isOpen ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)'};
+    z-index: 999;
+    opacity: ${props => props.$isOpen ? '1' : '0'};
+    visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 `;
 
@@ -80,8 +120,11 @@ const NavLinks = styled.div<{ $isOpen: boolean }>`
     transform: translateY(${props => props.$isOpen ? '0' : '-100%'});
     opacity: ${props => props.$isOpen ? '1' : '0'};
     visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
-    transition: all 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                visibility 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     gap: ${theme.spacing.md};
+    z-index: 1000;
   }
 `;
 
@@ -190,39 +233,45 @@ const Header: React.FC = () => {
   };
 
   return (
-    <HeaderContainer $isScrolled={isScrolled}>
-      <Nav>
-        <Logo to="/">Premium Numbers</Logo>
+    <>
+      <MobileOverlay $isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(false)} />
+      <HeaderContainer $isScrolled={isScrolled}>
+        <Nav>
+          <LogoContainer to="/">
+            <Logo>Elite VIP Numbers</Logo>
+            <Tagline>आपका नंबर आपकी पहचान</Tagline>
+          </LogoContainer>
 
-        <NavLinks $isOpen={isMobileMenuOpen}>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              $isActive={location.pathname === item.path}
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          <NavLinks $isOpen={isMobileMenuOpen}>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                $isActive={location.pathname === item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
-          <ContactInfo>
-            <ContactButton
-              href="https://wa.me/919772297722?text=Hi! I'm interested in premium numbers"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp />
-              WhatsApp
-            </ContactButton>
-          </ContactInfo>
-        </NavLinks>
+            <ContactInfo>
+              <ContactButton
+                href="https://wa.me/919772297722?text=Hi! I'm interested in premium numbers"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaWhatsapp />
+                WhatsApp
+              </ContactButton>
+            </ContactInfo>
+          </NavLinks>
 
-        <MobileMenuButton onClick={toggleMobileMenu}>
-          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </MobileMenuButton>
-      </Nav>
-    </HeaderContainer>
+          <MobileMenuButton onClick={toggleMobileMenu}>
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </MobileMenuButton>
+        </Nav>
+      </HeaderContainer>
+    </>
   );
 };
 

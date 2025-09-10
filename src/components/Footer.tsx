@@ -54,37 +54,37 @@ const FooterSubtitle = styled.p`
 
 const StatsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
-  margin-bottom: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
 `;
 
 const StatCard = styled.div`
   text-align: center;
-  padding: 25px;
+  padding: 15px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
+  border-radius: 12px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background: rgba(255, 255, 255, 0.15);
   }
 `;
 
 const StatIcon = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #ffd700;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `;
 
 const StatNumber = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 `;
 
 const StatLabel = styled.div`
@@ -96,7 +96,7 @@ const StatLabel = styled.div`
 
 const MainFooterContent = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 40px;
   margin-bottom: 50px;
 
@@ -271,7 +271,7 @@ const Footer: React.FC = () => {
     <FooterContainer>
       <FooterContent>
         <TopSection>
-          <FooterTitle>Premium Numbers Hub</FooterTitle>
+          <FooterTitle>Elite VIP Numbers</FooterTitle>
           <FooterSubtitle>
             India's Leading Premium & VIP Mobile Numbers Provider
           </FooterSubtitle>
@@ -297,7 +297,7 @@ const Footer: React.FC = () => {
 
         <MainFooterContent>
           <CompanySection>
-            <h3>About Premium Numbers</h3>
+            <h3>About Elite VIP Numbers</h3>
             <CompanyDescription>
               We are India's most trusted premium and VIP mobile numbers provider,
               offering exclusive collections of lucky numbers, sequential patterns,
@@ -329,15 +329,6 @@ const Footer: React.FC = () => {
             <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Contact Us</ScrollToTopLink>
           </FooterSection>
 
-          <FooterSection>
-            <h3>Our Services</h3>
-            <ScrollToTopLink to="/gallery" onClick={scrollToTop}><FaArrowRight />Premium Numbers</ScrollToTopLink>
-            <ScrollToTopLink to="/vvip-collection" onClick={scrollToTop}><FaArrowRight />VIP Collections</ScrollToTopLink>
-            <ScrollToTopLink to="/numerology" onClick={scrollToTop}><FaArrowRight />Lucky Numbers</ScrollToTopLink>
-            <ScrollToTopLink to="/how-it-works" onClick={scrollToTop}><FaArrowRight />Number Porting</ScrollToTopLink>
-            <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Custom Requests</ScrollToTopLink>
-            <ScrollToTopLink to="/contact" onClick={scrollToTop}><FaArrowRight />Bulk Orders</ScrollToTopLink>
-          </FooterSection>
 
           <FooterSection>
             <h3>Our Locations</h3>
@@ -364,7 +355,7 @@ const Footer: React.FC = () => {
 
         <BottomSection>
           <Copyright>
-            &copy; {new Date().getFullYear()} Premium Numbers Hub. All rights reserved.
+            &copy; {new Date().getFullYear()} Elite VIP Numbers. All rights reserved.
           </Copyright>
           <BottomLinks>
             <BottomLink to="/privacy" onClick={scrollToTop}>Privacy Policy</BottomLink>
