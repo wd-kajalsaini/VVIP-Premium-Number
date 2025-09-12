@@ -9,104 +9,54 @@ const HowItWorksContainer = styled.div`
   background: ${theme.colors.neutral.gray50};
 `;
 
-const HeroSection = styled.section`
-  background: ${theme.colors.neutral.white};
-  padding: ${theme.spacing.xl} 0;
-  text-align: center;
-  border-bottom: 1px solid ${theme.colors.neutral.gray200};
-`;
-
-const HeroTitle = styled.h1`
-  color: ${theme.colors.primary.orange};
-  font-size: 2.5rem;
-  font-weight: ${theme.typography.fontWeight.bold};
-  margin-bottom: ${theme.spacing.md};
-`;
+// Hero section removed - showing image directly
 
 const MainContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: ${theme.spacing['2xl']} ${theme.spacing.md};
+  padding: 0 ${theme.spacing.md} ${theme.spacing['2xl']};
 `;
 
 const StepsSection = styled.div`
   margin-bottom: ${theme.spacing.xl};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0;
 `;
 
-const StepsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: ${theme.spacing.md};
-  margin-top: ${theme.spacing.lg};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: ${theme.spacing.sm};
-  }
-`;
-
-const StepCard = styled.div`
+const StepsImageWrapper = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 0;
   background: ${theme.colors.neutral.white};
   border-radius: ${theme.borderRadius.lg};
-  border: 1px solid ${theme.colors.neutral.gray200};
-  padding: ${theme.spacing.lg};
-  text-align: center;
-  position: relative;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    border-color: ${theme.colors.primary.orange};
+    transform: scale(1.02);
   }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, ${theme.colors.primary.orange}, ${theme.colors.primary.yellow});
-    border-radius: ${theme.borderRadius.lg} ${theme.borderRadius.lg} 0 0;
+  
+  @media (max-width: 768px) {
+    border-radius: ${theme.borderRadius.md};
+    &:hover {
+      transform: none;
+    }
   }
 `;
 
-const StepNumber = styled.div`
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, ${theme.colors.primary.orange}, ${theme.colors.primary.yellow});
-  color: ${theme.colors.neutral.white};
-  font-weight: ${theme.typography.fontWeight.bold};
-  font-size: ${theme.typography.fontSize.xl};
-  border-radius: ${theme.borderRadius.full};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto ${theme.spacing.md} auto;
-  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.3);
+const StepsImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 `;
 
-const StepContent = styled.div`
-  flex: 1;
-`;
-
-const StepTitle = styled.h3`
-  color: ${theme.colors.neutral.gray800};
-  font-size: ${theme.typography.fontSize.xl};
-  font-weight: ${theme.typography.fontWeight.bold};
-  margin-bottom: ${theme.spacing.sm};
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`;
-
-const StepDescription = styled.p`
-  color: ${theme.colors.neutral.gray600};
-  line-height: 1.6;
-  margin: 0;
-  font-size: ${theme.typography.fontSize.md};
-`;
+// Step components removed as we're using an image instead
 
 const BottomSection = styled.div`
   display: grid;
@@ -247,33 +197,7 @@ const PrivacyText = styled.p`
 const HowItWorks: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
-  const steps = [
-    {
-      number: "01",
-      title: "SELECTION",
-      description: "Send us a HI using WhatsApp on 97722-97722 to get a list of paid VIP Numbers."
-    },
-    {
-      number: "02", 
-      title: "AVAILABILITY",
-      description: "Confirm the availability of your NEW VIP NUMBER."
-    },
-    {
-      number: "03",
-      title: "BOOKING", 
-      description: "We book your choice by Advance payment only. Use PAYTM and reserve your number on 97722-97722."
-    },
-    {
-      number: "04",
-      title: "SCHEDULE",
-      description: "Our team will call you & fix an appointment as per your schedule."
-    },
-    {
-      number: "05",
-      title: "THE DELIVERY",
-      description: "Done! We are always on time."
-    }
-  ];
+  // Steps data removed as we're using an image instead
 
   const faqs = [
     {
@@ -316,24 +240,16 @@ const HowItWorks: React.FC = () => {
 
   return (
     <HowItWorksContainer>
-      <HeroSection>
-        <div className="container">
-          <HeroTitle>How It Works</HeroTitle>
-        </div>
-      </HeroSection>
-
       <MainContent>
         <StepsSection>
-          <SectionTitle>Our Simple 5-Step Process</SectionTitle>
-          <StepsGrid>
-            {steps.map((step, index) => (
-              <StepCard key={index}>
-                <StepNumber>{step.number}</StepNumber>
-                <StepTitle>{step.title}</StepTitle>
-                <StepDescription>{step.description}</StepDescription>
-              </StepCard>
-            ))}
-          </StepsGrid>
+          <StepsImageWrapper>
+            <StepsImage 
+              src="/howItWorks.jpg" 
+              alt="How It Works - 5 Step Process: 1. Selection, 2. Availability, 3. Booking, 4. Schedule, 5. Delivery"
+              loading="eager"
+              decoding="async"
+            />
+          </StepsImageWrapper>
         </StepsSection>
 
         <BottomSection>
