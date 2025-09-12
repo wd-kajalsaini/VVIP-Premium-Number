@@ -1852,6 +1852,7 @@ const Home: React.FC = () => {
     }
   ];
 
+
   const categories = [
     {
       icon: <FaCrown />,
