@@ -346,94 +346,117 @@ const NumbersGrid = styled.div`
 
 const NumberCard = styled.div`
   background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
-  border: 2px solid transparent;
+  border: 3px solid;
   border-image: linear-gradient(135deg, #FFD700, #FFA500, #FFD700) 1;
-  border-radius: 12px;
-  padding: 25px;
+  border-radius: 15px;
+  padding: 30px 25px;
   position: relative;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.2);
   overflow: visible;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   
   &::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 100%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-    transform: rotate(45deg);
-    transition: all 0.5s ease;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 10px;
+    z-index: 1;
   }
   
   &::after {
-    content: '💎';
+    content: 'VVIP';
     position: absolute;
-    top: 15px;
+    top: -5px;
     right: 15px;
-    font-size: 1.5rem;
-    filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.4));
-    z-index: 3;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000000;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    z-index: 4;
+    text-shadow: none;
+    box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4);
   }
   
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.25);
+    box-shadow: 0 8px 35px rgba(255, 215, 0, 0.3);
     border-image: linear-gradient(135deg, #FFA500, #FFD700, #FFA500) 1;
-    
-    &::before {
-      animation: shine 0.5s ease-in-out;
-    }
-  }
-  
-  @keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
   }
 `;
 
 const PriceTag = styled.div`
-  color: white;
-  font-size: 20px;
+  color: #FFD700;
+  font-size: 1.8rem;
   font-weight: 800;
   margin-top: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-align: center;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   position: relative;
   z-index: 2;
-`;
-
-const PhoneNumber = styled.div`
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 12px;
-  text-align: center;
   letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  position: relative;
-  z-index: 2;
-  
-  .highlight {
-    color: #FFD700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  }
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
   }
 `;
 
-const SumTotal = styled.div`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+const PhoneNumber = styled.div`
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #FFD700;
   margin-bottom: 15px;
-  font-weight: 500;
+  text-align: center;
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  position: relative;
+  z-index: 2;
+  
+  .highlight {
+    color: #FFA500;
+    text-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+`;
+
+const SumTotal = styled.div`
+  color: rgba(255, 215, 0, 0.9);
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 600;
   text-align: center;
   position: relative;
   z-index: 2;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+`;
+
+const CrownIcon = styled.div`
+  position: absolute;
+  bottom: -8px;
+  left: 15px;
+  font-size: 2.5rem;
+  z-index: 4;
+  filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+  
+  &::before {
+    content: '👑';
+  }
 `;
 
 const ButtonRow = styled.div`
@@ -567,8 +590,9 @@ const VVIPCollection: React.FC = () => {
           <NumbersGrid>
             {sampleNumbers.map((item) => (
               <NumberCard key={item.id}>
+                <CrownIcon />
                 <PhoneNumber>{formatNumber(item.number, item.highlights)}</PhoneNumber>
-                <SumTotal>Sum Total = {calculateSumTotal(item.number)}</SumTotal>
+                <SumTotal>Sum Total: {calculateSumTotal(item.number)}</SumTotal>
                 <PriceTag>{item.price}</PriceTag>
                 <ButtonRow>
                   <ActionButton 
