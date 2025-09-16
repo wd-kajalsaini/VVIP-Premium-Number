@@ -231,16 +231,12 @@ const Gallery: React.FC = () => {
         console.log('📝 No Instagram URL configured in admin panel database');
       }
 
-      // Always show fallback if no URL or no posts found
-      console.log('📦 Using fallback posts');
-      const fallbackPosts = getPremiumNumberPost();
-      setInstagramPosts(fallbackPosts);
+      // No fallback - only show real Instagram posts
+      setInstagramPosts([]);
 
     } catch (error) {
       console.error('❌ Instagram loading error:', error);
-      const fallbackPosts = getPremiumNumberPost();
-      setInstagramPosts(fallbackPosts);
-      console.log('✅ Error fallback: Using themed posts');
+      setInstagramPosts([]);
     } finally {
       setLoading(false);
     }
@@ -294,7 +290,7 @@ const Gallery: React.FC = () => {
 
         {loading ? (
           <LoadingMessage>Loading Instagram posts...</LoadingMessage>
-        ) : (
+        ) : instagramPosts.length > 0 ? (
           <>
             <InstagramGrid>
               {instagramPosts.map((post) => (
@@ -317,9 +313,17 @@ const Gallery: React.FC = () => {
             </InstagramGrid>
 
             <LoadMoreButton onClick={openInstagramProfile}>
-              {loading ? 'Loading Posts...' : 'View More on Instagram'}
+              View More on Instagram
             </LoadMoreButton>
           </>
+        ) : (
+          <LoadingMessage>
+            Instagram posts are currently unavailable. Visit our Instagram directly.
+            <br />
+            <LoadMoreButton onClick={openInstagramProfile} style={{marginTop: '20px'}}>
+              Visit Instagram
+            </LoadMoreButton>
+          </LoadingMessage>
         )}
       </GalleryContent>
     </GalleryContainer>
