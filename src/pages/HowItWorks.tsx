@@ -43,25 +43,13 @@ const HowItWorksContainer = styled.div`
 
 const PageHeader = styled.div`
   text-align: center;
-  padding: ${theme.spacing['3xl']} 0 ${theme.spacing['2xl']};
+  padding: ${theme.spacing['2xl']} 0 ${theme.spacing.xl};
   background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   position: relative;
   z-index: 1;
   box-shadow: 0 10px 30px rgba(32, 178, 170, 0.2);
-  margin-bottom: ${theme.spacing['3xl']};
+  margin-bottom: ${theme.spacing.xl};
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-top: 30px solid #48cae4;
-  }
 `;
 
 const PageTitle = styled.h1`
@@ -96,12 +84,12 @@ const PageSubtitle = styled.p`
 const MainContent = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: ${theme.spacing['2xl']} ${theme.spacing.lg};
+  padding: ${theme.spacing.lg} ${theme.spacing.lg};
   position: relative;
   z-index: 1;
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing.xl} ${theme.spacing.md};
+    padding: ${theme.spacing.md} ${theme.spacing.md};
   }
 `;
 
@@ -197,7 +185,7 @@ const ImageTitle = styled.div`
 `;
 
 const FAQSection = styled.div`
-  margin-top: ${theme.spacing['2xl']};
+  margin-top: ${theme.spacing.xl};
 `;
 
 const FAQContainer = styled.div`
