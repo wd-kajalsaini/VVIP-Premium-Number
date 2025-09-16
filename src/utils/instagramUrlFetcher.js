@@ -318,7 +318,7 @@ const generateThemedPostsForAccount = (username) => {
   ];
 
   const themedCaptions = [
-    `🙏 Premium VIP numbers collection from @${username}`,
+    `🙏 Premium VIP numbers collection from`,
     `✨ New exclusive number launch! Contact us for details`,
     `🔥 Limited time offer on special VIP numbers`,
     `🎉 Happy customer with their new premium number`,
@@ -326,8 +326,10 @@ const generateThemedPostsForAccount = (username) => {
     `🌟 Blessed numbers with special significance`
   ];
 
+  
+
   return themedImages.map((image, index) => ({
-    id: `themed_${username}_${index + 1}`,
+    id: `themed_${index + 1}`,
     imageUrl: image,
     thumbnailUrl: image,
     caption: themedCaptions[index] || `Post from @${username}`,
