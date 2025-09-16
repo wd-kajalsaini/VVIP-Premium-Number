@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { fetchInstagramFromUrl, getPremiumNumberPost } from '../utils/instagramUrlFetcher';
-import { fetchRealInstagramData } from '../utils/realInstagramFetcher2';
 import { InstagramService } from '../services/instagramService';
 
 const GalleryContainer = styled.div`
@@ -217,28 +216,16 @@ const Gallery: React.FC = () => {
       console.log('🔍 URL to use for fetching:', urlToUse);
 
       if (urlToUse && urlToUse.trim()) {
-        console.log('🎯 FETCHING REAL INSTAGRAM POSTS FROM URL:', urlToUse);
+        console.log('🎯 FETCHING INSTAGRAM POSTS FROM URL:', urlToUse);
 
-        // Try the advanced real Instagram fetcher first
-        const realPosts = await fetchRealInstagramData(urlToUse);
+        const posts = await fetchInstagramFromUrl(urlToUse);
 
-        if (realPosts && realPosts.length > 0) {
-          setInstagramPosts(realPosts);
-          console.log('🎉 SUCCESS! Loaded', realPosts.length, 'REAL Instagram posts from URL!');
+        if (posts && posts.length > 0) {
+          setInstagramPosts(posts);
+          console.log('🎉 SUCCESS! Loaded', posts.length, 'Instagram posts from URL!');
           return;
         } else {
-          console.log('⚠️ Real Instagram fetcher failed, trying original method...');
-
-          // Fallback to original method
-          const posts = await fetchInstagramFromUrl(urlToUse);
-
-          if (posts && posts.length > 0) {
-            setInstagramPosts(posts);
-            console.log('🎉 SUCCESS! Loaded', posts.length, 'Instagram posts from fallback method!');
-            return;
-          } else {
-            console.log('⚠️ All Instagram methods failed, using themed posts...');
-          }
+          console.log('⚠️ No posts found from Instagram URL, using manual posts...');
         }
       } else {
         console.log('📝 No Instagram URL configured in admin panel database');

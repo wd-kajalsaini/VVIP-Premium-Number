@@ -1,6 +1,9 @@
 // Simple Instagram Solution - Practical approaches that actually work
 // Since all client-side scraping is blocked, we offer practical alternatives
 
+// Import the real Instagram content manager
+import { getRealInstagramPosts } from './instagramContentManager.js';
+
 export const fetchSimpleInstagramPosts = async (profileUrl) => {
   try {
     console.log('🎯 Using simple Instagram solution for:', profileUrl);
@@ -13,9 +16,8 @@ export const fetchSimpleInstagramPosts = async (profileUrl) => {
 
     console.log('👤 Username extracted:', username);
 
-    // Skip RSS attempts (they're blocked) and go straight to working solution
-    console.log('📝 Instagram auto-fetching is restricted by CORS/API limitations');
-    console.log('🎨 Using professional themed posts with your Instagram branding');
+    // Use manual Instagram content manager for real posts
+    console.log('🎯 Loading manual Instagram posts with real content');
     console.log('💡 Posts link to your real Instagram profile:', profileUrl);
     return getManualInstagramPosts(username, profileUrl);
 
@@ -46,65 +48,24 @@ const extractUsernameFromUrl = (url) => {
   }
 };
 
-// Solution 1: RSS to JSON service (sometimes works)
-const tryRSSToJSON = async (username) => {
-  try {
-    console.log('🔄 Trying RSS to JSON service...');
 
-    // Use a public RSS to JSON converter
-    const rssUrl = `https://rsshub.app/instagram/user/${username}`;
-    const jsonUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-
-    const response = await fetch(jsonUrl);
-
-    if (response.ok) {
-      const data = await response.json();
-
-      if (data.status === 'ok' && data.items && data.items.length > 0) {
-        return data.items.slice(0, 12).map((item, index) => ({
-          id: `rss_${index + 1}`,
-          imageUrl: item.thumbnail || item.enclosure?.link || `https://via.placeholder.com/400x400?text=Post+${index + 1}`,
-          thumbnailUrl: item.thumbnail || `https://via.placeholder.com/150x150?text=${index + 1}`,
-          caption: item.title || item.description || '',
-          likes: Math.floor(Math.random() * 500) + 50,
-          comments: Math.floor(Math.random() * 50) + 5,
-          link: item.link || `https://www.instagram.com/${username}/`,
-          timestamp: new Date(item.pubDate).getTime() / 1000 || Date.now() / 1000,
-          isVideo: false,
-          shortcode: `rss_${index + 1}`
-        }));
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.log('❌ RSS to JSON failed:', error.message);
-    return null;
-  }
-};
-
-// Solution 2: Instagram widget (manual approach)
-const tryInstagramWidget = async (username) => {
-  try {
-    console.log('🔄 Trying Instagram widget approach...');
-
-    // This would work with an Instagram Basic Display API token
-    // For now, we'll show the structure
-
-    console.log('💡 Instagram widget requires API token - skipping for now');
-    return null;
-  } catch (error) {
-    console.log('❌ Instagram widget failed:', error.message);
-    return null;
-  }
-};
-
-// Solution 3: Manual post management (always works)
+// Manual post management using content manager (always works)
 const getManualInstagramPosts = (username, profileUrl) => {
-  console.log('📝 Using manual Instagram posts template');
-  console.log('💡 To show real posts, you can manually update the images and captions below');
+  console.log('📝 Using REAL Instagram content from content manager');
+  console.log('🎯 Loading real Instagram images and captions');
 
-  // You can manually update these with your actual Instagram post data
+  // Use the real Instagram posts from content manager
+  try {
+    const realPosts = getRealInstagramPosts(username, profileUrl);
+    if (realPosts && realPosts.length > 0) {
+      console.log('✅ Loaded', realPosts.length, 'REAL Instagram posts with actual images');
+      return realPosts;
+    }
+  } catch (error) {
+    console.log('⚠️ Content manager failed, using fallback');
+  }
+
+  // Fallback if content manager fails
   const manualPosts = [
     {
       id: 'manual_1',
