@@ -1614,6 +1614,10 @@ const SumTotal = styled.div`
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: ${theme.spacing.sm};
   font-weight: ${theme.typography.fontWeight.medium};
+
+  strong {
+    font-weight: ${theme.typography.fontWeight.bold};
+  }
 `;
 
 const NumberActions = styled.div`
@@ -1656,7 +1660,7 @@ const NumberAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
 `;
 
 // Function to calculate sum total of digits in a phone number
-const calculateSumTotal = (phoneNumber: string): string => {
+const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
 
@@ -1669,8 +1673,8 @@ const calculateSumTotal = (phoneNumber: string): string => {
   // Calculate sum of the second sum (third sum)
   const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
 
-  // Return format: "firstSum-secondSum-thirdSum"
-  return `${firstSum}-${secondSum}-${thirdSum}`;
+  // Return format: "firstSum-secondSum-thirdSum" with bold formatting
+  return <><strong>{firstSum}-{secondSum}-{thirdSum}</strong></>;
 };
 
 const Home: React.FC = () => {

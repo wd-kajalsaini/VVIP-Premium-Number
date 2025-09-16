@@ -413,15 +413,16 @@ const PriceTag = styled.div`
 `;
 
 const PhoneNumber = styled.div`
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #FFD700;
   margin-bottom: 15px;
   text-align: center;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
   position: relative;
   z-index: 2;
+  white-space: nowrap;
   
   .highlight {
     color: #FFA500;
@@ -443,6 +444,10 @@ const SumTotal = styled.div`
   position: relative;
   z-index: 2;
   letter-spacing: 0.5px;
+
+  strong {
+    font-weight: 700;
+  }
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 `;
 
@@ -519,21 +524,21 @@ const VipBadge = styled.div`
 `;
 
 // Function to calculate sum total of digits in a phone number
-const calculateSumTotal = (phoneNumber: string): string => {
+const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
-  
+
   // Calculate sum of all digits (first sum)
   const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the first sum (second sum)
   const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
+
   // Calculate sum of the second sum (third sum)
   const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-  
-  // Return format: "firstSum-secondSum-thirdSum"
-  return `${firstSum}-${secondSum}-${thirdSum}`;
+
+  // Return format: "firstSum-secondSum-thirdSum" with bold formatting
+  return <><strong>{firstSum}-{secondSum}-{thirdSum}</strong></>;
 };
 
 const VVIPCollection: React.FC = () => {

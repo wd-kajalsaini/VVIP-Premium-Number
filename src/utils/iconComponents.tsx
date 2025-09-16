@@ -55,3 +55,4 @@ export const FaMoneyBillWave = createIcon(FaIcons.FaMoneyBillWave);
 export const FaHeart = createIcon(FaIcons.FaHeart);
 export const FaCog = createIcon(FaIcons.FaCog);
 export const FaImage = createIcon(FaIcons.FaImage);
+export const FaInstagram = createIcon(FaIcons.FaInstagram);

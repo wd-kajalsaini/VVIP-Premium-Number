@@ -6,14 +6,16 @@ import { theme } from '../styles/theme'
 import CategoriesManager from '../components/admin/CategoriesManager'
 import PhoneNumbersManager from '../components/admin/PhoneNumbersManager'
 import AdminCarousel from './AdminCarousel'
-import { 
-  FaBars, 
-  FaTimes, 
-  FaUser, 
-  FaPhoneAlt, 
+import InstagramSettings from './InstagramSettings'
+import {
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaPhoneAlt,
   FaCrown,
   FaChevronDown,
-  FaImage
+  FaImage,
+  FaInstagram
 } from '../utils/iconComponents'
 
 const DashboardContainer = styled.div`
@@ -241,6 +243,7 @@ const AdminDashboard: React.FC = () => {
     if (path.includes('/categories')) return 'Categories Management'
     if (path.includes('/phone-numbers')) return 'Phone Numbers Management'
     if (path.includes('/carousel')) return 'Carousel Management'
+    if (path.includes('/instagram')) return 'Instagram Settings'
     return 'Dashboard Overview'
   }
 
@@ -255,12 +258,17 @@ const AdminDashboard: React.FC = () => {
       icon: <FaImage />
     },
     {
+      path: '/admin/instagram',
+      label: 'Instagram',
+      icon: <FaInstagram />
+    },
+    {
       path: '/admin/categories',
       label: 'Categories',
       icon: <FaCrown />
     },
     {
-      path: '/admin/phone-numbers', 
+      path: '/admin/phone-numbers',
       label: 'Phone Numbers',
       icon: <FaPhoneAlt />
     }
@@ -320,6 +328,7 @@ const AdminDashboard: React.FC = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/admin/carousel" replace />} />
             <Route path="/carousel" element={<AdminCarousel />} />
+            <Route path="/instagram" element={<InstagramSettings />} />
             <Route path="/categories" element={<CategoriesManager />} />
             <Route path="/phone-numbers" element={<PhoneNumbersManager />} />
           </Routes>

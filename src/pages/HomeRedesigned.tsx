@@ -71,6 +71,10 @@ const FeaturedSum = styled.div`
   margin-bottom: 8px;
   text-align: center;
   font-weight: 500;
+
+  strong {
+    font-weight: 700;
+  }
 `;
 
 const FeaturedPrice = styled.div`
@@ -935,6 +939,168 @@ const VipCardButton = styled.button<{ $primary?: boolean }>`
   `}
 `;
 
+// Attractive Numbers Styled Components
+const AttractiveScrollContainer = styled.div`
+  overflow: hidden;
+  padding: 20px 0;
+  position: relative;
+`;
+
+const AttractiveScrollWrapper = styled.div`
+  display: flex;
+  gap: 25px;
+  width: max-content;
+  animation: autoScrollReverse 85s linear infinite;
+  will-change: transform;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes autoScrollReverse {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+`;
+
+const AttractiveCard = styled.div`
+  background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
+  border: 3px solid #fbbf24;
+  border-radius: 15px;
+  padding: 25px;
+  min-width: 340px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3), 0 0 30px rgba(251, 191, 36, 0.2);
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent);
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
+    animation: shimmerEffect 4s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  @keyframes shimmerEffect {
+    0% {
+      transform: translateX(-100%) translateY(-100%) rotate(0deg);
+    }
+    100% {
+      transform: translateX(100%) translateY(100%) rotate(360deg);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.4);
+    border-color: #facc15;
+  }
+
+  @media (max-width: 1200px) {
+    min-width: 280px;
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    min-width: 260px;
+    padding: 18px;
+  }
+`;
+
+const AttractiveNumberDisplay = styled.div`
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 10px;
+  text-align: center;
+  letter-spacing: 1.8px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3), 0 0 20px rgba(251, 191, 36, 0.2);
+
+  span.highlight {
+    color: #facc15;
+    text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+    font-weight: 800;
+  }
+`;
+
+const AttractiveSum = styled.div`
+  font-size: 1rem;
+  color: #fbbf24;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+
+  strong {
+    font-weight: 700;
+    color: #facc15;
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+  }
+`;
+
+const AttractivePrice = styled.div`
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #facc15;
+  text-align: center;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
+`;
+
+const AttractiveButton = styled.button`
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 2px solid #fbbf24;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  background: #fbbf24;
+  color: #000000;
+  box-shadow: 0 3px 15px rgba(251, 191, 36, 0.4);
+  position: relative;
+  z-index: 2;
+
+  &:hover {
+    background: #000000;
+    color: #fbbf24;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 5px 20px rgba(251, 191, 36, 0.6);
+    border-color: #facc15;
+  }
+
+  &:active {
+    transform: translateY(0) scale(1);
+  }
+`;
+
 // Quick Contact Section
 const QuickContact = styled.div`
   position: fixed;
@@ -1294,7 +1460,7 @@ const VisitorCounterSubtitle = styled.p`
 `;
 
 // Function to calculate sum total of digits in a phone number
-const calculateSumTotal = (phoneNumber: string): string => {
+const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
 
@@ -1307,8 +1473,8 @@ const calculateSumTotal = (phoneNumber: string): string => {
   // Calculate sum of the second sum (third sum)
   const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
 
-  // Return format: "firstSum-secondSum-thirdSum"
-  return `${firstSum}-${secondSum}-${thirdSum}`;
+  // Return format: "firstSum-secondSum-thirdSum" with bold formatting
+  return <><strong>{firstSum}-{secondSum}-{thirdSum}</strong></>;
 };
 
 const Home: React.FC = () => {
@@ -1371,6 +1537,48 @@ const Home: React.FC = () => {
     }
   ];
 
+  const attractiveNumbers = [
+    {
+      number: "98 98 00 00 00",
+      highlights: [6, 7, 8, 9, 10],
+      price: "₹28,000"
+    },
+    {
+      number: "99 55 88 55 88",
+      highlights: [3, 4, 6, 7, 9, 10],
+      price: "₹35,000"
+    },
+    {
+      number: "88 00 88 00 88",
+      highlights: [0, 1, 4, 5, 8, 9],
+      price: "₹42,000"
+    },
+    {
+      number: "77 77 00 00 77",
+      highlights: [0, 1, 2, 3, 8, 9],
+      price: "₹32,000"
+    },
+    {
+      number: "90 90 12 12 12",
+      highlights: [6, 7, 8, 9, 10],
+      price: "₹25,000"
+    },
+    {
+      number: "88 88 55 55 00",
+      highlights: [0, 1, 2, 3, 4, 5, 6, 7],
+      price: "₹38,000"
+    },
+    {
+      number: "99 00 99 00 99",
+      highlights: [0, 1, 4, 5, 8, 9],
+      price: "₹45,000"
+    },
+    {
+      number: "777 888 9999",
+      highlights: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      price: "₹55,000"
+    }
+  ];
 
   const topBannerNumbers = [
     {
@@ -1901,6 +2109,31 @@ const Home: React.FC = () => {
               ))}
             </VipScrollWrapper>
           </VipScrollContainer>
+        </NumbersSection>
+
+        {/* Attractive Numbers Auto-Scroll Section */}
+        <NumbersSection>
+          <SectionTitle>Attractive Numbers</SectionTitle>
+          <AttractiveScrollContainer>
+            <AttractiveScrollWrapper>
+              {[...attractiveNumbers, ...attractiveNumbers].map((item, index) => (
+                <AttractiveCard key={index}>
+                  <AttractiveNumberDisplay>
+                    {formatNumberDisplay(item.number, item.highlights)}
+                  </AttractiveNumberDisplay>
+                  <AttractiveSum>Sum Total = {calculateSumTotal(item.number)}</AttractiveSum>
+                  <AttractivePrice>{item.price}</AttractivePrice>
+                  <CardActions>
+                    <AttractiveButton
+                      onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
+                    >
+                      Buy Now
+                    </AttractiveButton>
+                  </CardActions>
+                </AttractiveCard>
+              ))}
+            </AttractiveScrollWrapper>
+          </AttractiveScrollContainer>
         </NumbersSection>
       </MainContent>
 
