@@ -6,46 +6,62 @@ import { theme } from '../styles/theme';
 const HowItWorksContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: linear-gradient(135deg, 
-    #87CEEB 0%, 
-    #87CEFA 25%, 
-    #20B2AA 70%, 
-    #32CD32 100%
-  );
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   position: relative;
-  
+  overflow: hidden;
+
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 25% 25%, rgba(135, 206, 235, 0.2) 0%, transparent 40%),
-      radial-gradient(circle at 75% 75%, rgba(135, 206, 250, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 50% 10%, rgba(32, 178, 170, 0.1) 0%, transparent 50%);
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(32, 178, 170, 0.03) 0%, transparent 70%);
+    animation: float 20s ease-in-out infinite;
     z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
+    animation: float 25s ease-in-out infinite reverse;
+    z-index: 0;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
   }
 `;
 
 const PageHeader = styled.div`
   text-align: center;
   padding: ${theme.spacing['2xl']} 0 ${theme.spacing.xl};
-  background: transparent;
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   position: relative;
   z-index: 1;
+  box-shadow: 0 10px 30px rgba(32, 178, 170, 0.2);
+  margin-bottom: ${theme.spacing.xl};
+
 `;
 
 const PageTitle = styled.h1`
-  font-size: ${theme.typography.fontSize['3xl']};
-  font-weight: ${theme.typography.fontWeight.bold};
+  font-size: 3.5rem;
+  font-weight: 800;
   color: ${theme.colors.neutral.white};
   margin: 0 0 ${theme.spacing.md};
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  letter-spacing: -1px;
+
   @media (max-width: 768px) {
-    font-size: ${theme.typography.fontSize['2xl']};
+    font-size: 2.5rem;
   }
 `;
 
@@ -66,81 +82,171 @@ const PageSubtitle = styled.p`
 `;
 
 const MainContent = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 ${theme.spacing.md} ${theme.spacing['2xl']};
+  padding: ${theme.spacing.lg} ${theme.spacing.lg};
   position: relative;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md} ${theme.spacing.md};
+  }
 `;
 
-const MainLayout = styled.div`
+const ImagesSection = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${theme.spacing.xl};
   margin-bottom: ${theme.spacing['3xl']};
 
-  @media (max-width: 1024px) {
+  @media (max-width: 968px) {
     grid-template-columns: 1fr;
     gap: ${theme.spacing.lg};
   }
 `;
 
-const LeftPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.lg};
+const SectionDivider = styled.div`
+  height: 40px;
+  position: relative;
+  margin: ${theme.spacing['2xl']} 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #20b2aa, #48cae4);
+    border-radius: 2px;
+  }
 `;
 
-const RightPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.lg};
+const ImageCard = styled.div`
+  position: relative;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const BannerImageWrapper = styled.div`
+  width: 100%;
+  position: relative;
   background: ${theme.colors.neutral.white};
-  border-radius: ${theme.borderRadius.lg};
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid ${theme.colors.neutral.gray200};
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: ${theme.spacing.md};
+
   @media (max-width: 768px) {
-    border-radius: ${theme.borderRadius.md};
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    min-height: 250px;
+    padding: ${theme.spacing.sm};
   }
 `;
 
 const BannerImage = styled.img`
   width: 100%;
   height: auto;
+  max-height: 400px;
   display: block;
   object-fit: contain;
+  background: white;
+
+  @media (max-width: 768px) {
+    max-height: 300px;
+  }
 `;
 
-const FAQCard = styled.div`
-  background: ${theme.colors.neutral.white};
-  border-radius: ${theme.borderRadius.lg};
-  border: 1px solid ${theme.colors.neutral.gray200};
-  padding: ${theme.spacing.xl};
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+const ImageTitle = styled.div`
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
+  color: white;
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 12px 12px 0 0;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: ${theme.spacing.sm} ${theme.spacing.md};
+  }
+`;
+
+const FAQSection = styled.div`
+  margin-top: ${theme.spacing.xl};
+`;
+
+const FAQContainer = styled.div`
+  width: 100%;
+`;
+
+const FAQHeader = styled.div`
+  text-align: center;
+  margin-bottom: ${theme.spacing['2xl']};
 `;
 
 const SectionTitle = styled.h2`
-  color: ${theme.colors.primary.green};
-  font-size: ${theme.typography.fontSize.xl};
-  font-weight: ${theme.typography.fontWeight.bold};
-  margin-bottom: ${theme.spacing.lg};
+  color: #1a1a1a;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: ${theme.spacing.sm};
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #20b2aa, #48cae4);
+    border-radius: 2px;
+  }
+`;
+
+const SectionSubtitle = styled.p`
+  color: ${theme.colors.neutral.gray600};
+  font-size: ${theme.typography.fontSize.md};
+  margin-top: ${theme.spacing.lg};
+  margin-bottom: 0;
+`;
+
+const FAQGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: ${theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing.lg};
+  }
 `;
 
 const FAQItem = styled.div`
-  border-bottom: 1px solid ${theme.colors.neutral.gray200};
-  margin-bottom: ${theme.spacing.md};
-  padding-bottom: ${theme.spacing.md};
+  background: ${theme.colors.neutral.white};
+  border-radius: 15px;
+  padding: ${theme.spacing.lg};
+  border: 2px solid ${theme.colors.neutral.gray200};
+  transition: all 0.3s ease;
 
-  &:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+  &:hover {
+    border-color: #20b2aa;
+    box-shadow: 0 10px 30px rgba(32, 178, 170, 0.1);
+    transform: translateY(-5px);
   }
 `;
 
@@ -149,48 +255,95 @@ const FAQQuestion = styled.button`
   text-align: left;
   background: none;
   border: none;
-  font-size: ${theme.typography.fontSize.md};
-  font-weight: ${theme.typography.fontWeight.semibold};
-  color: ${theme.colors.neutral.gray800};
-  padding: ${theme.spacing.sm} 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 0;
+  margin-bottom: ${theme.spacing.sm};
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  transition: color 0.3s ease;
+  line-height: 1.4;
 
   &:hover {
-    color: ${theme.colors.primary.green};
+    color: #20b2aa;
+  }
+
+  svg {
+    flex-shrink: 0;
+    margin-left: ${theme.spacing.sm};
+    margin-top: 3px;
+    color: #20b2aa;
+    transition: transform 0.3s ease;
   }
 `;
 
 const FAQAnswer = styled.div<{ $isOpen: boolean }>`
-  max-height: ${props => props.$isOpen ? '200px' : '0'};
+  max-height: ${props => props.$isOpen ? '300px' : '0'};
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: all 0.3s ease;
   color: ${theme.colors.neutral.gray600};
-  line-height: 1.6;
+  line-height: 1.7;
   padding-top: ${props => props.$isOpen ? theme.spacing.sm : '0'};
+  opacity: ${props => props.$isOpen ? 1 : 0};
+  font-size: 0.95rem;
 `;
 
 
 const PrivacySection = styled.div`
-  background: ${theme.colors.neutral.gray100};
-  border-radius: ${theme.borderRadius.lg};
-  padding: ${theme.spacing.xl};
-  border: 1px solid ${theme.colors.neutral.gray200};
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
+  padding: ${theme.spacing['2xl']};
+  margin-top: ${theme.spacing['3xl']};
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(32, 178, 170, 0.2);
+
+  &::before {
+    content: '🔒';
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 60px;
+    opacity: 0.1;
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.xl};
+
+    &::before {
+      font-size: 40px;
+      right: 20px;
+    }
+  }
+`;
+
+const PrivacyContent = styled.div`
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
 `;
 
 const PrivacyTitle = styled.h3`
-  color: ${theme.colors.neutral.gray800};
-  font-size: ${theme.typography.fontSize.lg};
-  font-weight: ${theme.typography.fontWeight.semibold};
+  color: ${theme.colors.neutral.white};
+  font-size: 1.8rem;
+  font-weight: 700;
   margin-bottom: ${theme.spacing.md};
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const PrivacyText = styled.p`
-  color: ${theme.colors.neutral.gray600};
-  line-height: 1.6;
+  color: ${theme.colors.neutral.white};
+  line-height: 1.8;
   margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const HowItWorks: React.FC = () => {
@@ -247,21 +400,38 @@ const HowItWorks: React.FC = () => {
       </PageHeader>
       
       <MainContent>
-        <MainLayout>
-          <LeftPanel>
+        <ImagesSection>
+          <ImageCard>
+            <ImageTitle>📋 Step by Step Process</ImageTitle>
             <BannerImageWrapper>
-              <BannerImage 
-                src="/howItWorks.jpg" 
-                alt="How It Works - 5 Step Process: 1. Selection, 2. Availability, 3. Booking, 4. Schedule, 5. Delivery"
+              <BannerImage
+                src="/howItWorks.jpg"
+                alt="How It Works - 5 Step Process"
                 loading="eager"
                 decoding="async"
               />
             </BannerImageWrapper>
-          </LeftPanel>
+          </ImageCard>
+          <ImageCard>
+            <ImageTitle>✅ Complete Your Purchase</ImageTitle>
+            <BannerImageWrapper>
+              <BannerImage
+                src="/howitworks2.jpg"
+                alt="Complete Your Purchase Process"
+                loading="eager"
+                decoding="async"
+              />
+            </BannerImageWrapper>
+          </ImageCard>
+        </ImagesSection>
 
-          <RightPanel>
-            <FAQCard>
+        <FAQSection>
+          <FAQContainer>
+            <FAQHeader>
               <SectionTitle>Frequently Asked Questions</SectionTitle>
+              <SectionSubtitle>Everything you need to know about getting your premium number</SectionSubtitle>
+            </FAQHeader>
+            <FAQGrid>
               {faqs.map((faq, index) => (
                 <FAQItem key={index}>
                   <FAQQuestion onClick={() => toggleFAQ(index)}>
@@ -273,15 +443,17 @@ const HowItWorks: React.FC = () => {
                   </FAQAnswer>
                 </FAQItem>
               ))}
-            </FAQCard>
-          </RightPanel>
-        </MainLayout>
+            </FAQGrid>
+          </FAQContainer>
+        </FAQSection>
 
         <PrivacySection>
-          <PrivacyTitle>Privacy</PrivacyTitle>
-          <PrivacyText>
-            We do not store your credit card or other payment information. And we do not share your information with anyone else.
-          </PrivacyText>
+          <PrivacyContent>
+            <PrivacyTitle>Your Privacy Matters</PrivacyTitle>
+            <PrivacyText>
+              We do not store your credit card or other payment information. Your data is encrypted and secure. We never share your personal information with third parties.
+            </PrivacyText>
+          </PrivacyContent>
         </PrivacySection>
       </MainContent>
     </HowItWorksContainer>

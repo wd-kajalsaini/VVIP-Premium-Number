@@ -27,5 +27,6 @@ export interface PhoneNumber {
 export interface AdminUser {
   id: string
   email: string
+  instagram_url?: string
   created_at: string
 }
