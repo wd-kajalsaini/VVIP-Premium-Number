@@ -6,14 +6,15 @@ import { theme } from '../styles/theme';
 const NumerologyContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: linear-gradient(135deg, 
-    #87CEEB 0%, 
-    #87CEFA 25%, 
-    #20B2AA 70%, 
-    #32CD32 100%
+  background: linear-gradient(135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #4facfe 100%
   );
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -21,10 +22,28 @@ const NumerologyContainer = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-      radial-gradient(circle at 25% 25%, rgba(135, 206, 235, 0.3) 0%, transparent 40%),
-      radial-gradient(circle at 75% 75%, rgba(135, 206, 250, 0.2) 0%, transparent 40%),
-      radial-gradient(circle at 50% 10%, rgba(32, 178, 170, 0.15) 0%, transparent 50%);
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 40% 80%, rgba(102, 126, 234, 0.2) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 35px,
+        rgba(255, 255, 255, 0.03) 35px,
+        rgba(255, 255, 255, 0.03) 70px
+      );
     z-index: 0;
   }
 `;
@@ -38,11 +57,30 @@ const MainLayout = styled.div`
   padding: ${theme.spacing.xl};
   min-height: calc(100vh - 70px);
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
     gap: ${theme.spacing.lg};
+    padding: ${theme.spacing.lg};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md};
+    gap: ${theme.spacing.md};
+    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    gap: 15px;
   }
 `;
 
@@ -59,30 +97,152 @@ const RightPanel = styled.div`
 `;
 
 const CompactHeader = styled.div`
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.green},
-    ${theme.colors.primary.skyBlue},
-    ${theme.colors.primary.yellow}
-  );
-  padding: ${theme.spacing.xl};
-  border-radius: 20px;
-  text-align: center;
-  color: white;
-  margin-bottom: ${theme.spacing.lg};
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 60px 16px 0;
+  position: relative;
+  z-index: 2;
 
-  h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: ${theme.spacing.sm};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: ${theme.spacing.sm};
+  @media (max-width: 768px) {
+    padding: 40px 8px 0;
+  }
+`;
+
+const ImageCard = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, rgba(118, 75, 162, 0.9), rgba(240, 147, 251, 0.9));
   }
 
-  p {
+  @media (max-width: 768px) {
+    max-width: 95%;
+  }
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+`;
+
+const HeroImage = styled.img`
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  display: block;
+  object-fit: contain;
+  background: white;
+  transition: transform 0.3s ease;
+
+  @media (max-width: 768px) {
+    height: 400px;
+    max-height: 400px;
+  }
+
+  /* Fallback if image fails to load */
+  &:not([src]),
+  &[src=""],
+  &:after {
+    content: '';
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  }
+`;
+
+const HeroContent = styled.div`
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const HeroTitle = styled.h1`
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.4;
+
+  @media (max-width: 768px) {
     font-size: 1.3rem;
-    opacity: 0.9;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
+`;
+
+const HeroDescription = styled.p`
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const NumberSymbols = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  font-size: 2rem;
+  opacity: 0.8;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    gap: 15px;
   }
 `;
 
@@ -99,6 +259,8 @@ const CompactFormCard = styled.div`
   padding: ${theme.spacing.xl};
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
+  width: 100%;
+  margin: 0 auto;
 
   &::before {
     content: '';
@@ -113,6 +275,17 @@ const CompactFormCard = styled.div`
       #20b2aa
     );
     border-radius: 20px 20px 0 0;
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.lg};
+    border-radius: 15px;
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: ${theme.spacing.md};
+    border-radius: 12px;
   }
 `;
 
@@ -130,6 +303,9 @@ const CompactInfoCard = styled.div`
   ) 1;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 
   &:hover {
     transform: translateY(-2px);
@@ -154,6 +330,19 @@ const CompactInfoCard = styled.div`
   ul {
     margin: 0;
     padding-left: ${theme.spacing.md};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md};
+    border-radius: 10px;
+    margin-bottom: ${theme.spacing.sm};
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 8px;
   }
 `;
 
@@ -196,10 +385,14 @@ const CompactFormGroup = styled.div`
 `;
 
 const CompactLabel = styled.label`
-  font-weight: 600;
-  color: ${theme.colors.neutral.gray700};
-  margin-bottom: ${theme.spacing.xs};
+  font-weight: 500;
+  color: ${theme.colors.neutral.gray400};
+  margin-bottom: 8px;
   font-size: 0.9rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const CompactInput = styled.input`
@@ -209,6 +402,9 @@ const CompactInput = styled.input`
   font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
 
   &:focus {
     border-color: ${theme.colors.primary.green};
@@ -218,9 +414,24 @@ const CompactInput = styled.input`
 
   &::placeholder {
     color: ${theme.colors.neutral.gray400};
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 480px) {
+    height: 52px;
+    padding: 16px;
+    font-size: 1rem;
   }
 `;
+
 
 const CompactSelect = styled.select`
   padding: ${theme.spacing.md};
@@ -230,11 +441,27 @@ const CompactSelect = styled.select`
   background: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
 
   &:focus {
     border-color: ${theme.colors.primary.skyBlue};
     box-shadow: 0 0 0 2px ${theme.colors.primary.skyBlue}15;
     outline: none;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 480px) {
+    height: 52px;
+    padding: 16px;
+    font-size: 1rem;
   }
 `;
 
@@ -322,11 +549,11 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
   return (
     <NumerologyContainer>
       <CompactHeader>
-        <h1>
-          <MagicIcon />
-          Numerology Consultation
-        </h1>
-        <p>मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत! ✨📱</p>
+        <ImageCard>
+          <ImageWrapper>
+            <HeroImage src="/numerology.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
+          </ImageWrapper>
+        </ImageCard>
       </CompactHeader>
 
       <MainLayout>
@@ -374,7 +601,6 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     name="birthTime"
                     value={formData.birthTime}
                     onChange={handleChange}
-                    placeholder="HH:MM"
                   />
                 </CompactFormGroup>
 

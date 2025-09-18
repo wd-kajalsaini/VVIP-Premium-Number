@@ -6,50 +6,26 @@ import { theme } from '../styles/theme';
 const HowItWorksContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(32, 178, 170, 0.03) 0%, transparent 70%);
-    animation: float 20s ease-in-out infinite;
-    z-index: 0;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
-    animation: float 25s ease-in-out infinite reverse;
-    z-index: 0;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(30px, -30px) rotate(120deg); }
-    66% { transform: translate(-20px, 20px) rotate(240deg); }
-  }
 `;
 
 const PageHeader = styled.div`
   text-align: center;
-  padding: ${theme.spacing['2xl']} 0 ${theme.spacing.xl};
+  padding: ${theme.spacing['3xl']} ${theme.spacing.md} 0;
   background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
-  position: relative;
-  z-index: 1;
+  border-radius: 20px;
   box-shadow: 0 10px 30px rgba(32, 178, 170, 0.2);
-  margin-bottom: ${theme.spacing.xl};
+  margin: 0 ${theme.spacing.md} ${theme.spacing.xl};
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
 
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.xl} ${theme.spacing.sm} 0;
+    margin: 0 ${theme.spacing.sm} ${theme.spacing.xl};
+  }
 `;
 
 const PageTitle = styled.h1`
@@ -74,10 +50,25 @@ const PageSubtitle = styled.p`
   margin-right: auto;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   opacity: 0.9;
-  
+
   @media (max-width: 768px) {
     font-size: ${theme.typography.fontSize.md};
     padding: 0 ${theme.spacing.md};
+  }
+`;
+
+const HeaderBannerImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 400px;
+  border-radius: 12px;
+  margin-top: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    max-height: 300px;
+    margin-top: ${theme.spacing.md};
   }
 `;
 
@@ -86,7 +77,6 @@ const MainContent = styled.div`
   margin: 0 auto;
   padding: ${theme.spacing.lg} ${theme.spacing.lg};
   position: relative;
-  z-index: 1;
 
   @media (max-width: 768px) {
     padding: ${theme.spacing.md} ${theme.spacing.md};
@@ -94,14 +84,16 @@ const MainContent = styled.div`
 `;
 
 const ImagesSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${theme.spacing.xl};
-  margin-bottom: ${theme.spacing['3xl']};
+  display: flex;
+  justify-content: center;
+  margin-bottom: ${theme.spacing['2xl']};
+  padding: ${theme.spacing.lg} ${theme.spacing.xs};
+  background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(32, 178, 170, 0.08);
 
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: ${theme.spacing.lg};
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.sm} ${theme.spacing.xs};
   }
 `;
 
@@ -126,15 +118,26 @@ const SectionDivider = styled.div`
 const ImageCard = styled.div`
   position: relative;
   width: 100%;
+  max-width: 90%;
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 24px rgba(32, 178, 170, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(32, 178, 170, 0.1);
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(32, 178, 170, 0.15);
+    border-color: rgba(32, 178, 170, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    max-width: 98%;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
   }
 `;
 
@@ -146,11 +149,9 @@ const BannerImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
-  padding: ${theme.spacing.md};
+  padding: ${theme.spacing.lg};
 
   @media (max-width: 768px) {
-    min-height: 250px;
     padding: ${theme.spacing.sm};
   }
 `;
@@ -162,30 +163,49 @@ const BannerImage = styled.img`
   display: block;
   object-fit: contain;
   background: white;
+  transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
-    max-height: 300px;
+    height: 400px;
+    max-height: 400px;
   }
 `;
 
 const ImageTitle = styled.div`
   background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   color: white;
-  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  padding: ${theme.spacing.lg} ${theme.spacing.xl};
   text-align: center;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  border-radius: 12px 12px 0 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
 
   @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: ${theme.spacing.sm} ${theme.spacing.md};
+    font-size: 1.1rem;
+    padding: ${theme.spacing.md} ${theme.spacing.lg};
   }
 `;
 
 const FAQSection = styled.div`
   margin-top: ${theme.spacing.xl};
+
+  @media (max-width: 768px) {
+    margin-top: ${theme.spacing.lg};
+  }
 `;
 
 const FAQContainer = styled.div`
@@ -199,11 +219,15 @@ const FAQHeader = styled.div`
 
 const SectionTitle = styled.h2`
   color: #1a1a1a;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
   margin-bottom: ${theme.spacing.sm};
   position: relative;
   display: inline-block;
+  background: linear-gradient(135deg, #20b2aa, #48cae4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   &::after {
     content: '';
@@ -211,10 +235,14 @@ const SectionTitle = styled.h2`
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
+    width: 60px;
+    height: 3px;
     background: linear-gradient(90deg, #20b2aa, #48cae4);
     border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
   }
 `;
 
@@ -227,26 +255,28 @@ const SectionSubtitle = styled.p`
 
 const FAQGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: ${theme.spacing.xl};
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: ${theme.spacing.lg};
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: ${theme.spacing.lg};
+    gap: ${theme.spacing.md};
   }
 `;
 
 const FAQItem = styled.div`
   background: ${theme.colors.neutral.white};
-  border-radius: 15px;
-  padding: ${theme.spacing.lg};
-  border: 2px solid ${theme.colors.neutral.gray200};
+  border-radius: 12px;
+  padding: ${theme.spacing.md} ${theme.spacing.lg};
+  border: 1px solid rgba(32, 178, 170, 0.15);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 
   &:hover {
     border-color: #20b2aa;
-    box-shadow: 0 10px 30px rgba(32, 178, 170, 0.1);
-    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(32, 178, 170, 0.15);
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.9);
   }
 `;
 
@@ -393,25 +423,18 @@ const HowItWorks: React.FC = () => {
   return (
     <HowItWorksContainer>
       <PageHeader>
-        <PageTitle>How It Works</PageTitle>
-        <PageSubtitle>
-          Get your premium mobile number in just 5 simple steps. Fast, secure, and hassle-free process.
-        </PageSubtitle>
+        <div style={{ padding: '40px 0', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '20px'}}>
+            How It Works
+          </h1>
+          <p style={{ fontSize: '1.2rem', color: '#FFFFFF', maxWidth: '600px', margin: '0 auto' }}>
+            Get your premium mobile number in just a few simple steps. Fast, secure, and hassle-free process.
+          </p>
+        </div>
       </PageHeader>
-      
+
       <MainContent>
         <ImagesSection>
-          <ImageCard>
-            <ImageTitle>📋 Step by Step Process</ImageTitle>
-            <BannerImageWrapper>
-              <BannerImage
-                src="/howItWorks.jpg"
-                alt="How It Works - 5 Step Process"
-                loading="eager"
-                decoding="async"
-              />
-            </BannerImageWrapper>
-          </ImageCard>
           <ImageCard>
             <ImageTitle>✅ Complete Your Purchase</ImageTitle>
             <BannerImageWrapper>
