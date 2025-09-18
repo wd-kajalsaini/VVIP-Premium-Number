@@ -6,27 +6,8 @@ import { theme } from '../styles/theme';
 const NumerologyContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: linear-gradient(135deg, 
-    #87CEEB 0%, 
-    #87CEFA 25%, 
-    #20B2AA 70%, 
-    #32CD32 100%
-  );
+  background: #ffffff;
   position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 25% 25%, rgba(135, 206, 235, 0.3) 0%, transparent 40%),
-      radial-gradient(circle at 75% 75%, rgba(135, 206, 250, 0.2) 0%, transparent 40%),
-      radial-gradient(circle at 50% 10%, rgba(32, 178, 170, 0.15) 0%, transparent 50%);
-    z-index: 0;
-  }
 `;
 
 const MainLayout = styled.div`
@@ -43,6 +24,20 @@ const MainLayout = styled.div`
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
     gap: ${theme.spacing.lg};
+    padding: ${theme.spacing.lg};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md};
+    gap: ${theme.spacing.md};
+    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    gap: 15px;
   }
 `;
 
@@ -59,30 +54,123 @@ const RightPanel = styled.div`
 `;
 
 const CompactHeader = styled.div`
-  background: linear-gradient(135deg,
-    ${theme.colors.primary.green},
-    ${theme.colors.primary.skyBlue},
-    ${theme.colors.primary.yellow}
-  );
-  padding: ${theme.spacing.xl};
-  border-radius: 20px;
-  text-align: center;
-  color: white;
+  width: 100%;
   margin-bottom: ${theme.spacing.lg};
+  padding: ${theme.spacing['3xl']} ${theme.spacing.md} 0;
+  position: relative;
+  overflow: hidden;
 
-  h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: ${theme.spacing.sm};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: ${theme.spacing.sm};
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.xl} ${theme.spacing.sm} 0;
+  }
+`;
+
+const HeroImage = styled.img`
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 1200px) {
+    height: 350px;
   }
 
-  p {
+  @media (max-width: 768px) {
+    height: 400px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 480px) {
+    height: 400px;
+    border-radius: 10px;
+  }
+
+  /* Fallback if image fails to load */
+  &:not([src]),
+  &[src=""],
+  &:after {
+    content: '';
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  }
+`;
+
+const HeroContent = styled.div`
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const HeroTitle = styled.h1`
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.4;
+
+  @media (max-width: 768px) {
     font-size: 1.3rem;
-    opacity: 0.9;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
+`;
+
+const HeroDescription = styled.p`
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const NumberSymbols = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  font-size: 2rem;
+  opacity: 0.8;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    gap: 15px;
   }
 `;
 
@@ -99,6 +187,8 @@ const CompactFormCard = styled.div`
   padding: ${theme.spacing.xl};
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
+  width: 100%;
+  margin: 0 auto;
 
   &::before {
     content: '';
@@ -113,6 +203,17 @@ const CompactFormCard = styled.div`
       #20b2aa
     );
     border-radius: 20px 20px 0 0;
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.lg};
+    border-radius: 15px;
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: ${theme.spacing.md};
+    border-radius: 12px;
   }
 `;
 
@@ -130,6 +231,9 @@ const CompactInfoCard = styled.div`
   ) 1;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 
   &:hover {
     transform: translateY(-2px);
@@ -154,6 +258,19 @@ const CompactInfoCard = styled.div`
   ul {
     margin: 0;
     padding-left: ${theme.spacing.md};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md};
+    border-radius: 10px;
+    margin-bottom: ${theme.spacing.sm};
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 8px;
   }
 `;
 
@@ -196,10 +313,14 @@ const CompactFormGroup = styled.div`
 `;
 
 const CompactLabel = styled.label`
-  font-weight: 600;
-  color: ${theme.colors.neutral.gray700};
-  margin-bottom: ${theme.spacing.xs};
+  font-weight: 500;
+  color: ${theme.colors.neutral.gray400};
+  margin-bottom: 8px;
   font-size: 0.9rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const CompactInput = styled.input`
@@ -209,6 +330,9 @@ const CompactInput = styled.input`
   font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
 
   &:focus {
     border-color: ${theme.colors.primary.green};
@@ -218,9 +342,24 @@ const CompactInput = styled.input`
 
   &::placeholder {
     color: ${theme.colors.neutral.gray400};
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 480px) {
+    height: 52px;
+    padding: 16px;
+    font-size: 1rem;
   }
 `;
+
 
 const CompactSelect = styled.select`
   padding: ${theme.spacing.md};
@@ -230,11 +369,27 @@ const CompactSelect = styled.select`
   background: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
 
   &:focus {
     border-color: ${theme.colors.primary.skyBlue};
     box-shadow: 0 0 0 2px ${theme.colors.primary.skyBlue}15;
     outline: none;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 480px) {
+    height: 52px;
+    padding: 16px;
+    font-size: 1rem;
   }
 `;
 
@@ -322,11 +477,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
   return (
     <NumerologyContainer>
       <CompactHeader>
-        <h1>
-          <MagicIcon />
-          Numerology Consultation
-        </h1>
-        <p>मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत! ✨📱</p>
+        <HeroImage src="/numerology.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
       </CompactHeader>
 
       <MainLayout>
@@ -374,7 +525,6 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     name="birthTime"
                     value={formData.birthTime}
                     onChange={handleChange}
-                    placeholder="HH:MM"
                   />
                 </CompactFormGroup>
 

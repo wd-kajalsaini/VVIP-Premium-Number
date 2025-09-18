@@ -374,18 +374,19 @@ const NumberCard = styled.div`
   &::after {
     content: 'VVIP';
     position: absolute;
-    top: -5px;
+    top: 15px;
     right: 15px;
     background: linear-gradient(135deg, #FFD700, #FFA500);
     color: #000000;
-    padding: 5px 15px;
-    border-radius: 15px;
-    font-size: 0.8rem;
+    padding: 3px 15px;
+    border-radius: 12px;
+    font-size: 0.7rem;
     font-weight: 900;
     letter-spacing: 1px;
     z-index: 4;
     text-shadow: none;
     box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4);
+    border: 1px solid #000000;
   }
   
   &:hover {
@@ -416,6 +417,7 @@ const PhoneNumber = styled.div`
   font-size: 1.8rem;
   font-weight: 700;
   color: #FFD700;
+  margin-top: 25px;
   margin-bottom: 15px;
   text-align: center;
   letter-spacing: 1.5px;
@@ -423,7 +425,7 @@ const PhoneNumber = styled.div`
   position: relative;
   z-index: 2;
   white-space: nowrap;
-  
+
   .highlight {
     color: #FFA500;
     text-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
@@ -453,12 +455,12 @@ const SumTotal = styled.div`
 
 const CrownIcon = styled.div`
   position: absolute;
-  bottom: -8px;
-  left: 15px;
-  font-size: 2.5rem;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1.8rem;
   z-index: 4;
   filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
-  
+
   &::before {
     content: '👑';
   }

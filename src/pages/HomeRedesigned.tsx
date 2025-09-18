@@ -968,14 +968,17 @@ const AttractiveScrollWrapper = styled.div`
 `;
 
 const AttractiveCard = styled.div`
-  background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
-  border: 3px solid #fbbf24;
-  border-radius: 15px;
+  background: linear-gradient(135deg, #059669, #0ea5e9, #10b981);
+  border: 3px solid #eab308;
+  border-radius: 20px;
   padding: 25px;
   min-width: 340px;
   flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3), 0 0 30px rgba(251, 191, 36, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 8px 32px rgba(234, 179, 8, 0.4),
+    0 0 40px rgba(14, 165, 233, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
   position: relative;
 
@@ -986,35 +989,58 @@ const AttractiveCard = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), transparent);
+    background: linear-gradient(135deg,
+      rgba(234, 179, 8, 0.15) 0%,
+      rgba(14, 165, 233, 0.1) 50%,
+      rgba(16, 185, 129, 0.05) 100%);
     z-index: 1;
   }
 
   &::after {
     content: '';
     position: absolute;
-    top: -100%;
-    left: -100%;
-    width: 300%;
-    height: 300%;
-    background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 70%);
-    animation: shimmerEffect 4s ease-in-out infinite;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(234, 179, 8, 0.3) 30deg,
+      transparent 60deg,
+      rgba(14, 165, 233, 0.25) 120deg,
+      transparent 150deg,
+      rgba(16, 185, 129, 0.2) 240deg,
+      transparent 270deg
+    );
+    animation: attractiveShimmer 6s linear infinite;
     z-index: 1;
   }
 
-  @keyframes shimmerEffect {
+  @keyframes attractiveShimmer {
     0% {
-      transform: translateX(-100%) translateY(-100%) rotate(0deg);
+      transform: rotate(0deg);
     }
     100% {
-      transform: translateX(100%) translateY(100%) rotate(360deg);
+      transform: rotate(360deg);
     }
   }
 
   &:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5), 0 0 40px rgba(251, 191, 36, 0.4);
+    transform: translateY(-8px) scale(1.03);
+    box-shadow:
+      0 15px 45px rgba(234, 179, 8, 0.6),
+      0 0 60px rgba(14, 165, 233, 0.5),
+      0 0 80px rgba(16, 185, 129, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border-color: #facc15;
+
+    &::before {
+      background: linear-gradient(135deg,
+        rgba(234, 179, 8, 0.25) 0%,
+        rgba(14, 165, 233, 0.2) 50%,
+        rgba(16, 185, 129, 0.15) 100%);
+    }
   }
 
   @media (max-width: 1200px) {
@@ -1031,73 +1057,78 @@ const AttractiveCard = styled.div`
 const AttractiveNumberDisplay = styled.div`
   font-size: 1.6rem;
   font-weight: 700;
-  color: #fbbf24;
+  color: #ffffff;
   margin-bottom: 10px;
   text-align: center;
   letter-spacing: 1.8px;
   position: relative;
   z-index: 2;
-  text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3), 0 0 20px rgba(251, 191, 36, 0.2);
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 158, 11, 0.3);
 
   span.highlight {
-    color: #facc15;
-    text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+    color: #fbbf24;
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 3px 15px rgba(0, 0, 0, 0.4);
     font-weight: 800;
+    filter: brightness(1.2);
   }
 `;
 
 const AttractiveSum = styled.div`
   font-size: 1rem;
-  color: #fbbf24;
+  color: #e5e7eb;
   margin-bottom: 8px;
   text-align: center;
   font-weight: 500;
   position: relative;
   z-index: 2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   strong {
     font-weight: 700;
-    color: #facc15;
-    text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+    color: #fbbf24;
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 `;
 
 const AttractivePrice = styled.div`
   font-size: 1.3rem;
   font-weight: 700;
-  color: #facc15;
+  color: #fbbf24;
   text-align: center;
   margin-bottom: 15px;
   position: relative;
   z-index: 2;
-  text-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
+  text-shadow: 0 3px 12px rgba(251, 191, 36, 0.6), 0 0 20px rgba(251, 191, 36, 0.4);
+  filter: brightness(1.1);
 `;
 
 const AttractiveButton = styled.button`
-  padding: 10px 24px;
-  border-radius: 30px;
+  padding: 12px 28px;
+  border-radius: 25px;
   font-weight: 700;
   font-size: 1rem;
   border: 2px solid #fbbf24;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-  background: #fbbf24;
-  color: #000000;
-  box-shadow: 0 3px 15px rgba(251, 191, 36, 0.4);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 130px;
+  background: linear-gradient(135deg, #eab308, #fbbf24);
+  color: #059669;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: #000000;
-    color: #fbbf24;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 5px 20px rgba(251, 191, 36, 0.6);
+    background: linear-gradient(135deg, #ffffff, #f0fdf4);
+    color: #059669;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(251, 191, 36, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     border-color: #facc15;
   }
 
   &:active {
-    transform: translateY(0) scale(1);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
   }
 `;
 
