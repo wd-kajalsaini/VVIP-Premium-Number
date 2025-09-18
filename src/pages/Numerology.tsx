@@ -6,8 +6,46 @@ import { theme } from '../styles/theme';
 const NumerologyContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: #ffffff;
+  background: linear-gradient(135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #4facfe 100%
+  );
   position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 40% 80%, rgba(102, 126, 234, 0.2) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 35px,
+        rgba(255, 255, 255, 0.03) 35px,
+        rgba(255, 255, 255, 0.03) 70px
+      );
+    z-index: 0;
+  }
 `;
 
 const MainLayout = styled.div`
@@ -19,7 +57,12 @@ const MainLayout = styled.div`
   padding: ${theme.spacing.xl};
   min-height: calc(100vh - 70px);
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
@@ -54,39 +97,68 @@ const RightPanel = styled.div`
 `;
 
 const CompactHeader = styled.div`
-  width: 100%;
-  margin-bottom: ${theme.spacing.lg};
-  padding: ${theme.spacing['3xl']} ${theme.spacing.md} 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 60px 16px 0;
   position: relative;
-  overflow: hidden;
+  z-index: 2;
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing.xl} ${theme.spacing.sm} 0;
+    padding: 40px 8px 0;
+  }
+`;
+
+const ImageCard = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, rgba(118, 75, 162, 0.9), rgba(240, 147, 251, 0.9));
+  }
+
+  @media (max-width: 768px) {
+    max-width: 95%;
+  }
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+
+  @media (max-width: 768px) {
+    padding: 16px;
   }
 `;
 
 const HeroImage = styled.img`
   width: 100%;
-  height: 400px;
-  object-fit: cover;
-  object-position: center;
+  height: auto;
+  max-height: 400px;
   display: block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-
-  @media (max-width: 1200px) {
-    height: 350px;
-  }
+  object-fit: contain;
+  background: white;
+  transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
     height: 400px;
-    border-radius: 12px;
-  }
-
-  @media (max-width: 480px) {
-    height: 400px;
-    border-radius: 10px;
+    max-height: 400px;
   }
 
   /* Fallback if image fails to load */
@@ -477,7 +549,11 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
   return (
     <NumerologyContainer>
       <CompactHeader>
-        <HeroImage src="/numerology.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
+        <ImageCard>
+          <ImageWrapper>
+            <HeroImage src="/numerology.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
+          </ImageWrapper>
+        </ImageCard>
       </CompactHeader>
 
       <MainLayout>

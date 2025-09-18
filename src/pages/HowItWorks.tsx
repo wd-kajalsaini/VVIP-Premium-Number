@@ -14,14 +14,17 @@ const HowItWorksContainer = styled.div`
 const PageHeader = styled.div`
   text-align: center;
   padding: ${theme.spacing['3xl']} ${theme.spacing.md} 0;
-  background: ${theme.colors.neutral.white};
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(32, 178, 170, 0.2);
+  margin: 0 ${theme.spacing.md} ${theme.spacing.xl};
   position: relative;
-  z-index: 1;
-  margin-bottom: ${theme.spacing.xl};
+  z-index: 2;
   overflow: hidden;
 
   @media (max-width: 768px) {
     padding: ${theme.spacing.xl} ${theme.spacing.sm} 0;
+    margin: 0 ${theme.spacing.sm} ${theme.spacing.xl};
   }
 `;
 
@@ -74,7 +77,6 @@ const MainContent = styled.div`
   margin: 0 auto;
   padding: ${theme.spacing.lg} ${theme.spacing.lg};
   position: relative;
-  z-index: 1;
 
   @media (max-width: 768px) {
     padding: ${theme.spacing.md} ${theme.spacing.md};
@@ -200,14 +202,9 @@ const ImageTitle = styled.div`
 
 const FAQSection = styled.div`
   margin-top: ${theme.spacing.xl};
-  background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
-  padding: ${theme.spacing['2xl']};
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(32, 178, 170, 0.08);
-  border: 1px solid rgba(32, 178, 170, 0.1);
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing.xl};
+    margin-top: ${theme.spacing.lg};
   }
 `;
 
@@ -426,12 +423,14 @@ const HowItWorks: React.FC = () => {
   return (
     <HowItWorksContainer>
       <PageHeader>
-        <HeaderBannerImage
-          src="/howitworksbanner.jpg"
-          alt="How It Works Banner"
-          loading="eager"
-          decoding="async"
-        />
+        <div style={{ padding: '40px 0', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#FFFFFF', marginBottom: '20px'}}>
+            How It Works
+          </h1>
+          <p style={{ fontSize: '1.2rem', color: '#FFFFFF', maxWidth: '600px', margin: '0 auto' }}>
+            Get your premium mobile number in just a few simple steps. Fast, secure, and hassle-free process.
+          </p>
+        </div>
       </PageHeader>
 
       <MainContent>

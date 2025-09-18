@@ -4,7 +4,141 @@ import styled from 'styled-components';
 const VVIPContainer = styled.div`
   margin-top: 70px;
   min-height: calc(100vh - 70px);
-  background: #f8f9fa;
+  background: linear-gradient(135deg,
+    #1a1a1a 0%,
+    #2d2d2d 25%,
+    #1f1f23 50%,
+    #0f0f0f 75%,
+    #1a1a1a 100%
+  );
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 75% 75%, rgba(255, 165, 0, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 50% 10%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 35px,
+        rgba(255, 215, 0, 0.02) 35px,
+        rgba(255, 215, 0, 0.02) 70px
+      );
+    z-index: 0;
+  }
+`;
+
+const ImageSection = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 60px 16px 0;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 40px 8px 0;
+  }
+`;
+
+const ImageCard = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(255, 215, 0, 0.3);
+    background: linear-gradient(135deg, rgba(255, 165, 0, 0.15), rgba(255, 215, 0, 0.15));
+  }
+
+  @media (max-width: 768px) {
+    max-width: 95%;
+  }
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  background: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+`;
+
+const ProcessImage = styled.img`
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  display: block;
+  object-fit: contain;
+  background: white;
+  transition: transform 0.3s ease;
+
+  @media (max-width: 768px) {
+    height: 400px;
+    max-height: 400px;
+  }
+`;
+
+const ImageTitle = styled.div`
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  padding: 24px 32px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    padding: 20px 24px;
+  }
 `;
 
 const HeroBanner = styled.section`
@@ -211,7 +345,9 @@ const MainLayout = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   padding: 40px 20px;
-  
+  position: relative;
+  z-index: 2;
+
   @media (max-width: 768px) {
     padding: 30px 15px;
   }
@@ -583,14 +719,19 @@ const VVIPCollection: React.FC = () => {
 
   return (
     <VVIPContainer>
-      <HeroBanner>
-        <VIPBadge>EXCLUSIVE VIP</VIPBadge>
-        <LuxuryIcon />
-        <HeroContent>
-          <HeroTitle>VIP NUMBERS</HeroTitle>
-          <HeroSubtitle>Premium • Exclusive • Prestigious</HeroSubtitle>
-        </HeroContent>
-      </HeroBanner>
+      <ImageSection>
+        <ImageCard>
+          <ImageWrapper>
+            <ProcessImage
+              src="/howitworksbanner.jpg"
+              alt="How It Works Banner"
+              loading="eager"
+              decoding="async"
+            />
+          </ImageWrapper>
+        </ImageCard>
+      </ImageSection>
+
 
       <MainLayout>
         <ContentArea>
