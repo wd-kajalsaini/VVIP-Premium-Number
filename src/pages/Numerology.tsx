@@ -6,13 +6,7 @@ import { theme } from '../styles/theme';
 const NumerologyContainer = styled.div`
   margin-top: 70px;
   min-height: 100vh;
-  background: linear-gradient(135deg,
-    #667eea 0%,
-    #764ba2 25%,
-    #f093fb 50%,
-    #f5576c 75%,
-    #4facfe 100%
-  );
+
   position: relative;
 
   &::before {
@@ -100,19 +94,19 @@ const CompactHeader = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
-  padding: 60px 16px 0;
+  padding: 60px 8px 0;
   position: relative;
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 40px 8px 0;
+    padding: 40px 4px 0;
   }
 `;
 
 const ImageCard = styled.div`
   position: relative;
   width: 100%;
-  max-width: 90%;
+  max-width: 96%;
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
   border-radius: 16px;
   overflow: hidden;
@@ -127,14 +121,15 @@ const ImageCard = styled.div`
   }
 
   @media (max-width: 768px) {
-    max-width: 95%;
+    max-width: 98%;
   }
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
+
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -151,11 +146,11 @@ const HeroImage = styled.img`
   width: 100%;
   height: auto;
   max-height: 400px;
-  display: block;
+  display: flex;
   object-fit: contain;
-  background: white;
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   transition: transform 0.3s ease;
-
+    overflow: hidden;
   @media (max-width: 768px) {
     height: 400px;
     max-height: 400px;

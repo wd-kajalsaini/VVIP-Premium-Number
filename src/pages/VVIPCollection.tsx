@@ -4,13 +4,7 @@ import styled from 'styled-components';
 const VVIPContainer = styled.div`
   margin-top: 70px;
   min-height: calc(100vh - 70px);
-  background: linear-gradient(135deg,
-    #1a1a1a 0%,
-    #2d2d2d 25%,
-    #1f1f23 50%,
-    #0f0f0f 75%,
-    #1a1a1a 100%
-  );
+
   position: relative;
 
   &::before {
@@ -50,19 +44,19 @@ const ImageSection = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
-  padding: 60px 16px 0;
+  padding: 60px 8px 0;
   position: relative;
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 40px 8px 0;
+    padding: 40px 4px 0;
   }
 `;
 
 const ImageCard = styled.div`
   position: relative;
   width: 100%;
-  max-width: 90%;
+  max-width: 96%;
   background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
   border-radius: 16px;
   overflow: hidden;
@@ -78,14 +72,20 @@ const ImageCard = styled.div`
   }
 
   @media (max-width: 768px) {
-    max-width: 95%;
+    max-width: 98%;
   }
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
   position: relative;
-  background: white;
+   background: linear-gradient(135deg,
+    #1a1a1a 0%,
+    #2d2d2d 25%,
+    #1f1f23 50%,
+    #0f0f0f 75%,
+    #1a1a1a 100%
+  );
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -103,7 +103,13 @@ const ProcessImage = styled.img`
   max-height: 400px;
   display: block;
   object-fit: contain;
-  background: white;
+   background: linear-gradient(135deg,
+    #1a1a1a 0%,
+    #2d2d2d 25%,
+    #1f1f23 50%,
+    #0f0f0f 75%,
+    #1a1a1a 100%
+  );
   transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
@@ -149,7 +155,7 @@ const HeroBanner = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -160,7 +166,7 @@ const HeroBanner = styled.section`
     background: rgba(0, 0, 0, 0.4);
     z-index: 1;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -168,7 +174,7 @@ const HeroBanner = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
       linear-gradient(45deg, transparent 30%, rgba(220, 38, 38, 0.2) 30%, rgba(220, 38, 38, 0.2) 33%, transparent 33%),
       linear-gradient(-45deg, transparent 67%, rgba(59, 130, 246, 0.2) 67%, rgba(59, 130, 246, 0.2) 70%, transparent 70%);
     z-index: 1;
@@ -188,12 +194,12 @@ const HeroTitle = styled.h1`
   margin-bottom: 20px;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   letter-spacing: 8px;
-  
+
   @media (max-width: 768px) {
     font-size: 3rem;
     letter-spacing: 4px;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 2.5rem;
     letter-spacing: 2px;
@@ -206,7 +212,7 @@ const HeroSubtitle = styled.p`
   opacity: 0.9;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   letter-spacing: 2px;
-  
+
   @media (max-width: 768px) {
     font-size: 1.2rem;
     letter-spacing: 1px;
@@ -226,7 +232,7 @@ const VIPBadge = styled.div`
   letter-spacing: 1px;
   z-index: 2;
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
-  
+
   &::before {
     content: '★';
     margin-right: 8px;
@@ -245,7 +251,7 @@ const LuxuryIcon = styled.div`
   font-size: 1.5rem;
   z-index: 2;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-  
+
   &::before {
     content: '✈';
   }
@@ -263,7 +269,7 @@ const SearchRow = styled.div`
   align-items: center;
   max-width: 1400px;
   margin: 0 auto;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
@@ -277,11 +283,11 @@ const SearchInput = styled.input`
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  
+
   &::placeholder {
     color: #9ca3af;
   }
-  
+
   &:focus {
     outline: none;
     border-color: #6366f1;
@@ -298,7 +304,7 @@ const SearchButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: linear-gradient(135deg, #374151, #4b5563);
     transform: translateY(-1px);
@@ -313,7 +319,7 @@ const SortRow = styled.div`
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
-  
+
   @media (max-width: 768px) {
     flex-wrap: wrap;
     gap: 10px;
@@ -328,7 +334,7 @@ const SortSelect = styled.select`
   color: #374151;
   background: white;
   cursor: pointer;
-  
+
   &:focus {
     outline: none;
     border-color: #6366f1;
@@ -360,7 +366,7 @@ const Sidebar = styled.div`
   padding: 20px;
   height: fit-content;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -368,7 +374,7 @@ const Sidebar = styled.div`
 
 const FilterSection = styled.div`
   margin-bottom: 30px;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -397,7 +403,7 @@ const FilterInput = styled.input`
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 10px;
-  
+
   &:focus {
     outline: none;
     border-color: #6366f1;
@@ -416,7 +422,7 @@ const PriceInput = styled.input`
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  
+
   &:focus {
     outline: none;
     border-color: #6366f1;
@@ -434,7 +440,7 @@ const FilterButton = styled.button`
   font-weight: 500;
   cursor: pointer;
   margin-top: 10px;
-  
+
   &:hover {
     background: linear-gradient(135deg, #4f46e5, #4338ca);
   }
@@ -454,7 +460,7 @@ const CategoryItem = styled.label`
   cursor: pointer;
   font-size: 14px;
   color: #374151;
-  
+
   &:hover {
     color: #6366f1;
   }
@@ -494,7 +500,7 @@ const NumberCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -506,7 +512,7 @@ const NumberCard = styled.div`
     border-radius: 10px;
     z-index: 1;
   }
-  
+
   &::after {
     content: 'VVIP';
     position: absolute;
@@ -524,7 +530,7 @@ const NumberCard = styled.div`
     box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4);
     border: 1px solid #000000;
   }
-  
+
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 35px rgba(255, 215, 0, 0.3);
@@ -618,7 +624,7 @@ const ActionButton = styled.button<{ $primary?: boolean }>`
   min-width: 140px;
   position: relative;
   z-index: 2;
-  
+
   ${props => props.$primary ? `
     background: linear-gradient(135deg, #FFD700, #FFA500);
     color: #000000;
@@ -627,7 +633,7 @@ const ActionButton = styled.button<{ $primary?: boolean }>`
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    
+
     &:hover {
       background: linear-gradient(135deg, #FFA500, #FFD700);
       border-color: #FFA500;
@@ -637,7 +643,7 @@ const ActionButton = styled.button<{ $primary?: boolean }>`
   ` : `
     background: transparent;
     color: #FFD700;
-    
+
     &:hover {
       background: rgba(255, 215, 0, 0.1);
     }
@@ -743,7 +749,7 @@ const VVIPCollection: React.FC = () => {
                 <SumTotal>Sum Total: {calculateSumTotal(item.number)}</SumTotal>
                 <PriceTag>{item.price}</PriceTag>
                 <ButtonRow>
-                  <ActionButton 
+                  <ActionButton
                     $primary
                     onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
                   >
