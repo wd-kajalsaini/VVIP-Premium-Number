@@ -4,10 +4,13 @@ import { FaMagic, FaStar, FaCalculator, FaWhatsapp } from '../utils/iconComponen
 import { theme } from '../styles/theme';
 
 const NumerologyContainer = styled.div`
-  margin-top: 70px;
+  margin-top: 50px;
   min-height: 100vh;
-
   position: relative;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 
   &::before {
     content: '';
@@ -40,6 +43,10 @@ const NumerologyContainer = styled.div`
       );
     z-index: 0;
   }
+
+  @media (max-width: 480px) {
+    margin-top: 40px;
+  }
 `;
 
 const MainLayout = styled.div`
@@ -52,7 +59,7 @@ const MainLayout = styled.div`
   min-height: calc(100vh - 70px);
   position: relative;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   backdrop-filter: blur(15px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -65,16 +72,29 @@ const MainLayout = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing.md};
-    gap: ${theme.spacing.md};
-    margin: 0 auto;
-    width: 100%;
-    max-width: none;
+    padding: ${theme.spacing.sm};
+    gap: ${theme.spacing.sm};
+    margin: 10px;
+    width: calc(100% - 20px);
+    border-radius: 15px;
   }
 
   @media (max-width: 480px) {
-    padding: 15px;
-    gap: 15px;
+    padding: 8px;
+    gap: 8px;
+    margin: 4px;
+    width: calc(100% - 8px);
+    border-radius: 12px;
+    max-width: calc(100vw - 8px);
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 390px) {
+    padding: 6px;
+    gap: 6px;
+    margin: 2px;
+    width: calc(100% - 4px);
+    max-width: calc(100vw - 4px);
   }
 `;
 
@@ -82,12 +102,28 @@ const LeftPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    gap: ${theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    gap: 12px;
+  }
 `;
 
 const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    gap: ${theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    gap: 12px;
+  }
 `;
 
 const CompactHeader = styled.div`
@@ -99,7 +135,13 @@ const CompactHeader = styled.div`
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 40px 4px 0;
+    padding: 20px 8px 0;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 15px 6px 0;
+    margin-bottom: 15px;
   }
 `;
 
@@ -107,38 +149,55 @@ const ImageCard = styled.div`
   position: relative;
   width: 100%;
   max-width: 96%;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+  background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 32px rgba(102, 126, 234, 0.4);
-    background: linear-gradient(135deg, rgba(118, 75, 162, 0.9), rgba(240, 147, 251, 0.9));
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   }
 
   @media (max-width: 768px) {
     max-width: 98%;
+    border-radius: 12px;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: none;
+    }
   }
 `;
 
 const ImageWrapper = styled.div`
   width: 100%;
   position: relative;
-  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
-
+  background: white;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 24px;
-  backdrop-filter: blur(10px);
+  padding: 12px;
 
   @media (max-width: 768px) {
-    padding: 16px;
+    padding: 8px;
+    min-height: 350px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px;
+    min-height: 300px;
   }
 `;
 
@@ -146,13 +205,20 @@ const HeroImage = styled.img`
   width: 100%;
   height: auto;
   max-height: 400px;
-  display: flex;
+  display: block;
   object-fit: contain;
-  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
   transition: transform 0.3s ease;
-    overflow: hidden;
+
   @media (max-width: 768px) {
-    height: 400px;
+    width: 100%;
+    height: auto;
+    min-height: 350px;
+    max-height: 450px;
+    object-fit: contain;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 300px;
     max-height: 400px;
   }
 
@@ -256,6 +322,7 @@ const CompactFormCard = styled.div`
   position: relative;
   width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 
   &::before {
     content: '';
@@ -279,8 +346,15 @@ const CompactFormCard = styled.div`
   }
 
   @media (max-width: 480px) {
-    padding: ${theme.spacing.md};
+    padding: 12px;
     border-radius: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 390px) {
+    padding: 10px;
+    border-radius: 10px;
   }
 `;
 
@@ -357,11 +431,31 @@ const CompactFormTitle = styled.h3`
   gap: ${theme.spacing.sm};
   font-size: 1.5rem;
   font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const CompactForm = styled.form`
   display: grid;
   gap: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    gap: ${theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    gap: 16px;
+  }
 `;
 
 const CompactFormRow = styled.div`
@@ -371,12 +465,27 @@ const CompactFormRow = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: ${theme.spacing.sm};
+  }
+
+  @media (max-width: 480px) {
+    gap: 12px;
+  }
+
+  @media (max-width: 390px) {
+    gap: 10px;
   }
 `;
 
 const CompactFormGroup = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    min-width: 0;
+  }
 `;
 
 const CompactLabel = styled.label`
@@ -421,9 +530,17 @@ const CompactInput = styled.input`
   }
 
   @media (max-width: 480px) {
-    height: 52px;
-    padding: 16px;
-    font-size: 1rem;
+    height: 48px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    max-width: 100%;
+  }
+
+  @media (max-width: 390px) {
+    height: 46px;
+    padding: 10px;
+    font-size: 16px;
   }
 `;
 
@@ -454,9 +571,17 @@ const CompactSelect = styled.select`
   }
 
   @media (max-width: 480px) {
-    height: 52px;
-    padding: 16px;
-    font-size: 1rem;
+    height: 48px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    max-width: 100%;
+  }
+
+  @media (max-width: 390px) {
+    height: 46px;
+    padding: 10px;
+    font-size: 16px;
   }
 `;
 
@@ -480,6 +605,7 @@ const CompactSubmitButton = styled.button`
   gap: ${theme.spacing.sm};
   margin-top: ${theme.spacing.lg};
   width: 100%;
+  min-height: 54px;
 
   &:hover {
     transform: translateY(-2px);
@@ -490,6 +616,30 @@ const CompactSubmitButton = styled.button`
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    border-radius: 14px;
+    min-height: 56px;
+    margin-top: 20px;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 18px 20px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    min-height: 58px;
+    margin-top: 18px;
+
+    &:hover {
+      transform: none;
+    }
   }
 `;
 

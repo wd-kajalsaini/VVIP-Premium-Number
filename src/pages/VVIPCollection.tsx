@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const VVIPContainer = styled.div`
-  margin-top: 70px;
+  margin-top: 50px;
   min-height: calc(100vh - 70px);
 
   position: relative;
@@ -43,13 +43,13 @@ const VVIPContainer = styled.div`
 const ImageSection = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
-  padding: 60px 8px 0;
+  margin-bottom: 5px;
+  padding: 20px 8px 0;
   position: relative;
   z-index: 2;
-
   @media (max-width: 768px) {
-    padding: 40px 4px 0;
+    padding: 10px 4px 0;
+    margin-bottom: 0;
   }
 `;
 
@@ -57,20 +57,10 @@ const ImageCard = styled.div`
   position: relative;
   width: 100%;
   max-width: 96%;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 215, 0, 0.3);
   backdrop-filter: blur(10px);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 32px rgba(255, 215, 0, 0.3);
-    background: linear-gradient(135deg, rgba(255, 165, 0, 0.15), rgba(255, 215, 0, 0.15));
-  }
-
   @media (max-width: 768px) {
     max-width: 98%;
   }
@@ -79,19 +69,11 @@ const ImageCard = styled.div`
 const ImageWrapper = styled.div`
   width: 100%;
   position: relative;
-   background: linear-gradient(135deg,
-    #1a1a1a 0%,
-    #2d2d2d 25%,
-    #1f1f23 50%,
-    #0f0f0f 75%,
-    #1a1a1a 100%
-  );
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 24px;
-
   @media (max-width: 768px) {
     padding: 16px;
   }
@@ -103,15 +85,7 @@ const ProcessImage = styled.img`
   max-height: 400px;
   display: block;
   object-fit: contain;
-   background: linear-gradient(135deg,
-    #1a1a1a 0%,
-    #2d2d2d 25%,
-    #1f1f23 50%,
-    #0f0f0f 75%,
-    #1a1a1a 100%
-  );
   transition: transform 0.3s ease;
-
   @media (max-width: 768px) {
     height: 400px;
     max-height: 400px;
@@ -350,12 +324,12 @@ const Breadcrumb = styled.div`
 const MainLayout = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 10px 20px 40px;
   position: relative;
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 30px 15px;
+    padding: 0 8px 5px;
   }
 `;
 
@@ -484,6 +458,11 @@ const NumbersGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+    grid-template-columns: 1fr;
+  }
 `;
 
 const NumberCard = styled.div`
@@ -500,6 +479,12 @@ const NumberCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 20px 15px;
+    min-height: 180px;
+    border-width: 2px;
+  }
 
   &::before {
     content: '';
@@ -729,7 +714,7 @@ const VVIPCollection: React.FC = () => {
         <ImageCard>
           <ImageWrapper>
             <ProcessImage
-              src="/howitworksbanner.jpg"
+              src="/vvip.jpg"
               alt="How It Works Banner"
               loading="eager"
               decoding="async"
