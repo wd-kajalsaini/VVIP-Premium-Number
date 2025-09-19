@@ -79,6 +79,7 @@ const MainLayout = styled.div`
     border-radius: 15px;
   }
 
+
   @media (max-width: 480px) {
     padding: 8px;
     gap: 8px;
