@@ -1140,7 +1140,6 @@ const Gallery: React.FC = () => {
           </VehicleScrollWrapper>
         </VehicleScrollContainer>
       </VehicleSection>
-
       {/* Currency Numbers Section */}
       <CurrencySection>
         <CurrencySectionTitle>💰 Currency Numbers 💵</CurrencySectionTitle>
