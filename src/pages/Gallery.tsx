@@ -570,23 +570,9 @@ const NumerologyButton = styled.button`
 const CurrencySection = styled.section`
   padding: 60px 20px;
   background: linear-gradient(135deg, #ffd700 0%, #ffb347 25%, #ff8c00 50%, #ffd700 75%, #ffb347 100%);
-  background-size: 200% 200%;
-  animation: goldFlow 10s ease infinite;
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
-
-  @keyframes goldFlow {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
 
   &::before {
     content: '';
@@ -595,29 +581,8 @@ const CurrencySection = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='10' y='30' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹ $ € ¥ £%3C/text%3E%3Ctext x='10' y='60' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹ $ € ¥ £%3C/text%3E%3Ctext x='10' y='90' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹ $ € ¥ £%3C/text%3E%3C/svg%3E") repeat;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='10' y='30' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹%3C/text%3E%3Ctext x='10' y='60' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹%3C/text%3E%3Ctext x='10' y='90' font-size='20' fill='%23ffffff' fill-opacity='0.05' transform='rotate(-45 50 50)'>₹%3C/text%3E%3C/svg%3E") repeat;
     z-index: 1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-    animation: shimmer 3s ease-in-out infinite;
-    z-index: 1;
-  }
-
-  @keyframes shimmer {
-    0% {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
   }
 `;
 
@@ -703,7 +668,7 @@ const CurrencyScrollContainer = styled.div`
 
 const CurrencyScrollWrapper = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 5px;
   width: max-content;
   padding: 20px 0;
 
@@ -817,6 +782,9 @@ const CurrencyNumber = styled.div`
   text-align: center;
   font-family: 'Courier New', monospace;
   letter-spacing: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const CurrencyBadge = styled.div`
@@ -1177,11 +1145,6 @@ const Gallery: React.FC = () => {
       <CurrencySection>
         <CurrencySectionTitle>💰 Currency Numbers 💵</CurrencySectionTitle>
         <CurrencyIconsContainer>
-          <CurrencyIcon>₹</CurrencyIcon>
-          <CurrencyIcon>$</CurrencyIcon>
-          <CurrencyIcon>€</CurrencyIcon>
-          <CurrencyIcon>¥</CurrencyIcon>
-          <CurrencyIcon>£</CurrencyIcon>
         </CurrencyIconsContainer>
         <CurrencyScrollContainer>
           <CurrencyScrollWrapper>
@@ -1189,9 +1152,9 @@ const Gallery: React.FC = () => {
               <CurrencyScrollCard key={index}>
                 <CurrencySymbols>
                   <span>₹</span>
-                  <span>$</span>
+                  <span>₹</span>
                 </CurrencySymbols>
-                <CurrencyNumber>+91 {currency.number}</CurrencyNumber>
+                <CurrencyNumber>{currency.number}</CurrencyNumber>
                 <CurrencyBadge>{currency.category}</CurrencyBadge>
                 <CurrencyPrice>{currency.price}</CurrencyPrice>
                 <div style={{ fontSize: '0.85rem', marginBottom: '15px', opacity: 0.9, textAlign: 'center', color: '#ffb347' }}>
@@ -1199,7 +1162,7 @@ const Gallery: React.FC = () => {
                 </div>
                 <CurrencyActions>
                   <CurrencyButton
-                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy currency number +91 ${currency.number} for ${currency.price}`, '_blank')}
+                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy currency number +91${currency.number} for ${currency.price}`, '_blank')}
                   >
                     Buy Now
                   </CurrencyButton>
