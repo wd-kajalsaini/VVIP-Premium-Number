@@ -83,17 +83,51 @@ const MainContent = styled.div`
   }
 `;
 
-const ImagesSection = styled.div`
-  display: flex;
-  justify-content: center;
+const ProcessSection = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.spacing['3xl']};
   margin-bottom: ${theme.spacing['2xl']};
-  padding: ${theme.spacing.lg} ${theme.spacing.xs};
+  padding: ${theme.spacing['2xl']};
   background: linear-gradient(135deg, #f8fffe 0%, #ffffff 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(32, 178, 170, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(32, 178, 170, 0.12);
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(32, 178, 170, 0.03) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing['2xl']};
+    padding: ${theme.spacing.xl};
+  }
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing.sm} ${theme.spacing.xs};
+    padding: ${theme.spacing.md};
+    gap: ${theme.spacing.lg};
+    border-radius: 20px;
+  }
+
+  @media (max-width: 480px) {
+    padding: ${theme.spacing.sm};
+    gap: ${theme.spacing.md};
+    border-radius: 16px;
   }
 `;
 
@@ -118,26 +152,200 @@ const SectionDivider = styled.div`
 const ImageCard = styled.div`
   position: relative;
   width: 100%;
-  max-width: 90%;
-  background: white;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(32, 178, 170, 0.1);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(32, 178, 170, 0.1);
+  box-shadow: 0 15px 45px rgba(32, 178, 170, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(32, 178, 170, 0.1);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 32px rgba(32, 178, 170, 0.15);
-    border-color: rgba(32, 178, 170, 0.2);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(32, 178, 170, 0.25);
+    border-color: rgba(32, 178, 170, 0.3);
+  }
+
+  @media (max-width: 1024px) {
+    order: 2;
   }
 
   @media (max-width: 768px) {
-    max-width: 98%;
+    border-radius: 16px;
 
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.01);
     }
+  }
+`;
+
+const StepsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.xl};
+  padding: ${theme.spacing.lg};
+
+  @media (max-width: 1024px) {
+    order: 1;
+    padding: ${theme.spacing.md};
+  }
+
+  @media (max-width: 768px) {
+    gap: ${theme.spacing.md};
+    padding: ${theme.spacing.xs};
+  }
+
+  @media (max-width: 480px) {
+    gap: ${theme.spacing.sm};
+    padding: 0;
+  }
+`;
+
+const StepItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: ${theme.spacing.lg};
+  padding: ${theme.spacing.lg};
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+  border: 1px solid rgba(32, 178, 170, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 255, 254, 0.8) 100%);
+    transform: translateX(8px);
+    box-shadow: 0 8px 30px rgba(32, 178, 170, 0.15);
+    border-color: rgba(32, 178, 170, 0.2);
+
+    &::before {
+      transform: scaleY(1);
+    }
+  }
+
+  @media (max-width: 768px) {
+    gap: ${theme.spacing.md};
+    padding: ${theme.spacing.md};
+    border-radius: 12px;
+
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: ${theme.spacing.sm};
+    padding: ${theme.spacing.sm};
+    border-radius: 10px;
+
+    &:hover {
+      transform: translateX(2px);
+    }
+  }
+`;
+
+const StepNumber = styled.div`
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff8c42 100%);
+  color: white;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  border-radius: 12px;
+  min-width: fit-content;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.2px;
+  }
+`;
+
+const StepContent = styled.div`
+  flex: 1;
+`;
+
+const StepTitle = styled.h3`
+  color: #1a1a1a;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 ${theme.spacing.sm};
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    margin: 0 0 ${theme.spacing.xs};
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    margin: 0 0 6px;
+  }
+`;
+
+const StepDescription = styled.p`
+  color: ${theme.colors.neutral.gray600};
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+  font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 `;
 
@@ -172,31 +380,48 @@ const BannerImage = styled.img`
 `;
 
 const ImageTitle = styled.div`
-  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 100%);
+  background: linear-gradient(135deg, #20b2aa 0%, #48cae4 50%, #20b2aa 100%);
   color: white;
-  padding: ${theme.spacing.lg} ${theme.spacing.xl};
+  padding: ${theme.spacing.xl} ${theme.spacing['2xl']};
   text-align: center;
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
 
   &::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
+    width: 80px;
+    height: 6px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
+    border-radius: 3px;
   }
 
   @media (max-width: 768px) {
-    font-size: 1.1rem;
-    padding: ${theme.spacing.md} ${theme.spacing.lg};
+    font-size: 1.2rem;
+    padding: ${theme.spacing.lg} ${theme.spacing.xl};
+    letter-spacing: 0.5px;
   }
 `;
 
@@ -379,7 +604,33 @@ const PrivacyText = styled.p`
 const HowItWorks: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
-  // Steps data removed as we're using an image instead
+  const steps = [
+    {
+      number: "STEP 01",
+      title: "SELECTION",
+      description: "Send us a HI using WhatsApp on 77000 71600 to get a list of paid VIP Numbers."
+    },
+    {
+      number: "STEP 02",
+      title: "AVAILABILITY",
+      description: "Confirm the availability of your NEW VIP NUMBER."
+    },
+    {
+      number: "STEP 03",
+      title: "BOOKING",
+      description: "We book your choice by Advance payment only. Use PAYTM and reserve your number on 77000 71600."
+    },
+    {
+      number: "STEP 04",
+      title: "SCHEDULE",
+      description: "Our team will call you & fix an appointment as per your schedule."
+    },
+    {
+      number: "STEP 05",
+      title: "THE DELIVERY",
+      description: "Done! We are always on time."
+    }
+  ];
 
   const faqs = [
     {
@@ -434,7 +685,7 @@ const HowItWorks: React.FC = () => {
       </PageHeader>
 
       <MainContent>
-        <ImagesSection>
+        <ProcessSection>
           <ImageCard>
             <ImageTitle>✅ Complete Your Purchase</ImageTitle>
             <BannerImageWrapper>
@@ -446,7 +697,19 @@ const HowItWorks: React.FC = () => {
               />
             </BannerImageWrapper>
           </ImageCard>
-        </ImagesSection>
+
+          <StepsContainer>
+            {steps.map((step, index) => (
+              <StepItem key={index}>
+                <StepNumber>{step.number}</StepNumber>
+                <StepContent>
+                  <StepTitle>{step.title}</StepTitle>
+                  <StepDescription>{step.description}</StepDescription>
+                </StepContent>
+              </StepItem>
+            ))}
+          </StepsContainer>
+        </ProcessSection>
 
         <FAQSection>
           <FAQContainer>

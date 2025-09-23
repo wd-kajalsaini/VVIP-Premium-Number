@@ -544,20 +544,34 @@ const VVIPAction = styled.button<{ $variant: 'primary' | 'secondary' }>`
 // Horizontal scrolling VVIP components
 const VVIPScrollContainer = styled.div`
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: ${theme.spacing.sm};
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 
-  &::-webkit-scrollbar {
-    height: 6px;
+  @media (max-width: 768px) {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
-  &::-webkit-scrollbar-track {
-    background: ${theme.colors.neutral.gray100};
-    border-radius: 3px;
-  }
+  @media (min-width: 769px) {
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background: ${theme.colors.primary.orange};
-    border-radius: 3px;
+    &::-webkit-scrollbar-track {
+      background: ${theme.colors.neutral.gray100};
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${theme.colors.primary.orange};
+      border-radius: 3px;
+    }
   }
 `;
 
@@ -566,19 +580,27 @@ const VVIPScrollWrapper = styled.div`
   gap: ${theme.spacing.lg};
   width: max-content;
   padding: ${theme.spacing.sm} 0;
-  animation: scroll 20s linear infinite;
 
-  @keyframes scroll {
-    0% {
-      transform: translateX(0);
+  @media (min-width: 769px) {
+    animation: scroll 20s linear infinite;
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
     }
-    100% {
-      transform: translateX(-50%);
+
+    &:hover {
+      animation-play-state: paused;
     }
   }
 
-  &:hover {
-    animation-play-state: paused;
+  @media (max-width: 768px) {
+    animation: none;
+    padding: ${theme.spacing.sm} ${theme.spacing.xs};
   }
 `;
 
@@ -1513,28 +1535,42 @@ const FeaturedNumbersSection = styled.section`
 `;
 
 const NumbersGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${theme.spacing.md};
-  padding: 0 ${theme.spacing.md};
-  width: 100%;
-  box-sizing: border-box;
+  @media (min-width: 769px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: ${theme.spacing.md};
+    padding: 0 ${theme.spacing.md};
+    width: 100%;
+    box-sizing: border-box;
+  }
 
   @media (min-width: 1400px) {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1200px) and (min-width: 769px) {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 900px) and (min-width: 769px) {
     grid-template-columns: repeat(2, 1fr);
     gap: ${theme.spacing.sm};
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 768px) {
+    display: flex;
+    gap: ${theme.spacing.md};
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: ${theme.spacing.sm} ${theme.spacing.md};
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 `;
 
@@ -1558,6 +1594,12 @@ const NumberCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    min-width: 250px;
+    width: 250px;
+    flex-shrink: 0;
+  }
 
   &:hover {
     transform: translateY(-5px);
