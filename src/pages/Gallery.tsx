@@ -1363,6 +1363,7 @@ const Gallery: React.FC = () => {
     <GalleryContainer>
       {/* Vehicle VIP Numbers Section */}
       <VehicleSection>
+        
         <VehicleSectionTitle>🛻 Vehicle VIP Numbers 🏍</VehicleSectionTitle>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', position: 'relative', zIndex: 2 }}>
           <VehicleVipCard
