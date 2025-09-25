@@ -697,7 +697,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
       <CompactHeader>
         <ImageCard>
           <ImageWrapper>
-            <HeroImage src="/numerology.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
+            <HeroImage src="numerology1.jpg" alt="मोबाइल न्यूमरोलॉजी - अब आपका नंबर बोलेगा आपकी किस्मत!" />
           </ImageWrapper>
         </ImageCard>
       </CompactHeader>
