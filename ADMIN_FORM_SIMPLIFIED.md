@@ -31,6 +31,7 @@ The admin phone number form has been simplified by removing the following unnece
 - **Cleaner Interface**: More focused and less cluttered form
 - **Essential Focus**: Only the most important fields remain
 
+
 ### 🚀 **Technical Benefits**
 - **Faster Form Submission**: Less data to validate and submit
 - **Reduced Storage**: Smaller database records
