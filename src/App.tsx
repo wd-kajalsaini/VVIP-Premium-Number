@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import Home from './pages/HomeRedesigned';
+import HomeDynamic from './pages/HomeDynamic';
 import Gallery from './pages/Gallery';
 import VVIPCollection from './pages/VVIPCollection';
 import HowItWorks from './pages/HowItWorks';
@@ -38,6 +39,7 @@ function App() {
                 <main>
                   <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/dynamic" element={<HomeDynamic />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/vvip-collection" element={<VVIPCollection />} />
                     <Route path="/how-it-works" element={<HowItWorks />} />

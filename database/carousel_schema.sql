@@ -43,39 +43,10 @@ CREATE POLICY "Anyone can view active carousel slides" ON carousel_slides
   FOR SELECT USING (is_active = true);
 
 -- Insert sample carousel slides
-INSERT INTO carousel_slides (image_url,display_order, is_active) VALUES
-  (
-
-    '/hero2.jpeg',
-    1,
-    true
-  ),
-  (
-    'Lucky Numbers for Success',
-    'Based on Numerology',
-    'Find your perfect number that aligns with your personality and brings prosperity',
-    '/hero3.jpeg',
-    'Check Numerology',
-    '/numerology',
-    'View VIP Collection',
-    '/vvip-collection',
-    'SPECIAL DISCOUNT',
-    2,
-    true
-  ),
-  (
-    'Instant Activation',
-    'Get Your Number Today',
-    'Quick and hassle-free activation process. Your premium number activated within hours',
-    '/hero2.jpeg',
-    'Get Started',
-    '/how-it-works',
-    'Call Now',
-    'tel:+919772297722',
-    'FAST DELIVERY',
-    3,
-    true
-  )
+INSERT INTO carousel_slides (image_url, display_order, is_active, description) VALUES
+  ('/hero2.jpeg', 0, true, 'Premium number showcase'),
+  ('/hero3.jpeg', 1, true, 'Lucky numbers based on numerology'),
+  ('/hero2.jpeg', 2, true, 'Instant activation available')
 ON CONFLICT DO NOTHING;
 
 -- Create indexes for better performance

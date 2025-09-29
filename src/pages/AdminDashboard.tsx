@@ -4,9 +4,11 @@ import styled from 'styled-components'
 import { useAuth } from '../contexts/AuthContext'
 import { theme } from '../styles/theme'
 import CategoriesManager from '../components/admin/CategoriesManager'
-import PhoneNumbersManager from '../components/admin/PhoneNumbersManager'
 import AdminCarousel from './AdminCarousel'
-import InstagramSettings from './InstagramSettings'
+import AdminPhoneNumbers from './AdminPhoneNumbers'
+import AdminVehicleNumbers from './AdminVehicleNumbers'
+import AdminCurrencyNumbers from './AdminCurrencyNumbers'
+import AdminNumerology from './AdminNumerology'
 import {
   FaBars,
   FaTimes,
@@ -15,7 +17,9 @@ import {
   FaCrown,
   FaChevronDown,
   FaImage,
-  FaInstagram
+  FaCar,
+  FaCoins,
+  FaStar
 } from '../utils/iconComponents'
 
 const DashboardContainer = styled.div`
@@ -36,6 +40,12 @@ const Sidebar = styled.aside<{ $isOpen: boolean }>`
   z-index: 100;
   transform: translateX(${props => props.$isOpen ? '0' : '-100%'});
   transition: transform 0.3s ease;
+  overflow-y: auto;
+
+  @media (max-width: 767px) {
+    width: 100%;
+    max-width: 320px;
+  }
 
   @media (min-width: 768px) {
     position: static;
@@ -50,11 +60,15 @@ const SidebarHeader = styled.div`
     ${theme.colors.primary.orange}10,
     ${theme.colors.primary.skyBlue}10
   );
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.lg};
+  }
 `
 
 const SidebarTitle = styled.h1`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.orange}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.orange},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -62,6 +76,10 @@ const SidebarTitle = styled.h1`
   background-clip: text;
   font-size: ${theme.typography.fontSize.xl};
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: ${theme.typography.fontSize.lg};
+  }
 `
 
 const SidebarSubtitle = styled.p`
@@ -79,20 +97,27 @@ const NavItem = styled(Link)<{ $isActive: boolean }>`
   align-items: center;
   gap: ${theme.spacing.md};
   padding: ${theme.spacing.md} ${theme.spacing.xl};
-  color: ${props => props.$isActive 
-    ? theme.colors.primary.orange 
+  color: ${props => props.$isActive
+    ? theme.colors.primary.orange
     : theme.colors.neutral.gray700};
-  background: ${props => props.$isActive 
-    ? `${theme.colors.primary.orange}10` 
+  background: ${props => props.$isActive
+    ? `${theme.colors.primary.orange}10`
     : 'transparent'};
   text-decoration: none;
-  font-weight: ${props => props.$isActive 
-    ? theme.typography.fontWeight.semibold 
+  font-weight: ${props => props.$isActive
+    ? theme.typography.fontWeight.semibold
     : theme.typography.fontWeight.medium};
-  border-right: ${props => props.$isActive 
-    ? `3px solid ${theme.colors.primary.orange}` 
+  border-right: ${props => props.$isActive
+    ? `3px solid ${theme.colors.primary.orange}`
     : '3px solid transparent'};
   transition: all 0.2s ease;
+  min-height: 48px; /* Touch-friendly height */
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.lg} ${theme.spacing.xl};
+    font-size: ${theme.typography.fontSize.md};
+    min-height: 56px; /* Larger touch target on mobile */
+  }
 
   &:hover {
     background: ${theme.colors.primary.orange}10;
@@ -191,6 +216,10 @@ const TopBar = styled.header`
   position: sticky;
   top: 0;
   z-index: 50;
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.sm} ${theme.spacing.md};
+  }
 `
 
 const MenuButton = styled.button`
@@ -212,10 +241,27 @@ const PageTitle = styled.h2`
   font-size: ${theme.typography.fontSize.xl};
   font-weight: ${theme.typography.fontWeight.semibold};
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: ${theme.typography.fontSize.lg};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${theme.typography.fontSize.md};
+    display: none; /* Hide on very small screens to save space */
+  }
 `
 
 const ContentArea = styled.div`
   padding: ${theme.spacing.lg};
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.md};
+  }
+
+  @media (max-width: 480px) {
+    padding: ${theme.spacing.sm};
+  }
 `
 
 const Overlay = styled.div<{ $show: boolean }>`
@@ -242,8 +288,10 @@ const AdminDashboard: React.FC = () => {
     const path = location.pathname
     if (path.includes('/categories')) return 'Categories Management'
     if (path.includes('/phone-numbers')) return 'Phone Numbers Management'
+    if (path.includes('/vehicle-numbers')) return 'Vehicle Numbers Management'
+    if (path.includes('/currency-numbers')) return 'Currency Numbers Management'
+    if (path.includes('/numerology')) return 'Numerology Management'
     if (path.includes('/carousel')) return 'Carousel Management'
-    if (path.includes('/instagram')) return 'Instagram Settings'
     return 'Dashboard Overview'
   }
 
@@ -258,11 +306,6 @@ const AdminDashboard: React.FC = () => {
       icon: <FaImage />
     },
     {
-      path: '/admin/instagram',
-      label: 'Instagram',
-      icon: <FaInstagram />
-    },
-    {
       path: '/admin/categories',
       label: 'Categories',
       icon: <FaCrown />
@@ -271,6 +314,21 @@ const AdminDashboard: React.FC = () => {
       path: '/admin/phone-numbers',
       label: 'Phone Numbers',
       icon: <FaPhoneAlt />
+    },
+    {
+      path: '/admin/vehicle-numbers',
+      label: 'Vehicle Numbers',
+      icon: <FaCar />
+    },
+    {
+      path: '/admin/currency-numbers',
+      label: 'Currency Numbers',
+      icon: <FaCoins />
+    },
+    {
+      path: '/admin/numerology',
+      label: 'Numerology Special',
+      icon: <FaStar />
     }
   ]
 
@@ -328,9 +386,11 @@ const AdminDashboard: React.FC = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/admin/carousel" replace />} />
             <Route path="/carousel" element={<AdminCarousel />} />
-            <Route path="/instagram" element={<InstagramSettings />} />
             <Route path="/categories" element={<CategoriesManager />} />
-            <Route path="/phone-numbers" element={<PhoneNumbersManager />} />
+            <Route path="/phone-numbers" element={<AdminPhoneNumbers />} />
+            <Route path="/vehicle-numbers" element={<AdminVehicleNumbers />} />
+            <Route path="/currency-numbers" element={<AdminCurrencyNumbers />} />
+            <Route path="/numerology" element={<AdminNumerology />} />
           </Routes>
         </ContentArea>
       </MainContent>

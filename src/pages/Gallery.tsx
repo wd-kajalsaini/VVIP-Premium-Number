@@ -412,7 +412,7 @@ const VehicleButton = styled.button`
 // Numerology Special Section
 const NumerologySection = styled.section`
   padding: 60px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
@@ -469,7 +469,7 @@ const NumerologyInstagramCard = styled.div`
   position: relative;
   width: 800px;
   height: 449px;
-  background: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -518,7 +518,7 @@ const NumerologyInstagramOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(131, 96, 195, 0.8), rgba(46, 191, 145, 0.8));
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(6, 182, 212, 0.8));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -665,13 +665,13 @@ const NumerologyScrollWrapper = styled.div`
 
 const NumerologyScrollCard = styled.div`
   width: 250px;
-  background: linear-gradient(135deg, #8360c3, #2ebf91);
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
   border-radius: 15px;
   padding: 25px;
   color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(131, 96, 195, 0.3);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
   transition: all 0.3s ease;
   text-align: center;
   display: flex;
@@ -769,7 +769,7 @@ const NumerologyActions = styled.div`
 
 const NumerologyButton = styled.button`
   background: white;
-  color: #8360c3;
+  color: #8b5cf6;
   border: none;
   padding: 12px 30px;
   border-radius: 25px;

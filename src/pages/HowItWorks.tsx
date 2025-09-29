@@ -623,7 +623,7 @@ const HowItWorks: React.FC = () => {
     {
       number: "STEP 04",
       title: "SCHEDULE",
-      description: "Our team will call you & fix an appointment as per your schedule."
+      description: "Our team will call you and give you UPC (unique port code) & Guide you until you get the sim-card."
     },
     {
       number: "STEP 05",

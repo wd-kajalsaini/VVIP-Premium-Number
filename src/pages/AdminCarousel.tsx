@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes, FaImage, FaEye } from '../utils/iconComponents';
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes, FaImage, FaEye, FaGripVertical, FaArrowUp, FaArrowDown } from '../utils/iconComponents';
 import { carouselService, CarouselSlide } from '../services/carouselService';
 
 const AdminContainer = styled.div`
@@ -99,41 +99,83 @@ const SearchInput = styled.input`
 `;
 
 const CarouselGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   margin-bottom: 20px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
 `;
 
-const CarouselCard = styled.div`
+const CarouselCard = styled.div<{ $isDragging?: boolean; $isDragOver?: boolean }>`
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: ${props => props.$isDragging ? '0 8px 24px rgba(0, 0, 0, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.1)'};
   transition: all 0.3s ease;
+  opacity: ${props => props.$isDragging ? 0.5 : 1};
+  transform: ${props => props.$isDragOver ? 'scale(1.02)' : 'none'};
+  cursor: move;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 `;
 
+const DragHandle = styled.div`
+  padding: 20px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 1.5rem;
+  cursor: grab;
+  background: #f9fafb;
+
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+const OrderButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 10px;
+`;
+
+const OrderButton = styled.button`
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: #f3f4f6;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+`;
+
 const CardImage = styled.div<{ $image: string }>`
-  height: 200px;
+  width: 200px;
+  height: 120px;
   background-image: url(${props => props.$image});
   background-size: cover;
   background-position: center;
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
 
   &::before {
     content: '';
@@ -142,27 +184,45 @@ const CardImage = styled.div<{ $image: string }>`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.1);
   }
 `;
 
 const CardContent = styled.div`
+  flex: 1;
   padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  @media (max-width: 480px) {
-    padding: 15px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
+`;
+
+const CardInfo = styled.div`
+  flex: 1;
 `;
 
 const CardTitle = styled.h3`
   color: #1f2937;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
-  @media (max-width: 480px) {
-    font-size: 1.1rem;
-  }
+const OrderBadge = styled.span`
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
 `;
 
 const CardMeta = styled.div`
@@ -189,11 +249,7 @@ const DateText = styled.span`
 const CardActions = styled.div`
   display: flex;
   gap: 8px;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    gap: 6px;
-  }
+  align-items: center;
 `;
 
 const ActionButton = styled.button<{ $variant?: 'edit' | 'delete' | 'view' }>`
@@ -469,6 +525,7 @@ const EmptyText = styled.p`
 interface FormData {
   image: File | null;
   isActive: boolean;
+  display_order?: number;
 }
 
 const AdminCarousel: React.FC = () => {
@@ -481,6 +538,9 @@ const AdminCarousel: React.FC = () => {
     image: null,
     isActive: true
   });
+  const [draggedItem, setDraggedItem] = useState<CarouselSlide | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<CarouselSlide | null>(null);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
 
   useEffect(() => {
     loadSlides();
@@ -489,8 +549,8 @@ const AdminCarousel: React.FC = () => {
   const loadSlides = async () => {
     try {
       setIsLoading(true);
-      const data = await carouselService.getCarouselSlides();
-      setSlides(data);
+      const data = await carouselService.getAllCarouselSlides();
+      setSlides(data.sort((a, b) => a.display_order - b.display_order));
     } catch (error) {
       console.error('Error loading slides:', error);
     } finally {
@@ -510,8 +570,9 @@ const AdminCarousel: React.FC = () => {
   const handleEdit = (slide: CarouselSlide) => {
     setEditingSlide(slide);
     setFormData({
-      image: null, // Will be handled separately for existing images
-      isActive: slide.isActive
+      image: null,
+      isActive: slide.isActive,
+      display_order: slide.display_order
     });
     setIsModalOpen(true);
   };
@@ -537,37 +598,52 @@ const AdminCarousel: React.FC = () => {
     }
 
     try {
-      // In a real app, you would upload the file to a server here
-      // For now, we'll create a mock URL
-      let imageUrl = '';
-      if (formData.image) {
-        // Create object URL for preview (in real app, upload to server)
-        imageUrl = URL.createObjectURL(formData.image);
-      } else if (editingSlide) {
-        imageUrl = editingSlide.image;
-      }
-
-      const slideData = {
-        image: imageUrl,
-        isActive: formData.isActive
-      };
-
       if (editingSlide) {
         // Update existing slide
-        const updatedSlide = await carouselService.updateCarouselSlide(editingSlide.id, slideData);
+        const updateData: any = {
+          isActive: formData.isActive
+        };
+
+        // Only include display_order if it's defined
+        if (formData.display_order !== undefined) {
+          updateData.display_order = formData.display_order;
+        }
+
+        // Include the image file if a new one was selected
+        if (formData.image) {
+          updateData.imageFile = formData.image;
+        }
+
+        const updatedSlide = await carouselService.updateCarouselSlide(editingSlide.id, updateData);
         setSlides(slides.map(slide =>
           slide.id === editingSlide.id ? updatedSlide : slide
         ));
       } else {
         // Add new slide
+        const slideData: any = {
+          isActive: formData.isActive,
+          imageFile: formData.image
+        };
+
+        // Only include display_order if it's defined
+        if (formData.display_order !== undefined) {
+          slideData.display_order = formData.display_order;
+        }
+
         const newSlide = await carouselService.addCarouselSlide(slideData);
-        setSlides([...slides, newSlide]);
+
+        // Insert the new slide at the correct position based on display_order
+        const updatedSlides = [...slides, newSlide].sort((a, b) => a.display_order - b.display_order);
+        setSlides(updatedSlides);
       }
 
+      // Reset form and close modal
+      setFormData({ image: null, isActive: true });
+      setEditingSlide(null);
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error saving slide:', error);
-      alert('Failed to save slide');
+      alert('Failed to save slide. Please try again.');
     }
   };
 
@@ -583,8 +659,117 @@ const AdminCarousel: React.FC = () => {
     handleInputChange('image', file);
   };
 
+  const handleDragStart = (e: React.DragEvent, slide: CarouselSlide) => {
+    setDraggedItem(slide);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnter = (e: React.DragEvent, slide: CarouselSlide) => {
+    setDragOverItem(slide);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverItem(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, dropSlide: CarouselSlide) => {
+    e.preventDefault();
+    setDragOverItem(null);
+
+    if (!draggedItem || draggedItem.id === dropSlide.id) return;
+
+    const dragIndex = slides.findIndex(s => s.id === draggedItem.id);
+    const dropIndex = slides.findIndex(s => s.id === dropSlide.id);
+
+    if (dragIndex === -1 || dropIndex === -1) return;
+
+    const newSlides = [...slides];
+    const [draggedSlide] = newSlides.splice(dragIndex, 1);
+    newSlides.splice(dropIndex, 0, draggedSlide);
+
+    // Update display_order for all slides
+    const updatedSlides = newSlides.map((slide, index) => ({
+      ...slide,
+      display_order: index
+    }));
+
+    setSlides(updatedSlides);
+
+    // Save the new order to the database
+    setIsSavingOrder(true);
+    const orderUpdates = updatedSlides.map(slide => ({
+      id: slide.id,
+      display_order: slide.display_order
+    }));
+
+    const success = await carouselService.updateDisplayOrder(orderUpdates);
+    if (!success) {
+      alert('Failed to save new order');
+      loadSlides(); // Reload to get the correct order
+    }
+    setIsSavingOrder(false);
+    setDraggedItem(null);
+  };
+
+  const handleMoveUp = async (slide: CarouselSlide) => {
+    const index = slides.findIndex(s => s.id === slide.id);
+    if (index <= 0) return;
+
+    const newSlides = [...slides];
+    [newSlides[index - 1], newSlides[index]] = [newSlides[index], newSlides[index - 1]];
+
+    // Update display_order
+    const updatedSlides = newSlides.map((slide, idx) => ({
+      ...slide,
+      display_order: idx
+    }));
+
+    setSlides(updatedSlides);
+
+    // Save to database
+    setIsSavingOrder(true);
+    const orderUpdates = updatedSlides.map(slide => ({
+      id: slide.id,
+      display_order: slide.display_order
+    }));
+
+    await carouselService.updateDisplayOrder(orderUpdates);
+    setIsSavingOrder(false);
+  };
+
+  const handleMoveDown = async (slide: CarouselSlide) => {
+    const index = slides.findIndex(s => s.id === slide.id);
+    if (index >= slides.length - 1) return;
+
+    const newSlides = [...slides];
+    [newSlides[index], newSlides[index + 1]] = [newSlides[index + 1], newSlides[index]];
+
+    // Update display_order
+    const updatedSlides = newSlides.map((slide, idx) => ({
+      ...slide,
+      display_order: idx
+    }));
+
+    setSlides(updatedSlides);
+
+    // Save to database
+    setIsSavingOrder(true);
+    const orderUpdates = updatedSlides.map(slide => ({
+      id: slide.id,
+      display_order: slide.display_order
+    }));
+
+    await carouselService.updateDisplayOrder(orderUpdates);
+    setIsSavingOrder(false);
+  };
+
   const filteredSlides = slides.filter(slide =>
-    searchTerm === '' || slide.image.toLowerCase().includes(searchTerm.toLowerCase())
+    searchTerm === '' || (slide.image && slide.image.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const formatDate = (dateString: string) => {
@@ -613,7 +798,7 @@ const AdminCarousel: React.FC = () => {
       </AdminHeader>
 
       <ActionBar>
-        <AddButton onClick={handleAdd}>
+        <AddButton onClick={handleAdd} disabled={isSavingOrder}>
           <FaPlus />
           Add New Slide
         </AddButton>
@@ -623,6 +808,9 @@ const AdminCarousel: React.FC = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        {isSavingOrder && (
+          <span style={{ color: '#6b7280', fontSize: '14px' }}>Saving order...</span>
+        )}
       </ActionBar>
 
       {filteredSlides.length === 0 ? (
@@ -643,17 +831,51 @@ const AdminCarousel: React.FC = () => {
         </EmptyState>
       ) : (
         <CarouselGrid>
-          {filteredSlides.map((slide) => (
-            <CarouselCard key={slide.id}>
-              <CardImage $image={slide.image} />
+          {filteredSlides.map((slide, index) => (
+            <CarouselCard
+              key={slide.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, slide)}
+              onDragOver={handleDragOver}
+              onDragEnter={(e) => handleDragEnter(e, slide)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, slide)}
+              $isDragging={draggedItem?.id === slide.id}
+              $isDragOver={dragOverItem?.id === slide.id}
+            >
+              <DragHandle>
+                <FaGripVertical />
+              </DragHandle>
+              <OrderButtons>
+                <OrderButton
+                  onClick={() => handleMoveUp(slide)}
+                  disabled={index === 0 || isSavingOrder}
+                  title="Move up"
+                >
+                  <FaArrowUp />
+                </OrderButton>
+                <OrderButton
+                  onClick={() => handleMoveDown(slide)}
+                  disabled={index === filteredSlides.length - 1 || isSavingOrder}
+                  title="Move down"
+                >
+                  <FaArrowDown />
+                </OrderButton>
+              </OrderButtons>
+              <CardImage $image={slide.image || slide.image_url || ''} />
               <CardContent>
-                <CardTitle>Carousel Image #{slide.id}</CardTitle>
-                <CardMeta>
-                  <StatusBadge $active={slide.isActive}>
-                    {slide.isActive ? 'Active' : 'Inactive'}
-                  </StatusBadge>
-                  <DateText>{formatDate(slide.createdAt)}</DateText>
-                </CardMeta>
+                <CardInfo>
+                  <CardTitle>
+                    Slide #{slide.id}
+                    <OrderBadge>Position {slide.display_order + 1}</OrderBadge>
+                  </CardTitle>
+                  <CardMeta>
+                    <StatusBadge $active={slide.isActive}>
+                      {slide.isActive ? 'Active' : 'Inactive'}
+                    </StatusBadge>
+                    <DateText>{formatDate(slide.createdAt)}</DateText>
+                  </CardMeta>
+                </CardInfo>
                 <CardActions>
                   <ActionButton $variant="edit" onClick={() => handleEdit(slide)}>
                     <FaEdit />

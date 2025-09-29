@@ -119,22 +119,38 @@ const FeaturedButton = styled.button<{ $primary?: boolean }>`
 // Carousel Section
 const CarouselSection = styled.section`
   position: relative;
-  width: calc(100% - 40px);
-  height: 600px;
+  width: 800px;
+  height: 449px;
+  max-width: calc(100% - 40px);
   overflow: hidden;
   background: #1e3a5f;
-  margin: 0 20px;
+  margin: 0 auto;
   border-radius: 8px;
+  user-select: none; /* Prevent text selection during swipe */
+  -webkit-touch-callout: none; /* Disable callout on iOS */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  touch-action: pan-y; /* Allow vertical scrolling but handle horizontal ourselves */
+
+  @media (max-width: 840px) {
+    width: calc(100% - 40px);
+    height: calc((100vw - 40px) * 449 / 800);
+    margin: 0 20px;
+    cursor: grab; /* Show grab cursor on touch devices */
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
 
   @media (max-width: 768px) {
-    height: 450px;
     width: calc(100% - 30px);
+    height: calc((100vw - 30px) * 449 / 800);
     margin: 0 15px;
   }
 
   @media (max-width: 480px) {
-    height: 350px;
     width: calc(100% - 20px);
+    height: calc((100vw - 20px) * 449 / 800);
     margin: 0 10px;
   }
 `;
@@ -520,13 +536,13 @@ const FeaturedLayout = styled.div`
 
 const Sidebar = styled.div<{ $expandHeight?: boolean }>`
   width: 320px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: #2c5aa0;
+  border: 1px solid #1e3a5f;
   border-radius: 16px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   ${props => props.$expandHeight ? `
     min-height: 100%;
@@ -547,10 +563,10 @@ const CategorySection = styled.div`
 `;
 
 const SidebarTitle = styled.h3`
-  color: #1f2937;
-  font-size: 20px;
+  color: #ffffff;
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   text-align: left;
   position: relative;
   padding: 24px 24px 0;
@@ -562,7 +578,7 @@ const SidebarTitle = styled.h3`
     bottom: -12px;
     width: 40px;
     height: 3px;
-    background: linear-gradient(90deg, #6366f1, #4f46e5);
+    background: linear-gradient(90deg, #ff6b35, #e55a2b);
     border-radius: 2px;
   }
 `;
@@ -583,19 +599,17 @@ const CategoryItem = styled.li`
 const CategoryLink = styled.label<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
-  color: ${props => props.$isActive ? '#374151' : '#6b7280'};
+  color: ${props => props.$isActive ? '#ff6b35' : '#ffffff'};
   text-decoration: none;
-  padding: 14px 16px;
-  border-radius: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
   background: ${props => props.$isActive
-    ? 'linear-gradient(135deg, #eff6ff, #dbeafe)'
+    ? 'rgba(255, 107, 53, 0.1)'
     : 'transparent'};
-  border: 2px solid ${props => props.$isActive
-    ? '#374151'
-    : 'transparent'};
+  border: none;
   transition: all 0.3s ease;
-  font-size: 15px;
-  font-weight: ${props => props.$isActive ? '600' : '500'};
+  font-size: 14px;
+  font-weight: ${props => props.$isActive ? '600' : '400'};
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -606,21 +620,20 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
     left: 0;
     top: 0;
     height: 100%;
-    width: 4px;
-    background: ${props => props.$isActive ? '#6366f1' : 'transparent'};
+    width: 3px;
+    background: ${props => props.$isActive ? '#ff6b35' : 'transparent'};
     transition: all 0.3s ease;
   }
 
   &:hover {
     background: ${props => props.$isActive
-      ? 'linear-gradient(135deg, #eff6ff, #dbeafe)'
-      : '#f9fafb'};
-    color: ${props => props.$isActive ? '#6366f1' : '#374151'};
+      ? 'rgba(255, 107, 53, 0.15)'
+      : 'rgba(255, 255, 255, 0.1)'};
+    color: ${props => props.$isActive ? '#ff6b35' : '#ffffff'};
     transform: translateX(2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 
     &::before {
-      background: ${props => props.$isActive ? '#6366f1' : '#d1d5db'};
+      background: ${props => props.$isActive ? '#ff6b35' : 'rgba(255, 255, 255, 0.3)'};
     }
   }
 `;
@@ -648,8 +661,8 @@ const CategoryCount = styled.span`
 const CategoryCheckbox = styled.input`
   width: 16px;
   height: 16px;
-  margin-left: 10px;
-  accent-color: #6b7280;
+  margin-right: 12px;
+  accent-color: #ff6b35;
   cursor: pointer;
 `;
 
@@ -1508,6 +1521,15 @@ const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
   return <><strong>{firstSum}-{secondSum}-{thirdSum}</strong></>;
 };
 
+// Function to get sum total as string for filtering
+const getSumTotalString = (phoneNumber: string): string => {
+  const digits = phoneNumber.replace(/\D/g, '');
+  const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  return `${firstSum}-${secondSum}-${thirdSum}`;
+};
+
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -1517,8 +1539,14 @@ const Home: React.FC = () => {
   const [sortBy, setSortBy] = useState('Sort By');
   const [priceFilter, setPriceFilter] = useState('Price Low to High');
   const [carouselSlides, setCarouselSlides] = useState<CarouselSlideType[]>([]);
-  const [isLoadingCarousel, setIsLoadingCarousel] = useState(true);
+  const [isCarouselReady, setIsCarouselReady] = useState(false);
   const [activeSearchTab, setActiveSearchTab] = useState('global');
+  const [sumTotalSearch, setSumTotalSearch] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['All']);
+  // Touch/Swipe handling for mobile
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
   // Removed highlightedIndex state
 
   // Format number with highlights
@@ -1534,6 +1562,20 @@ const Home: React.FC = () => {
       </>
     );
   };
+
+  // Handle category toggle
+  const handleCategoryToggle = (category: string) => {
+    if (category === 'All') {
+      setSelectedCategories(['All']);
+    } else {
+      const newCategories = selectedCategories.includes(category)
+        ? selectedCategories.filter(cat => cat !== category && cat !== 'All')
+        : [...selectedCategories.filter(cat => cat !== 'All'), category];
+
+      setSelectedCategories(newCategories.length > 0 ? newCategories : ['All']);
+    }
+  };
+
 
   const vipNumbers = [
     {
@@ -1896,26 +1938,74 @@ const Home: React.FC = () => {
     }
   ];
 
+  // Filter featured numbers based on search and categories
+  const filteredFeaturedNumbers = featuredNumbers.filter(number => {
+    // Filter by sum total search
+    if (sumTotalSearch) {
+      const sumTotal = getSumTotalString(number.number);
+      if (!sumTotal.includes(sumTotalSearch)) {
+        return false;
+      }
+    }
+
+    // Filter by categories (for now just show all since we don't have category data)
+    return true;
+  });
+
   // Load carousel slides from admin panel
   useEffect(() => {
     const loadCarouselSlides = async () => {
       try {
-        setIsLoadingCarousel(true);
         const slides = await carouselService.getCarouselSlides();
-        setCarouselSlides(slides);
+        console.log('Loaded carousel slides:', slides);
+
+        if (slides && slides.length > 0) {
+          setCarouselSlides(slides);
+          setIsCarouselReady(true);
+        } else {
+          // If no slides from database, use fallback slides
+          setCarouselSlides([
+            {
+              id: 1,
+              image: "/hero2.jpeg",
+              isActive: true,
+              display_order: 0,
+              createdAt: new Date().toISOString(),
+              description: "Premium Numbers Collection"
+            },
+            {
+              id: 2,
+              image: "/hero3.jpeg",
+              isActive: true,
+              display_order: 1,
+              createdAt: new Date().toISOString(),
+              description: "Lucky Numbers for Success"
+            }
+          ]);
+          setIsCarouselReady(true);
+        }
       } catch (error) {
         console.error('Error loading carousel slides:', error);
-        // Fallback to default slides if API fails
+        // Use fallback slides in case of error
         setCarouselSlides([
           {
             id: 1,
             image: "/hero2.jpeg",
             isActive: true,
-            createdAt: new Date().toISOString()
+            display_order: 0,
+            createdAt: new Date().toISOString(),
+            description: "Premium Numbers Collection"
+          },
+          {
+            id: 2,
+            image: "/hero3.jpeg",
+            isActive: true,
+            display_order: 1,
+            createdAt: new Date().toISOString(),
+            description: "Lucky Numbers for Success"
           }
         ]);
-      } finally {
-        setIsLoadingCarousel(false);
+        setIsCarouselReady(true);
       }
     };
 
@@ -1924,23 +2014,68 @@ const Home: React.FC = () => {
 
   // Auto-slide carousel
   useEffect(() => {
-    if (carouselSlides.length === 0) return;
+    if (carouselSlides.length === 0 || isUserInteracting) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [carouselSlides.length]);
+  }, [carouselSlides.length, isUserInteracting]);
 
   // Animation for phone number highlighting - removed
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+    // Pause auto-slide when user manually navigates
+    setIsUserInteracting(true);
+    setTimeout(() => setIsUserInteracting(false), 3000);
   };
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+    // Pause auto-slide when user manually navigates
+    setIsUserInteracting(true);
+    setTimeout(() => setIsUserInteracting(false), 3000);
+  };
+
+  // Touch event handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null); // Reset touchEnd
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsUserInteracting(true); // Pause auto-slide
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setIsUserInteracting(false); // Resume auto-slide
+      return;
+    }
+
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+
+    if (Math.abs(distance) < minSwipeDistance) {
+      setIsUserInteracting(false); // Resume auto-slide
+      return;
+    }
+
+    if (distance > 0) {
+      // Swiped left - go to next slide
+      nextSlide();
+    } else {
+      // Swiped right - go to previous slide
+      prevSlide();
+    }
+
+    // Resume auto-slide after a delay
+    setTimeout(() => {
+      setIsUserInteracting(false);
+    }, 3000); // Resume after 3 seconds
   };
 
   const faqs = [
@@ -1988,65 +2123,62 @@ const Home: React.FC = () => {
     <HomeContainer>
       <MainContent>
         {/* Carousel Section */}
-        <CarouselSection>
-          {isLoadingCarousel ? (
-            <div style={{
-              height: '500px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-              color: 'white',
-              fontSize: '1.2rem'
-            }}>
-              Loading carousel...
-            </div>
-          ) : carouselSlides.length > 0 ? (
+        <CarouselSection
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{
+            opacity: isCarouselReady ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out'
+          }}
+        >
+          {isCarouselReady && carouselSlides.map((slide, index) => (
+            <CarouselSlide
+              key={slide.id}
+              $active={index === currentSlide}
+            >
+              <img
+                src={slide.image || slide.image_url || "/hero2.jpeg"}
+                alt={slide.description || `Carousel slide ${index + 1}`}
+                onError={(e) => {
+                  // Fallback to default image if the slide image fails to load
+                  (e.target as HTMLImageElement).src = "/hero2.jpeg";
+                }}
+                loading="eager"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center top'
+                }}
+              />
+            </CarouselSlide>
+          ))}
+
+          {isCarouselReady && carouselSlides.length > 1 && (
             <>
-              {carouselSlides.map((slide, index) => (
-                <CarouselSlide
-                  key={slide.id}
-                  $active={index === currentSlide}
-                >
-                  <img src={slide.image} alt="Banner" />
-                </CarouselSlide>
-              ))}
+              <CarouselArrows>
+                <ArrowButton onClick={prevSlide}>
+                  <FaChevronLeft />
+                </ArrowButton>
+                <ArrowButton onClick={nextSlide}>
+                  <FaChevronRight />
+                </ArrowButton>
+              </CarouselArrows>
 
-              {carouselSlides.length > 1 && (
-                <>
-                  <CarouselArrows>
-                    <ArrowButton onClick={prevSlide}>
-                      <FaChevronLeft />
-                    </ArrowButton>
-                    <ArrowButton onClick={nextSlide}>
-                      <FaChevronRight />
-                    </ArrowButton>
-                  </CarouselArrows>
-
-                  <CarouselDots>
-                    {carouselSlides.map((_, index) => (
-                      <CarouselDot
-                        key={index}
-                        $active={index === currentSlide}
-                        onClick={() => setCurrentSlide(index)}
-                      />
-                    ))}
-                  </CarouselDots>
-                </>
-              )}
+              <CarouselDots>
+                {carouselSlides.map((_, index) => (
+                  <CarouselDot
+                    key={index}
+                    $active={index === currentSlide}
+                    onClick={() => {
+                      setCurrentSlide(index);
+                      // Pause auto-slide when user manually navigates
+                      setIsUserInteracting(true);
+                      setTimeout(() => setIsUserInteracting(false), 3000);
+                    }}
+                  />
+                ))}
+              </CarouselDots>
             </>
-          ) : (
-            <div style={{
-              height: '500px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-              color: 'white',
-              fontSize: '1.2rem'
-            }}>
-              No carousel slides available
-            </div>
           )}
         </CarouselSection>
 
@@ -2087,9 +2219,199 @@ const Home: React.FC = () => {
         {/* Featured Numbers Section */}
         <NumbersSection>
           <SectionTitle>Featured Numbers</SectionTitle>
-          <FeaturedContent>
+          <FeaturedLayout>
+            <Sidebar $expandHeight={true}>
+              <SidebarTitle>Sum Total</SidebarTitle>
+              <CategorySection>
+                <SearchInput
+                  type="text"
+                  placeholder="Sum"
+                  value={sumTotalSearch}
+                  onChange={(e) => setSumTotalSearch(e.target.value)}
+                  style={{ marginBottom: '20px' }}
+                />
+
+                <SidebarTitle style={{ paddingTop: '0', marginBottom: '20px' }}>CATEGORY</SidebarTitle>
+                <CategoryList>
+                  <CategoryItem>
+                    <CategoryLink $isActive={selectedCategories.includes('All')}>
+                      <CategoryCheckbox
+                        type="checkbox"
+                        checked={selectedCategories.includes('All')}
+                        onChange={() => handleCategoryToggle('All')}
+                      />
+                      <CategoryInfo>
+                        <CategoryName>All</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>Numerology Without 2 4 8</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>PENTA NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>HEXA NUMBER</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>SEPTA (XYY AAA AAA A)</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>OCTA NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>ENDING AAAA NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>AB AB (XXXXXX 1212)</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>ABC ABC NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>MIRROR NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>SEMI MIRROR NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>123456 NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>786 NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>11 12 13 NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>UNIQUE NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>AAA BBB</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>XY XY XY NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>DOUBLING NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>ENDING AAA NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>AB XXXXXXY</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                  <CategoryItem>
+                    <CategoryLink>
+                      <CategoryCheckbox type="checkbox" />
+                      <CategoryInfo>
+                        <CategoryName>ABCD ABCD NUMBERS</CategoryName>
+                      </CategoryInfo>
+                    </CategoryLink>
+                  </CategoryItem>
+                </CategoryList>
+              </CategorySection>
+            </Sidebar>
+
+            <div style={{ flex: 1 }}>
               <NumbersGrid>
-                {featuredNumbers.slice(0, numbersToShow).map((item, index) => (
+                {filteredFeaturedNumbers.slice(0, numbersToShow).map((item, index) => (
                   <NumberCard key={index}>
                     <NumberDisplay>
                       {formatNumberDisplay(item.number, item.highlights)}
@@ -2113,7 +2435,8 @@ const Home: React.FC = () => {
                   View All VIP Numbers
                 </MoreButton>
               </div>
-          </FeaturedContent>
+            </div>
+          </FeaturedLayout>
         </NumbersSection>
 
         {/* VIP Numbers Auto-Scroll Section */}

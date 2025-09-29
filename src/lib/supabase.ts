@@ -30,3 +30,13 @@ export interface AdminUser {
   instagram_url?: string
   created_at: string
 }
+
+export interface CarouselSlideDB {
+  id: number
+  image_url: string
+  description?: string
+  display_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}

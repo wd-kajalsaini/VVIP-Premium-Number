@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { supabase, Category } from '../../lib/supabase'
+import { supabase } from '../../lib/supabase'
+import { categoryService, Category } from '../../services/categoryService'
 import { theme } from '../../styles/theme'
 import { 
   FaPlus, 
@@ -30,6 +31,12 @@ const Header = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: ${theme.spacing.md};
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.lg};
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 const Title = styled.h1`
@@ -54,6 +61,11 @@ const Controls = styled.div`
 const SearchContainer = styled.div`
   position: relative;
   min-width: 250px;
+
+  @media (max-width: 768px) {
+    min-width: 100%;
+    order: 1; /* Put search below title on mobile */
+  }
 `
 
 const SearchInput = styled.input`
@@ -127,6 +139,19 @@ const Input = styled.input`
   }
 `
 
+const InlineSelect = styled.select`
+  padding: 4px 8px;
+  border: 1px solid ${theme.colors.neutral.gray300};
+  border-radius: ${theme.borderRadius.sm};
+  font-size: ${theme.typography.fontSize.xs};
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.primary.orange};
+  }
+`
+
 const ActionButton = styled.button<{ $variant?: 'save' | 'cancel' | 'edit' | 'delete' }>`
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
   border: none;
@@ -138,6 +163,24 @@ const ActionButton = styled.button<{ $variant?: 'save' | 'cancel' | 'edit' | 'de
   align-items: center;
   gap: ${theme.spacing.xs};
   transition: all 0.2s ease;
+  min-height: 36px;
+
+  @media (max-width: 768px) {
+    min-height: 44px;
+    padding: ${theme.spacing.sm};
+    font-size: ${theme.typography.fontSize.xs};
+
+    /* Hide text on very small screens, show only icons */
+    @media (max-width: 480px) {
+      span {
+        display: none;
+      }
+
+      svg {
+        margin: 0;
+      }
+    }
+  }
 
   ${props => {
     switch (props.$variant) {
@@ -175,10 +218,29 @@ const ActionButton = styled.button<{ $variant?: 'save' | 'cancel' | 'edit' | 'de
   }}
 `
 
+const TableContainer = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: ${theme.borderRadius.lg};
+  box-shadow: ${theme.shadows.sm};
+
+  @media (max-width: 768px) {
+    border-radius: ${theme.borderRadius.md};
+    margin: 0 -${theme.spacing.sm};
+  }
+`
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: ${theme.spacing.md};
+  min-width: 600px;
+
+  @media (max-width: 768px) {
+    margin-top: ${theme.spacing.sm};
+    font-size: ${theme.typography.fontSize.sm};
+  }
 `
 
 const TableHeader = styled.thead`
@@ -198,6 +260,18 @@ const TableCell = styled.td`
   padding: ${theme.spacing.md};
   text-align: left;
   vertical-align: middle;
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.sm};
+
+    &:first-child {
+      padding-left: ${theme.spacing.md};
+    }
+
+    &:last-child {
+      padding-right: ${theme.spacing.md};
+    }
+  }
 `
 
 const TableHeaderCell = styled.th`
@@ -206,6 +280,20 @@ const TableHeaderCell = styled.th`
   font-weight: ${theme.typography.fontWeight.semibold};
   color: ${theme.colors.neutral.gray700};
   border-bottom: 2px solid ${theme.colors.neutral.gray300};
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    padding: ${theme.spacing.sm};
+    font-size: ${theme.typography.fontSize.xs};
+
+    &:first-child {
+      padding-left: ${theme.spacing.md};
+    }
+
+    &:last-child {
+      padding-right: ${theme.spacing.md};
+    }
+  }
 `
 
 const EmptyState = styled.div`
@@ -238,6 +326,7 @@ const CategoriesManager: React.FC = () => {
   const [newCategoryName, setNewCategoryName] = useState('')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editingName, setEditingName] = useState('')
+  const [editingStatus, setEditingStatus] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -255,15 +344,10 @@ const CategoriesManager: React.FC = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
+      const data = await categoryService.getAllCategories()
       setCategories(data || [])
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message || 'Failed to fetch categories')
     } finally {
       setLoading(false)
     }
@@ -274,17 +358,20 @@ const CategoriesManager: React.FC = () => {
 
     try {
       setSaving(true)
-      const { data, error } = await supabase
-        .from('categories')
-        .insert([{ name: newCategoryName.trim() }])
-        .select()
+      const categoryInput = {
+        name: newCategoryName.trim()
+      }
 
-      if (error) throw error
+      const newCategory = await categoryService.createCategory(categoryInput)
 
-      setCategories([...data, ...categories])
-      setNewCategoryName('')
-      setShowAddForm(false)
-      setError('')
+      if (newCategory) {
+        setCategories([...categories, newCategory])
+        setNewCategoryName('')
+        setShowAddForm(false)
+        setError('')
+      } else {
+        setError('Failed to create category')
+      }
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -295,6 +382,7 @@ const CategoriesManager: React.FC = () => {
   const handleEditStart = (category: Category) => {
     setEditingId(category.id)
     setEditingName(category.name)
+    setEditingStatus(category.is_active ?? true)
   }
 
   const handleEditSave = async (id: number) => {
@@ -302,20 +390,23 @@ const CategoriesManager: React.FC = () => {
 
     try {
       setSaving(true)
-      const { data, error } = await supabase
-        .from('categories')
-        .update({ name: editingName.trim() })
-        .eq('id', id)
-        .select()
+      const categoryInput = {
+        name: editingName.trim(),
+        is_active: editingStatus
+      }
 
-      if (error) throw error
+      const updatedCategory = await categoryService.updateCategory(id, categoryInput)
 
-      setCategories(categories.map(cat => 
-        cat.id === id ? data[0] : cat
-      ))
-      setEditingId(null)
-      setEditingName('')
-      setError('')
+      if (updatedCategory) {
+        setCategories(categories.map(cat =>
+          cat.id === id ? updatedCategory : cat
+        ))
+        setEditingId(null)
+        setEditingName('')
+        setError('')
+      } else {
+        setError('Failed to update category')
+      }
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -326,6 +417,7 @@ const CategoriesManager: React.FC = () => {
   const handleEditCancel = () => {
     setEditingId(null)
     setEditingName('')
+    setEditingStatus(true)
   }
 
   const handleDelete = async (id: number) => {
@@ -333,15 +425,14 @@ const CategoriesManager: React.FC = () => {
 
     try {
       setSaving(true)
-      const { error } = await supabase
-        .from('categories')
-        .delete()
-        .eq('id', id)
+      const success = await categoryService.deleteCategory(id)
 
-      if (error) throw error
-
-      setCategories(categories.filter(cat => cat.id !== id))
-      setError('')
+      if (success) {
+        setCategories(categories.filter(cat => cat.id !== id))
+        setError('')
+      } else {
+        setError('Failed to delete category')
+      }
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -426,16 +517,18 @@ const CategoriesManager: React.FC = () => {
             {searchTerm ? 'No categories found matching your search.' : 'No categories found. Add your first category!'}
           </EmptyState>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHeaderCell>ID</TableHeaderCell>
-                <TableHeaderCell>Name</TableHeaderCell>
-                <TableHeaderCell>Created</TableHeaderCell>
-                <TableHeaderCell>Updated</TableHeaderCell>
-                <TableHeaderCell>Actions</TableHeaderCell>
-              </TableRow>
-            </TableHeader>
+          <TableContainer>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderCell>ID</TableHeaderCell>
+                  <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell>
+                  <TableHeaderCell>Created</TableHeaderCell>
+                  <TableHeaderCell>Updated</TableHeaderCell>
+                  <TableHeaderCell>Actions</TableHeaderCell>
+                </TableRow>
+              </TableHeader>
             <tbody>
               {filteredCategories.map((category) => (
                 <TableRow key={category.id} $isEditing={editingId === category.id}>
@@ -452,41 +545,66 @@ const CategoriesManager: React.FC = () => {
                       category.name
                     )}
                   </TableCell>
+                  <TableCell>
+                    {editingId === category.id ? (
+                      <InlineSelect
+                        value={editingStatus ? 'active' : 'inactive'}
+                        onChange={(e) => setEditingStatus(e.target.value === 'active')}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </InlineSelect>
+                    ) : (
+                      <span style={{
+                        background: category.is_active ? '#e8f5e8' : '#ffebee',
+                        color: category.is_active ? '#2e7d32' : '#c62828',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.8rem'
+                      }}>
+                        {category.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>{formatDate(category.created_at)}</TableCell>
                   <TableCell>{formatDate(category.updated_at)}</TableCell>
                   <TableCell>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       {editingId === category.id ? (
                         <>
-                          <ActionButton 
-                            $variant="save" 
+                          <ActionButton
+                            $variant="save"
                             onClick={() => handleEditSave(category.id)}
                             disabled={saving}
                           >
                             <FaSave />
+                            <span>Save</span>
                           </ActionButton>
-                          <ActionButton 
-                            $variant="cancel" 
+                          <ActionButton
+                            $variant="cancel"
                             onClick={handleEditCancel}
                           >
                             <FaTimes />
+                            <span>Cancel</span>
                           </ActionButton>
                         </>
                       ) : (
                         <>
-                          <ActionButton 
-                            $variant="edit" 
+                          <ActionButton
+                            $variant="edit"
                             onClick={() => handleEditStart(category)}
                             disabled={saving}
                           >
                             <FaEdit />
+                            <span>Edit</span>
                           </ActionButton>
-                          <ActionButton 
-                            $variant="delete" 
+                          <ActionButton
+                            $variant="delete"
                             onClick={() => handleDelete(category.id)}
                             disabled={saving}
                           >
                             <FaTrash />
+                            <span>Delete</span>
                           </ActionButton>
                         </>
                       )}
@@ -495,7 +613,8 @@ const CategoriesManager: React.FC = () => {
                 </TableRow>
               ))}
             </tbody>
-          </Table>
+            </Table>
+          </TableContainer>
         )}
       </Content>
     </Container>
