@@ -412,7 +412,7 @@ const VehicleButton = styled.button`
 // Numerology Special Section
 const NumerologySection = styled.section`
   padding: 60px 20px;
-  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+  background: #000000;
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
@@ -665,13 +665,13 @@ const NumerologyScrollWrapper = styled.div`
 
 const NumerologyScrollCard = styled.div`
   width: 250px;
-  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
   border-radius: 15px;
   padding: 25px;
   color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
   transition: all 0.3s ease;
   text-align: center;
   display: flex;
@@ -680,7 +680,7 @@ const NumerologyScrollCard = styled.div`
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(131, 96, 195, 0.4);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
     animation-play-state: paused;
   }
 `;
@@ -769,7 +769,7 @@ const NumerologyActions = styled.div`
 
 const NumerologyButton = styled.button`
   background: white;
-  color: #8b5cf6;
+  color: #1e3a8a;
   border: none;
   padding: 12px 30px;
   border-radius: 25px;

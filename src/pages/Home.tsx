@@ -7,6 +7,13 @@ import { theme } from '../styles/theme';
 const HomeContainer = styled.div`
   margin-top: 70px;
   min-height: calc(100vh - 70px);
+
+  @media (max-width: 1024px) {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const NumbersWithSidebar = styled.div`
@@ -130,8 +137,16 @@ const HeroSection = styled.section`
   min-height: 600px;
   margin-bottom: ${theme.spacing.xl};
 
+  @media (max-width: 1024px) {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: ${theme.spacing.md};
+  }
+
   @media (max-width: 768px) {
     min-height: 500px;
+    margin-left: 0;
+    margin-right: 0;
   }
 `;
 
@@ -141,8 +156,15 @@ const CarouselContainer = styled.div`
   height: 600px;
   overflow: hidden;
 
+  @media (max-width: 1024px) {
+    margin: 0;
+    padding: 0;
+  }
+
   @media (max-width: 768px) {
     height: 500px;
+    margin: 0;
+    padding: 0;
   }
 `;
 
@@ -2062,14 +2084,6 @@ const Home: React.FC = () => {
               style={{ backgroundImage: `url(${image})` }}
             />
           ))}
-
-          <CarouselArrow $direction="left" onClick={prevSlide}>
-            ‹
-          </CarouselArrow>
-
-          <CarouselArrow $direction="right" onClick={nextSlide}>
-            ›
-          </CarouselArrow>
 
           <CarouselNavigation>
             {heroImages.map((_, index) => (

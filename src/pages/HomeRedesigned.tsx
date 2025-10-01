@@ -132,9 +132,11 @@ const CarouselSection = styled.section`
   touch-action: pan-y; /* Allow vertical scrolling but handle horizontal ourselves */
 
   @media (max-width: 840px) {
-    width: calc(100% - 40px);
-    height: calc((100vw - 40px) * 449 / 800);
-    margin: 0 20px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vw * 449 / 800);
+    margin: 0;
+    border-radius: 0;
     cursor: grab; /* Show grab cursor on touch devices */
 
     &:active {
@@ -143,15 +145,19 @@ const CarouselSection = styled.section`
   }
 
   @media (max-width: 768px) {
-    width: calc(100% - 30px);
-    height: calc((100vw - 30px) * 449 / 800);
-    margin: 0 15px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vw * 449 / 800);
+    margin: 0;
+    border-radius: 0;
   }
 
   @media (max-width: 480px) {
-    width: calc(100% - 20px);
-    height: calc((100vw - 20px) * 449 / 800);
-    margin: 0 10px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vw * 449 / 800);
+    margin: 0;
+    border-radius: 0;
   }
 `;
 
@@ -252,6 +258,10 @@ const CarouselArrows = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   z-index: 10;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
 `;
 
 const ArrowButton = styled.button`
