@@ -265,7 +265,7 @@ const Header: React.FC = () => {
 
             <ContactInfo>
               <ContactButton
-                href="https://wa.me/919772297722?text=Hi! I'm interested in premium numbers"
+                href="https://wa.me/917700071600?text=Hi! I'm interested in premium numbers"
                 target="_blank"
                 rel="noopener noreferrer"
               >

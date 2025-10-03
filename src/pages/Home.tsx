@@ -1825,7 +1825,7 @@ const Home: React.FC = () => {
         </AnimatedNumber>
         <ContactSubtitle>Contact us for premium numbers</ContactSubtitle>
         <WhatsAppButton
-          href="https://wa.me/919772297722?text=Hi! I'm interested in premium mobile numbers"
+          href="https://wa.me/917700071600?text=Hi! I'm interested in premium mobile numbers"
           target="_blank"
         >
           <span>📱</span>
@@ -2182,7 +2182,7 @@ const Home: React.FC = () => {
                 <NumberActions>
                   <NumberAction
                     $variant="primary"
-                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
+                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
                   >
                     Buy Nowc
                   </NumberAction>
@@ -2221,7 +2221,7 @@ const Home: React.FC = () => {
                   </VVIPPriceInfo>
                   <VVIPCardActions>
                     <VVIPBuyButton
-                      onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy VIP number ${number.number} for ${number.price}`, '_blank')}
+                      onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy VIP number ${number.number} for ${number.price}`, '_blank')}
                     >
                       BUY
                     </VVIPBuyButton>

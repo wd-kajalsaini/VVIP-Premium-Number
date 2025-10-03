@@ -2431,7 +2431,7 @@ const Home: React.FC = () => {
                     <CardActions>
                       <CardButton
                         $primary
-                        onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
+                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
                       >
                         Buy Now
                       </CardButton>
@@ -2464,7 +2464,7 @@ const Home: React.FC = () => {
                   <CardActions>
                     <VipCardButton
                       $primary
-                      onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
+                      onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
                     >
                       Buy Now
                     </VipCardButton>
@@ -2489,7 +2489,7 @@ const Home: React.FC = () => {
                   <AttractivePrice>{item.price}</AttractivePrice>
                   <CardActions>
                     <AttractiveButton
-                      onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
+                      onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
                     >
                       Buy Now
                     </AttractiveButton>

@@ -3,13 +3,7 @@ import { supabase } from '../lib/supabase';
 export interface PhoneNumber {
   id: number;
   number: string;
-  display_number?: string;
   price: number;
-  original_price?: number;
-  sum_total_1?: number;
-  sum_total_2?: number;
-  sum_total_3?: number;
-  highlights?: number[];
   category_id?: number;
   operator?: string;
   circle?: string;
@@ -20,24 +14,15 @@ export interface PhoneNumber {
   is_sold: boolean;
   is_active: boolean;
   description?: string;
-  tags?: string[];
   view_count: number;
   inquiry_count: number;
-  primary_image?: string;
-  gallery_images?: string[];
-  numerology_number?: number;
-  numerology_meaning?: string;
-  meta_title?: string;
-  meta_description?: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface PhoneNumberInput {
   number: string;
-  display_number?: string;
   price: number;
-  original_price?: number;
   category_id?: number;
   operator?: string;
   circle?: string;
@@ -48,12 +33,6 @@ export interface PhoneNumberInput {
   is_sold?: boolean;
   is_active?: boolean;
   description?: string;
-  tags?: string[];
-  primary_image?: string;
-  gallery_images?: string[];
-  numerology_meaning?: string;
-  meta_title?: string;
-  meta_description?: string;
 }
 
 // Helper function to calculate sum totals
@@ -72,32 +51,6 @@ const calculateSumTotals = (number: string) => {
   return { sum1, sum2, sum3 };
 };
 
-// Helper function to find highlight positions
-const findHighlights = (number: string): number[] => {
-  const highlights: number[] = [];
-  const digits = number.replace(/\D/g, '');
-
-  // Find repeating sequences
-  for (let i = 0; i < digits.length - 2; i++) {
-    if (digits[i] === digits[i + 1] && digits[i] === digits[i + 2]) {
-      highlights.push(i, i + 1, i + 2);
-    }
-  }
-
-  // Find patterns like 123, 789, etc.
-  for (let i = 0; i < digits.length - 2; i++) {
-    const d1 = parseInt(digits[i]);
-    const d2 = parseInt(digits[i + 1]);
-    const d3 = parseInt(digits[i + 2]);
-
-    if (d2 === d1 + 1 && d3 === d2 + 1) {
-      highlights.push(i, i + 1, i + 2);
-    }
-  }
-
-  // Remove duplicates and sort
-  return Array.from(new Set(highlights)).sort((a, b) => a - b);
-};
 
 export const phoneNumberService = {
   // Get all phone numbers (admin)
@@ -205,32 +158,26 @@ export const phoneNumberService = {
   // Create phone number (admin)
   async createPhoneNumber(input: PhoneNumberInput): Promise<PhoneNumber | null> {
     try {
-      // Calculate sum totals and highlights
-      const { sum1, sum2, sum3 } = calculateSumTotals(input.number);
-      const highlights = findHighlights(input.number);
+      const insertData: any = {
+        number: input.number,
+        price: input.price,
+        is_vvip: input.is_vvip || false,
+        is_today_offer: input.is_today_offer || false,
+        is_featured: input.is_featured || false,
+        is_attractive: input.is_attractive || false,
+        is_sold: input.is_sold || false,
+        is_active: input.is_active !== undefined ? input.is_active : true
+      };
 
-      // Calculate numerology number (final single digit)
-      let numerologyNumber = sum3;
-      while (numerologyNumber > 9) {
-        numerologyNumber = numerologyNumber.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-      }
+      // Only include optional fields if defined
+      if (input.category_id) insertData.category_id = input.category_id;
+      if (input.operator) insertData.operator = input.operator;
+      if (input.circle) insertData.circle = input.circle;
+      if (input.description) insertData.description = input.description;
 
       const { data, error } = await supabase
         .from('phone_numbers')
-        .insert({
-          ...input,
-          sum_total_1: sum1,
-          sum_total_2: sum2,
-          sum_total_3: sum3,
-          highlights,
-          numerology_number: numerologyNumber,
-          is_vvip: input.is_vvip || false,
-          is_today_offer: input.is_today_offer || false,
-          is_featured: input.is_featured || false,
-          is_attractive: input.is_attractive || false,
-          is_sold: input.is_sold || false,
-          is_active: input.is_active !== undefined ? input.is_active : true
-        })
+        .insert(insertData)
         .select()
         .single();
 
@@ -245,24 +192,21 @@ export const phoneNumberService = {
   // Update phone number (admin)
   async updatePhoneNumber(id: number, input: Partial<PhoneNumberInput>): Promise<PhoneNumber | null> {
     try {
-      const updateData: any = { ...input };
+      const updateData: any = {};
 
-      // Recalculate if number changed
-      if (input.number) {
-        const { sum1, sum2, sum3 } = calculateSumTotals(input.number);
-        const highlights = findHighlights(input.number);
-
-        let numerologyNumber = sum3;
-        while (numerologyNumber > 9) {
-          numerologyNumber = numerologyNumber.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
-        }
-
-        updateData.sum_total_1 = sum1;
-        updateData.sum_total_2 = sum2;
-        updateData.sum_total_3 = sum3;
-        updateData.highlights = highlights;
-        updateData.numerology_number = numerologyNumber;
-      }
+      // Only include defined fields
+      if (input.number !== undefined) updateData.number = input.number;
+      if (input.price !== undefined) updateData.price = input.price;
+      if (input.category_id !== undefined) updateData.category_id = input.category_id;
+      if (input.operator !== undefined) updateData.operator = input.operator;
+      if (input.circle !== undefined) updateData.circle = input.circle;
+      if (input.is_vvip !== undefined) updateData.is_vvip = input.is_vvip;
+      if (input.is_today_offer !== undefined) updateData.is_today_offer = input.is_today_offer;
+      if (input.is_featured !== undefined) updateData.is_featured = input.is_featured;
+      if (input.is_attractive !== undefined) updateData.is_attractive = input.is_attractive;
+      if (input.is_sold !== undefined) updateData.is_sold = input.is_sold;
+      if (input.is_active !== undefined) updateData.is_active = input.is_active;
+      if (input.description !== undefined) updateData.description = input.description;
 
       const { data, error } = await supabase
         .from('phone_numbers')
@@ -350,37 +294,5 @@ export const phoneNumberService = {
   // Search phone numbers
   async searchPhoneNumbers(query: string): Promise<PhoneNumber[]> {
     return this.getActivePhoneNumbers({ search: query });
-  },
-
-  // Upload image
-  async uploadImage(file: File, type: 'primary' | 'gallery'): Promise<string | null> {
-    try {
-      const fileName = `phone-${type}-${Date.now()}-${file.name}`;
-
-      // Create bucket if it doesn't exist
-      const { data: buckets } = await supabase.storage.listBuckets();
-      const bucketExists = buckets?.some(bucket => bucket.name === 'phone-images');
-
-      if (!bucketExists) {
-        await supabase.storage.createBucket('phone-images', { public: true });
-      }
-
-      // Upload file
-      const { data, error } = await supabase.storage
-        .from('phone-images')
-        .upload(fileName, file);
-
-      if (error) throw error;
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('phone-images')
-        .getPublicUrl(fileName);
-
-      return publicUrl;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      return null;
-    }
   }
 };

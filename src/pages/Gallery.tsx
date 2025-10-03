@@ -1405,7 +1405,7 @@ const Gallery: React.FC = () => {
                 <VehiclePrice>{vehicle.price}</VehiclePrice>
                 <VehicleActions>
                   <VehicleButton
-                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy vehicle number ${vehicle.number} for ${vehicle.price}`, '_blank')}
+                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy vehicle number ${vehicle.number} for ${vehicle.price}`, '_blank')}
                   >
                     Buy Now
                   </VehicleButton>
@@ -1445,7 +1445,7 @@ const Gallery: React.FC = () => {
                     <CurrencyPrice>{currency.price}</CurrencyPrice>
                     <CurrencyActions>
                       <CurrencyButton
-                        onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy currency number${currency.number} for ${currency.price}`, '_blank')}
+                        onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy currency number${currency.number} for ${currency.price}`, '_blank')}
                       >
                         Buy Now
                       </CurrencyButton>
@@ -1502,7 +1502,7 @@ const Gallery: React.FC = () => {
                 </div>
                 <NumerologyActions>
                   <NumerologyButton
-                    onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy numerology number +91 ${number.number} for ${number.price}`, '_blank')}
+                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy numerology number +91 ${number.number} for ${number.price}`, '_blank')}
                   >
                     Buy Now
                   </NumerologyButton>

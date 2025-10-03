@@ -45,9 +45,6 @@ export const currencyNumberService = {
     is_today_offer?: boolean;
     is_featured?: boolean;
     category_id?: number;
-    denomination?: number;
-    currency_type?: string;
-    year?: number;
     min_price?: number;
     max_price?: number;
     search?: string;
@@ -71,15 +68,6 @@ export const currencyNumberService = {
       }
       if (filters?.category_id) {
         query = query.eq('category_id', filters.category_id);
-      }
-      if (filters?.denomination) {
-        query = query.eq('denomination', filters.denomination);
-      }
-      if (filters?.currency_type) {
-        query = query.eq('currency_type', filters.currency_type);
-      }
-      if (filters?.year) {
-        query = query.eq('year', filters.year);
       }
       if (filters?.min_price) {
         query = query.gte('price', filters.min_price);

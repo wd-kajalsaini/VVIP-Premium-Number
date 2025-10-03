@@ -588,19 +588,14 @@ const AdminPhoneNumbers: React.FC = () => {
   const [editingNumber, setEditingNumber] = useState<PhoneNumber | null>(null);
   const [formData, setFormData] = useState<PhoneNumberInput>({
     number: '',
-    display_number: '',
     price: 0,
-    original_price: 0,
     category_id: 0,
     is_vvip: false,
     is_today_offer: false,
     is_featured: false,
     is_attractive: false,
     is_sold: false,
-    is_active: true,
-    tags: [],
-    primary_image: '',
-    gallery_images: []
+    is_active: true
   });
 
   useEffect(() => {
@@ -636,37 +631,27 @@ const AdminPhoneNumbers: React.FC = () => {
       setEditingNumber(number);
       setFormData({
         number: number.number,
-        display_number: number.display_number || '',
         price: number.price,
-        original_price: number.original_price || 0,
         category_id: number.category_id || 0,
         is_vvip: number.is_vvip,
         is_today_offer: number.is_today_offer,
         is_featured: number.is_featured,
         is_attractive: number.is_attractive,
         is_sold: number.is_sold,
-        is_active: number.is_active,
-        tags: number.tags || [],
-        primary_image: number.primary_image || '',
-        gallery_images: number.gallery_images || []
+        is_active: number.is_active
       });
     } else {
       setEditingNumber(null);
       setFormData({
         number: '',
-        display_number: '',
         price: 0,
-        original_price: 0,
         category_id: 0,
         is_vvip: false,
         is_today_offer: false,
         is_featured: false,
         is_attractive: false,
         is_sold: false,
-        is_active: true,
-        tags: [],
-        primary_image: '',
-        gallery_images: []
+        is_active: true
       });
     }
     setIsModalOpen(true);
@@ -680,14 +665,21 @@ const AdminPhoneNumbers: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Clean the data before submitting
+    const cleanData = {
+      ...formData,
+      category_id: formData.category_id === 0 ? undefined : formData.category_id,
+      price: isNaN(formData.price) ? 0 : formData.price
+    };
+
     if (editingNumber) {
-      const updated = await phoneNumberService.updatePhoneNumber(editingNumber.id, formData);
+      const updated = await phoneNumberService.updatePhoneNumber(editingNumber.id, cleanData);
       if (updated) {
         fetchPhoneNumbers();
         handleCloseModal();
       }
     } else {
-      const created = await phoneNumberService.createPhoneNumber(formData);
+      const created = await phoneNumberService.createPhoneNumber(cleanData);
       if (created) {
         fetchPhoneNumbers();
         handleCloseModal();
@@ -737,8 +729,7 @@ const AdminPhoneNumbers: React.FC = () => {
 
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = searchTerm === '' ||
-      num.number.toLowerCase().includes(searchLower) ||
-      (num.display_number && num.display_number.toLowerCase().includes(searchLower));
+      num.number.toLowerCase().includes(searchLower);
 
     const matchesFilter =
       filter === 'all' ||
@@ -750,26 +741,6 @@ const AdminPhoneNumbers: React.FC = () => {
     return matchesSearch && matchesFilter;
   });
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'primary' | 'gallery') => {
-    const files = e.target.files;
-    if (!files) return;
-
-    const uploadPromises = Array.from(files).map(file =>
-      phoneNumberService.uploadImage(file, type)
-    );
-
-    const urls = await Promise.all(uploadPromises);
-    const validUrls = urls.filter(url => url !== null) as string[];
-
-    if (type === 'primary' && validUrls[0]) {
-      setFormData(prev => ({ ...prev, primary_image: validUrls[0] }));
-    } else if (type === 'gallery') {
-      setFormData(prev => ({
-        ...prev,
-        gallery_images: [...(prev.gallery_images || []), ...validUrls]
-      }));
-    }
-  };
 
   return (
     <AdminContainer>
@@ -857,7 +828,6 @@ const AdminPhoneNumbers: React.FC = () => {
               </Th>
               <Th>Phone Number</Th>
               <Th>Price</Th>
-              <Th>Sum Total</Th>
               <Th>Category</Th>
               <Th>Status</Th>
               <Th>Active</Th>
@@ -876,23 +846,11 @@ const AdminPhoneNumbers: React.FC = () => {
                 </Td>
                 <Td>
                   <PhoneNumberDisplay>
-                    {number.display_number || number.number}
+                    {number.number}
                   </PhoneNumberDisplay>
                 </Td>
                 <Td>
                   <PriceTag>₹{(number.price || 0).toLocaleString()}</PriceTag>
-                  {number.original_price && number.original_price > (number.price || 0) && (
-                    <div style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.85rem' }}>
-                      ₹{number.original_price.toLocaleString()}
-                    </div>
-                  )}
-                </Td>
-                <Td>
-                  {number.sum_total_1 && (
-                    <div style={{ fontSize: '0.85rem', color: '#666' }}>
-                      {number.sum_total_1}-{number.sum_total_2}-{number.sum_total_3}
-                    </div>
-                  )}
                 </Td>
                 <Td>
                   {categories.find(c => c.id === number.category_id)?.name || '-'}
@@ -958,33 +916,13 @@ const AdminPhoneNumbers: React.FC = () => {
               </FormGroup>
 
               <FormGroup>
-                <Label>Display Number</Label>
-                <Input
-                  type="text"
-                  value={formData.display_number}
-                  onChange={(e) => setFormData({...formData, display_number: e.target.value})}
-                  placeholder="98 765 432 10"
-                />
-              </FormGroup>
-
-              <FormGroup>
                 <Label>Price (₹) *</Label>
                 <Input
                   type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                  value={formData.price || ''}
+                  onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value) || 0})}
                   placeholder="50000"
                   required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Original Price (₹)</Label>
-                <Input
-                  type="number"
-                  value={formData.original_price}
-                  onChange={(e) => setFormData({...formData, original_price: parseFloat(e.target.value)})}
-                  placeholder="60000"
                 />
               </FormGroup>
 

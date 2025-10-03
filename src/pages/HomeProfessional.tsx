@@ -857,7 +857,7 @@ const Home: React.FC = () => {
                 <NumberProvider>{number.provider}</NumberProvider>
               </NumberDetails>
               <NumberActions>
-                <ActionButton $primary onClick={() => window.open(`https://wa.me/919772297722?text=Hi! I want to buy +91 ${number.number}`, '_blank')}>
+                <ActionButton $primary onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}>
                   Buy Now
                 </ActionButton>
                 <ActionButton onClick={() => console.log('View details')}>
@@ -896,7 +896,7 @@ const Home: React.FC = () => {
             Join thousands of satisfied customers who have found their perfect number with us
           </CTADescription>
           <CTAButtons>
-            <CTAButton href="https://wa.me/919772297722">
+            <CTAButton href="https://wa.me/917700071600">
               <FaPhoneAlt />
               Contact Us on WhatsApp
             </CTAButton>

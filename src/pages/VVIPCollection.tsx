@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { phoneNumberService, PhoneNumber as PhoneNumberType } from '../services/phoneNumberService';
 
 const VVIPContainer = styled.div`
   margin-top: 50px;
@@ -543,7 +544,7 @@ const PriceTag = styled.div`
 const PhoneNumber = styled.div`
   font-size: 1.8rem;
   font-weight: 700;
-  color: #FFD700;
+  color: #FFD700 !important;
   margin-top: 25px;
   margin-bottom: 15px;
   text-align: center;
@@ -552,6 +553,7 @@ const PhoneNumber = styled.div`
   position: relative;
   z-index: 2;
   white-space: nowrap;
+  min-height: 30px;
 
   .highlight {
     color: #FFA500;
@@ -565,7 +567,7 @@ const PhoneNumber = styled.div`
 `;
 
 const SumTotal = styled.div`
-  color: rgba(255, 215, 0, 0.9);
+  color: rgba(255, 215, 0, 0.9) !important;
   font-size: 16px;
   margin-bottom: 15px;
   font-weight: 600;
@@ -573,9 +575,11 @@ const SumTotal = styled.div`
   position: relative;
   z-index: 2;
   letter-spacing: 0.5px;
+  min-height: 20px;
 
   strong {
     font-weight: 700;
+    color: rgba(255, 215, 0, 0.9) !important;
   }
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 `;
@@ -653,7 +657,9 @@ const VipBadge = styled.div`
 `;
 
 // Function to calculate sum total of digits in a phone number
-const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
+const calculateSumTotal = (phoneNumber?: string): React.ReactNode => {
+  if (!phoneNumber) return <><strong>-</strong></>;
+
   // Remove all non-digit characters
   const digits = phoneNumber.replace(/\D/g, '');
 
@@ -671,40 +677,35 @@ const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
 };
 
 const VVIPCollection: React.FC = () => {
-  const sampleNumbers = [
-    { id: 1, number: '70390 91107', price: '₹4,080', highlights: [0, 1, 2, 3, 4] },
-    { id: 2, number: '914 2222288', price: '₹37,200', highlights: [4, 5, 6, 7, 8, 9] },
-    { id: 3, number: '74 7777 1665', price: '₹2,856', highlights: [3, 4, 5, 6] },
-    { id: 4, number: '9162203 888', price: '₹2,991', highlights: [8, 9, 10] },
-    { id: 5, number: '91329 00097', price: '₹4,760', highlights: [6, 7, 8, 9, 10] },
-    { id: 6, number: '905779 1234', price: '₹6,800', highlights: [7, 8, 9, 10] },
-    { id: 7, number: '98 555555 21', price: '₹1,20,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 8, number: '9876 777777', price: '₹5,40,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 9, number: '91 888888 45', price: '₹4,80,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 10, number: '8452 000000', price: '₹4,80,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 11, number: '9 510 999999', price: '₹12,00,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 12, number: '9561 444444', price: '₹3,00,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 13, number: '917 0000001', price: '₹15,60,000', highlights: [4, 5, 6, 7, 8] },
-    { id: 14, number: '94 000000 36', price: '₹2,88,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 15, number: '8888 999999', price: '₹12,50,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 16, number: '999 666666 9', price: '₹7,20,000', highlights: [4, 5, 6, 7, 8, 9] },
-    { id: 17, number: '80 000000 99', price: '₹8,40,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 18, number: '9999 888888', price: '₹18,00,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 19, number: '7777 333333', price: '₹4,80,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 20, number: '9123 444444', price: '₹3,60,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 21, number: '84 888888 12', price: '₹4,92,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 22, number: '9234 999999', price: '₹12,60,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 23, number: '85 222222 89', price: '₹1,80,000', highlights: [3, 4, 5, 6, 7, 8] },
-    { id: 24, number: '8345 111111', price: '₹1,92,000', highlights: [5, 6, 7, 8, 9, 10] },
-    { id: 25, number: '96 444444 89', price: '₹2,64,000', highlights: [3, 4, 5, 6, 7, 8] }
-  ];
+  const [vvipNumbers, setVvipNumbers] = useState<PhoneNumberType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const formatNumber = (number: string, highlights: number[]) => {
-    return number.split('').map((char, index) => (
-      <span key={index} className={highlights.includes(index) ? 'highlight' : ''}>
-        {char}
-      </span>
-    ));
+  useEffect(() => {
+    loadVVIPNumbers();
+  }, []);
+
+  const loadVVIPNumbers = async () => {
+    setLoading(true);
+    try {
+      const numbers = await phoneNumberService.getVVIPNumbers();
+      setVvipNumbers(numbers);
+    } catch (error) {
+      console.error('Error loading VVIP numbers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatNumber = (number?: string) => {
+    return number || '';
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+    }).format(price);
   };
 
 
@@ -726,24 +727,43 @@ const VVIPCollection: React.FC = () => {
 
       <MainLayout>
         <ContentArea>
-          <NumbersGrid>
-            {sampleNumbers.map((item) => (
-              <NumberCard key={item.id}>
-                <CrownIcon />
-                <PhoneNumber>{formatNumber(item.number, item.highlights)}</PhoneNumber>
-                <SumTotal>Sum Total: {calculateSumTotal(item.number)}</SumTotal>
-                <PriceTag>{item.price}</PriceTag>
-                <ButtonRow>
-                  <ActionButton
-                    $primary
-                    onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${item.number}`, '_blank')}
-                  >
-                    Buy Now
-                  </ActionButton>
-                </ButtonRow>
-              </NumberCard>
-            ))}
-          </NumbersGrid>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#FFD700' }}>
+              Loading VVIP Numbers...
+            </div>
+          ) : vvipNumbers.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#FFD700' }}>
+              No VVIP numbers available at the moment.
+            </div>
+          ) : (
+            <NumbersGrid>
+              {vvipNumbers.map((item) => (
+                <NumberCard key={item.id}>
+                  <CrownIcon />
+                  <PhoneNumber style={{ color: '#FFD700', fontSize: '1.8rem', fontWeight: 700 }}>
+                    {item.number || 'No number'}
+                  </PhoneNumber>
+                  <SumTotal style={{ color: '#FFD700', fontSize: '16px' }}>
+                    Sum Total: {calculateSumTotal(item.number)}
+                  </SumTotal>
+                  <PriceTag>{formatPrice(item.price)}</PriceTag>
+                  <ButtonRow>
+                    <ActionButton
+                      $primary
+                      onClick={() =>
+                        window.open(
+                          `https://wa.me/917700071600?text=I'm interested in ${item.number}`,
+                          '_blank'
+                        )
+                      }
+                    >
+                      Buy Now
+                    </ActionButton>
+                  </ButtonRow>
+                </NumberCard>
+              ))}
+            </NumbersGrid>
+          )}
         </ContentArea>
       </MainLayout>
     </VVIPContainer>

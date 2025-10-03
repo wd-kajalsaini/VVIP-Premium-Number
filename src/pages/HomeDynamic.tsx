@@ -868,30 +868,21 @@ const HomeDynamic: React.FC = () => {
     }
   };
 
-  // Format number with highlights
+  // Format number display
   const formatNumberDisplay = (number: PhoneNumber): React.ReactElement => {
-    const display = number.display_number || number.number;
-    const highlights = number.highlights || [];
-    const digits = display.split('');
-
-    return (
-      <>
-        {digits.map((digit, index) => (
-          <span key={index} className={highlights.includes(index) ? 'highlight' : ''}>
-            {digit}
-          </span>
-        ))}
-      </>
-    );
+    return <>{number.number}</>;
   };
 
-  // Format sum total display
+  // Calculate and format sum total display
   const formatSumTotal = (number: PhoneNumber): React.ReactElement => {
-    if (!number.sum_total_1) return <></>;
+    const digits = number.number.replace(/\D/g, '');
+    const sum1 = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+    const sum2 = sum1.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+    const sum3 = sum2.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
 
     return (
       <>
-        <strong>{number.sum_total_1}-{number.sum_total_2}-{number.sum_total_3}</strong>
+        <strong>{sum1}-{sum2}-{sum3}</strong>
       </>
     );
   };
@@ -1165,7 +1156,7 @@ const HomeDynamic: React.FC = () => {
                         <CardActions>
                           <CardButton
                             $primary
-                            onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in ${number.number}`, '_blank')}
+                            onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${number.number}`, '_blank')}
                           >
                             Buy Now
                           </CardButton>
@@ -1203,21 +1194,11 @@ const HomeDynamic: React.FC = () => {
                     <FeaturedSum>Sum Total = {formatSumTotal(number)}</FeaturedSum>
                     <NumberPrice>
                       ₹{number.price.toLocaleString()}
-                      {number.original_price && number.original_price > number.price && (
-                        <span style={{
-                          textDecoration: 'line-through',
-                          marginLeft: '10px',
-                          opacity: 0.7,
-                          fontSize: '0.9em'
-                        }}>
-                          ₹{number.original_price.toLocaleString()}
-                        </span>
-                      )}
                     </NumberPrice>
                     <CardActions>
                       <CardButton
                         $primary
-                        onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in Today's Offer: ${number.number}`, '_blank')}
+                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in Today's Offer: ${number.number}`, '_blank')}
                       >
                         Buy Now
                       </CardButton>
@@ -1245,7 +1226,7 @@ const HomeDynamic: React.FC = () => {
                     <CardActions>
                       <CardButton
                         $primary
-                        onClick={() => window.open(`https://wa.me/919772297722?text=I'm interested in VVIP number: ${number.number}`, '_blank')}
+                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in VVIP number: ${number.number}`, '_blank')}
                       >
                         Buy Now
                       </CardButton>
