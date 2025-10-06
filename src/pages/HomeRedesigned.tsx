@@ -2214,18 +2214,7 @@ const Home: React.FC = () => {
             </CarouselSlide>
           ))}
 
-          {isCarouselReady && carouselSlides.length > 1 && (
-            <>
-              <CarouselArrows>
-                <ArrowButton onClick={prevSlide}>
-                  <FaChevronLeft />
-                </ArrowButton>
-                <ArrowButton onClick={nextSlide}>
-                  <FaChevronRight />
-                </ArrowButton>
-              </CarouselArrows>
-            </>
-          )}
+         
         </CarouselSection>
 
         {/* Animated Phone Number Section - Removed */}
