@@ -683,11 +683,19 @@ const Numerology: React.FC = () => {
 Please provide me with a detailed numerology analysis and recommend the perfect premium number that aligns with my birth chart and life path! 🌟
     `;
 
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/917700071600?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
     setTimeout(() => {
       setIsSubmitting(false);
+      setFormData({
+        fullName: '',
+        dateOfBirth: '',
+        birthTime: '',
+        birthPlace: '',
+        phoneNumber: '',
+        profession: ''
+      });
       alert('Your numerology consultation request has been sent! Our expert will contact you soon with personalized recommendations.');
     }, 1000);
   };
