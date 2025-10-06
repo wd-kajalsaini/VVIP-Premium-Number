@@ -395,7 +395,7 @@ ${formData.message}
 Please respond to this inquiry at your earliest convenience. Thank you!
     `;
 
-    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/917700071600?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     
     setTimeout(() => {

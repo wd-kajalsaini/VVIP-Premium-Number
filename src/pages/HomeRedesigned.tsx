@@ -789,8 +789,8 @@ const VipCard = styled.div`
   &::after {
     content: 'VIP';
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 8px;
+    right: 8px;
     background: linear-gradient(135deg, #FFD700, #FFC700);
     color: #1e3a5f;
     padding: 4px 12px;
@@ -1558,6 +1558,8 @@ const Home: React.FC = () => {
   const [dbCategories, setDbCategories] = useState<Category[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [dbFeaturedNumbers, setDbFeaturedNumbers] = useState<PhoneNumber[]>([]);
+  const [dbTodayOffers, setDbTodayOffers] = useState<PhoneNumber[]>([]);
+  const [dbAttractiveNumbers, setDbAttractiveNumbers] = useState<PhoneNumber[]>([]);
   // Touch/Swipe handling for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -1977,14 +1979,25 @@ const Home: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch featured numbers (last 20)
+  // Fetch featured numbers, attractive numbers, and today's offers
   useEffect(() => {
-    const fetchFeaturedNumbers = async () => {
-      const numbers = await phoneNumberService.getFeaturedNumbers(20);
-      console.log('Fetched featured numbers:', numbers);
-      setDbFeaturedNumbers(numbers);
+    const fetchAllNumbers = async () => {
+      // Fetch featured numbers (is_featured = true)
+      const featuredNumbers = await phoneNumberService.getFeaturedNumbers(20);
+
+      // Fetch attractive numbers and today's offers for home sections
+      const attractiveNumbers = await phoneNumberService.getAttractiveNumbers();
+      const todayOffers = await phoneNumberService.getTodayOffers();
+
+      console.log('Fetched featured numbers:', featuredNumbers);
+      console.log('Fetched attractive numbers:', attractiveNumbers);
+      console.log('Fetched today offers:', todayOffers);
+
+      setDbFeaturedNumbers(featuredNumbers);
+      setDbAttractiveNumbers(attractiveNumbers.slice(0, 8)); // Limit to 8
+      setDbTodayOffers(todayOffers.slice(0, 8)); // Limit to 8
     };
-    fetchFeaturedNumbers();
+    fetchAllNumbers();
   }, []);
 
   // Load carousel slides from admin panel
@@ -2342,35 +2355,41 @@ const Home: React.FC = () => {
 
               <div style={{ textAlign: 'center', marginTop: '30px' }}>
                 <MoreButton onClick={() => window.location.href = '/featured-numbers'}>
-                  View All Featured Numbers
+                  View All Numbers
                 </MoreButton>
               </div>
             </div>
           </FeaturedLayout>
         </NumbersSection>
 
-        {/* VIP Numbers Auto-Scroll Section */}
+        {/* Today's Offers Auto-Scroll Section */}
         <NumbersSection>
           <SectionTitle>Today's Offers</SectionTitle>
           <VipScrollContainer>
             <VipScrollWrapper>
-              {[...vipNumbers, ...vipNumbers].map((item, index) => (
-                <VipCard key={index}>
-                  <NumberDisplay>
-                    {formatNumberDisplay(item.number, item.highlights)}
-                  </NumberDisplay>
-                  <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
-                  <NumberPrice>{item.price}</NumberPrice>
-                  <CardActions>
-                    <VipCardButton
-                      $primary
-                      onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
-                    >
-                      Buy Now
-                    </VipCardButton>
-                  </CardActions>
-                </VipCard>
-              ))}
+              {dbTodayOffers.length > 0 ? (
+                [...dbTodayOffers, ...dbTodayOffers].map((item, index) => (
+                  <VipCard key={index}>
+                    <NumberDisplay>
+                      +91 {item.number}
+                    </NumberDisplay>
+                    <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
+                    <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
+                    <CardActions>
+                      <VipCardButton
+                        $primary
+                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in +91 ${item.number}`, '_blank')}
+                      >
+                        Buy Now
+                      </VipCardButton>
+                    </CardActions>
+                  </VipCard>
+                ))
+              ) : (
+                <div style={{ padding: '40px', color: '#666', textAlign: 'center', width: '100%' }}>
+                  Loading today's offers...
+                </div>
+              )}
             </VipScrollWrapper>
           </VipScrollContainer>
         </NumbersSection>
@@ -2380,22 +2399,28 @@ const Home: React.FC = () => {
           <SectionTitle>Attractive Numbers</SectionTitle>
           <AttractiveScrollContainer>
             <AttractiveScrollWrapper>
-              {[...attractiveNumbers, ...attractiveNumbers].map((item, index) => (
-                <AttractiveCard key={index}>
-                  <AttractiveNumberDisplay>
-                    {formatNumberDisplay(item.number, item.highlights)}
-                  </AttractiveNumberDisplay>
-                  <AttractiveSum>Sum Total = {calculateSumTotal(item.number)}</AttractiveSum>
-                  <AttractivePrice>{item.price}</AttractivePrice>
-                  <CardActions>
-                    <AttractiveButton
-                      onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
-                    >
-                      Buy Now
-                    </AttractiveButton>
-                  </CardActions>
-                </AttractiveCard>
-              ))}
+              {dbAttractiveNumbers.length > 0 ? (
+                [...dbAttractiveNumbers, ...dbAttractiveNumbers].map((item, index) => (
+                  <AttractiveCard key={index}>
+                    <AttractiveNumberDisplay>
+                      +91 {item.number}
+                    </AttractiveNumberDisplay>
+                    <AttractiveSum>Sum Total = {calculateSumTotal(item.number)}</AttractiveSum>
+                    <AttractivePrice>₹{item.price.toLocaleString()}</AttractivePrice>
+                    <CardActions>
+                      <AttractiveButton
+                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in +91 ${item.number}`, '_blank')}
+                      >
+                        Buy Now
+                      </AttractiveButton>
+                    </CardActions>
+                  </AttractiveCard>
+                ))
+              ) : (
+                <div style={{ padding: '40px', color: '#666', textAlign: 'center', width: '100%' }}>
+                  Loading attractive numbers...
+                </div>
+              )}
             </AttractiveScrollWrapper>
           </AttractiveScrollContainer>
         </NumbersSection>

@@ -398,17 +398,36 @@ const FeaturedNumbers: React.FC = () => {
   // Filter numbers by selected categories and search term
   const filteredNumbers = numbers.filter(num => {
     // Filter by category
-    const matchesCategory = selectedCategories.length === 0 ||
-      (num.category_id && selectedCategories.includes(num.category_id));
+    let matchesCategory = false;
+
+    if (selectedCategories.length === 0) {
+      // No category selected, show all
+      matchesCategory = true;
+    } else {
+      // Category selected, check if number's category_id matches
+      if (num.category_id) {
+        matchesCategory = selectedCategories.includes(num.category_id);
+      }
+    }
 
     // Filter by search term (search in number, price, and category name)
     const matchesSearch = searchTerm === '' ||
       num.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       num.price.toString().includes(searchTerm) ||
-      categories.find(c => c.id === num.category_id)?.name.toLowerCase().includes(searchTerm.toLowerCase());
+      (num.category_id && categories.find(c => c.id === num.category_id)?.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return matchesCategory && matchesSearch;
   });
+
+  // Debug logging
+  useEffect(() => {
+    if (selectedCategories.length > 0) {
+      console.log('Selected category IDs:', selectedCategories);
+      console.log('Total numbers:', numbers.length);
+      console.log('Filtered numbers:', filteredNumbers.length);
+      console.log('Sample numbers with category_id:', numbers.slice(0, 5).map(n => ({ id: n.id, number: n.number, category_id: n.category_id })));
+    }
+  }, [selectedCategories, numbers, filteredNumbers.length]);
 
   return (
     <PageContainer>
@@ -456,7 +475,7 @@ const FeaturedNumbers: React.FC = () => {
           <Header>
             <Title>Featured Numbers</Title>
             <Subtitle>
-              Browse our collection of premium featured phone numbers. Scroll down to load more.
+              Browse our collection of featured premium numbers. Scroll down to load more.
             </Subtitle>
 
             {/* Search Bar */}
@@ -472,15 +491,34 @@ const FeaturedNumbers: React.FC = () => {
 
           {filteredNumbers.length === 0 && !loading ? (
             <EmptyState>
-              {selectedCategories.length > 0
-                ? 'No featured numbers found in selected categories.'
-                : 'No featured numbers available at the moment.'}
+              {selectedCategories.length > 0 ? (
+                <>
+                  <p>No featured numbers found in selected categories.</p>
+                  <p style={{ fontSize: '0.9rem', marginTop: '10px', color: '#999' }}>
+                    Selected categories: {selectedCategories.map(id =>
+                      categories.find(c => c.id === id)?.name || `ID ${id}`
+                    ).join(', ')}
+                  </p>
+                  <p style={{ fontSize: '0.9rem', marginTop: '10px', color: '#999' }}>
+                    Total numbers: {numbers.length}
+                  </p>
+                </>
+              ) : searchTerm ? (
+                <>
+                  <p>No numbers match your search "{searchTerm}"</p>
+                  <p style={{ fontSize: '0.9rem', marginTop: '10px', color: '#999' }}>
+                    Try a different search term
+                  </p>
+                </>
+              ) : (
+                'No featured numbers available at the moment.'
+              )}
             </EmptyState>
           ) : (
             <>
               <NumbersGrid>
                 {filteredNumbers.map((number) => {
-                  const categoryName = categories.find(c => c.id === number.category_id)?.name || 'Featured';
+                  const categoryName = categories.find(c => c.id === number.category_id)?.name || 'Premium';
 
                   return (
                     <NumberCard key={number.id}>

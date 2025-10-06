@@ -1772,7 +1772,7 @@ const Home: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch featured numbers (last 20)
+  // Fetch featured numbers
   useEffect(() => {
     const fetchFeaturedNumbers = async () => {
       const numbers = await phoneNumberService.getFeaturedNumbers(20);
