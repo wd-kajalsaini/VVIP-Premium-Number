@@ -7,7 +7,7 @@ import { categoryService, Category } from '../services/categoryService';
 import { phoneNumberService, PhoneNumber } from '../services/phoneNumberService';
 
 const HomeContainer = styled.div`
-  margin-top: 70px;
+  margin-top: 89px;
   min-height: calc(100vh - 70px);
   background: #f5f6fa;
 `;
@@ -2207,7 +2207,7 @@ const Home: React.FC = () => {
                 }}
                 loading="eager"
                 style={{
-                  objectFit: 'cover',
+                  objectFit: 'contain',
                   objectPosition: 'center top'
                 }}
               />
@@ -2224,21 +2224,6 @@ const Home: React.FC = () => {
                   <FaChevronRight />
                 </ArrowButton>
               </CarouselArrows>
-
-              <CarouselDots>
-                {carouselSlides.map((_, index) => (
-                  <CarouselDot
-                    key={index}
-                    $active={index === currentSlide}
-                    onClick={() => {
-                      setCurrentSlide(index);
-                      // Pause auto-slide when user manually navigates
-                      setIsUserInteracting(true);
-                      setTimeout(() => setIsUserInteracting(false), 3000);
-                    }}
-                  />
-                ))}
-              </CarouselDots>
             </>
           )}
         </CarouselSection>
