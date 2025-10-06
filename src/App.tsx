@@ -16,6 +16,7 @@ import Home from './pages/HomeRedesigned';
 import HomeDynamic from './pages/HomeDynamic';
 import Gallery from './pages/Gallery';
 import VVIPCollection from './pages/VVIPCollection';
+import FeaturedNumbers from './pages/FeaturedNumbers';
 import HowItWorks from './pages/HowItWorks';
 import Numerology from './pages/Numerology';
 import Contact from './pages/Contact';
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/dynamic" element={<HomeDynamic />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/vvip-collection" element={<VVIPCollection />} />
+                    <Route path="/featured-numbers" element={<FeaturedNumbers />} />
                     <Route path="/how-it-works" element={<HowItWorks />} />
                     <Route path="/numerology" element={<Numerology />} />
                     <Route path="/contact" element={<Contact />} />

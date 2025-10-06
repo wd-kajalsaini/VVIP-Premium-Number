@@ -23,9 +23,36 @@ export const categoryService = {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+
+      // Convert is_active from smallint to boolean if needed
+      return (data || []).map(cat => ({
+        ...cat,
+        is_active: Boolean(cat.is_active)
+      }));
     } catch (error) {
       console.error('Error fetching categories:', error);
+      return [];
+    }
+  },
+
+  // Get active categories (for public display)
+  async getActiveCategories(): Promise<Category[]> {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('is_active', 1)
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+
+      // Convert is_active from smallint to boolean if needed
+      return (data || []).map(cat => ({
+        ...cat,
+        is_active: Boolean(cat.is_active)
+      }));
+    } catch (error) {
+      console.error('Error fetching active categories:', error);
       return [];
     }
   },
@@ -56,7 +83,7 @@ export const categoryService = {
         .from('categories')
         .insert({
           name: input.name,
-          is_active: input.is_active ?? true
+          is_active: (input.is_active ?? true) ? 1 : 0
         })
         .select()
         .single();
@@ -72,9 +99,14 @@ export const categoryService = {
   // Update category (admin)
   async updateCategory(id: number, input: Partial<CategoryInput>): Promise<Category | null> {
     try {
+      const updateData: any = { ...input };
+      if (input.is_active !== undefined) {
+        updateData.is_active = input.is_active ? 1 : 0;
+      }
+
       const { data, error } = await supabase
         .from('categories')
-        .update(input)
+        .update(updateData)
         .eq('id', id)
         .select()
         .single();

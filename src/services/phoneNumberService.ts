@@ -282,8 +282,48 @@ export const phoneNumberService = {
   },
 
   // Get featured numbers
-  async getFeaturedNumbers(): Promise<PhoneNumber[]> {
-    return this.getActivePhoneNumbers({ is_featured: true });
+  async getFeaturedNumbers(limit?: number): Promise<PhoneNumber[]> {
+    try {
+      let query = supabase
+        .from('phone_numbers')
+        .select('*')
+        .eq('is_active', true)
+        .eq('is_sold', false)
+        .eq('is_featured', true)
+        .order('created_at', { ascending: false });
+
+      if (limit) {
+        query = query.limit(limit);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching featured numbers:', error);
+      return [];
+    }
+  },
+
+  // Get featured numbers with pagination
+  async getFeaturedNumbersPaginated(offset: number = 0, limit: number = 20): Promise<PhoneNumber[]> {
+    try {
+      const { data, error } = await supabase
+        .from('phone_numbers')
+        .select('*')
+        .eq('is_active', true)
+        .eq('is_sold', false)
+        .eq('is_featured', true)
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching featured numbers:', error);
+      return [];
+    }
   },
 
   // Get attractive numbers

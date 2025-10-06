@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaStar, FaShieldAlt, FaRocket, FaPhoneAlt, FaCrown, FaMagic, FaFilter, FaGlobe } from '../utils/iconComponents';
 import { theme } from '../styles/theme';
+import { categoryService, Category } from '../services/categoryService';
+import { phoneNumberService, PhoneNumber } from '../services/phoneNumberService';
 
 const HomeContainer = styled.div`
   margin-top: 70px;
@@ -23,10 +25,10 @@ const NumbersWithSidebar = styled.div`
 
 const Sidebar = styled.div`
   width: 280px;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border-right: 1px solid ${theme.colors.neutral.gray200};
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding: ${theme.spacing.md};
-  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 
   @media (max-width: 1024px) {
     width: 250px;
@@ -47,13 +49,15 @@ const MainContent = styled.div`
 `;
 
 const SidebarTitle = styled.h3`
-  color: ${theme.colors.neutral.gray800};
+  color: ${theme.colors.neutral.white};
   margin-bottom: ${theme.spacing.md};
-  font-size: ${theme.typography.fontSize.md};
+  font-size: ${theme.typography.fontSize.lg};
   font-weight: ${theme.typography.fontWeight.bold};
   text-align: left;
-  border-bottom: 2px solid #20b2aa;
-  padding-bottom: ${theme.spacing.xs};
+  border-bottom: 2px solid #FF6B35;
+  padding-bottom: ${theme.spacing.sm};
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const CategoryList = styled.ul`
@@ -69,16 +73,12 @@ const CategoryItem = styled.li`
 const CategoryLink = styled.label<{ $isActive?: boolean }>`
   display: flex;
   align-items: center;
-  color: ${props => props.$isActive ? '#20b2aa' : theme.colors.neutral.gray700};
+  gap: ${theme.spacing.sm};
+  color: ${props => props.$isActive ? '#FF6B35' : theme.colors.neutral.white};
   text-decoration: none;
   padding: ${theme.spacing.sm} ${theme.spacing.md};
-  border-radius: ${theme.borderRadius.md};
-  background: ${props => props.$isActive
-    ? 'linear-gradient(135deg, #20b2aa20, #48cae420)'
-    : theme.colors.neutral.white};
-  border: 1px solid ${props => props.$isActive
-    ? '#20b2aa'
-    : theme.colors.neutral.gray300};
+  border-radius: ${theme.borderRadius.sm};
+  background: transparent;
   transition: all 0.3s ease;
   font-size: ${theme.typography.fontSize.sm};
   font-weight: ${theme.typography.fontWeight.medium};
@@ -86,10 +86,7 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
   cursor: pointer;
 
   &:hover {
-    background: linear-gradient(135deg, #20b2aa15, #48cae415);
-    border-color: #20b2aa;
-    transform: translateX(2px);
-    box-shadow: 0 2px 8px rgba(32, 178, 170, 0.2);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   &:last-child {
@@ -99,13 +96,15 @@ const CategoryLink = styled.label<{ $isActive?: boolean }>`
 
 const CategoryInfo = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${theme.spacing.xs};
+  flex-direction: column;
+  flex: 1;
 `;
 
 const CategoryName = styled.span`
-  font-weight: ${theme.typography.fontWeight.semibold};
+  font-weight: ${theme.typography.fontWeight.medium};
+  text-transform: uppercase;
+  font-size: ${theme.typography.fontSize.sm};
+  letter-spacing: 0.3px;
 `;
 
 const CategoryCount = styled.span`
@@ -118,11 +117,11 @@ const CategoryCount = styled.span`
 `;
 
 const CategoryCheckbox = styled.input`
-  width: 16px;
-  height: 16px;
-  margin-right: ${theme.spacing.sm};
-  accent-color: #20b2aa;
+  width: 18px;
+  height: 18px;
+  accent-color: #FF6B35;
   cursor: pointer;
+  flex-shrink: 0;
 `;
 
 const PriceRange = styled.div`
@@ -1746,6 +1745,9 @@ const Home: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [dbCategories, setDbCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [featuredNumbers, setFeaturedNumbers] = useState<PhoneNumber[]>([]);
 
   const heroImages = [
     '/hero2.jpeg',
@@ -1759,6 +1761,26 @@ const Home: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
+
+  // Fetch categories from database
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const fetchedCategories = await categoryService.getActiveCategories();
+      console.log('Fetched categories:', fetchedCategories);
+      setDbCategories(fetchedCategories);
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch featured numbers (last 20)
+  useEffect(() => {
+    const fetchFeaturedNumbers = async () => {
+      const numbers = await phoneNumberService.getFeaturedNumbers(20);
+      console.log('Fetched featured numbers:', numbers);
+      setFeaturedNumbers(numbers);
+    };
+    fetchFeaturedNumbers();
+  }, []);
 
   // Animation for phone number highlighting
   useEffect(() => {
@@ -1983,68 +2005,6 @@ const Home: React.FC = () => {
     }
   ];
 
-  const featuredNumbers = [
-    {
-      number: "99999-88888",
-      category: "SUPER VIP",
-      price: "₹45,000"
-    },
-    {
-      number: "77777-77777",
-      category: "PLATINUM VIP",
-      price: "₹35,000"
-    },
-    {
-      number: "88888-99999",
-      category: "GOLD VIP",
-      price: "₹25,000"
-    },
-    {
-      number: "66666-77777",
-      category: "SILVER VIP",
-      price: "₹18,000"
-    },
-    {
-      number: "55555-66666",
-      category: "PREMIUM",
-      price: "₹12,000"
-    },
-    {
-      number: "44444-55555",
-      category: "PREMIUM",
-      price: "₹8,000"
-    },
-    {
-      number: "33333-44444",
-      category: "PREMIUM",
-      price: "₹6,000"
-    },
-    {
-      number: "22222-33333",
-      category: "STANDARD",
-      price: "₹4,000"
-    },
-    {
-      number: "12345-67890",
-      category: "SEQUENTIAL",
-      price: "₹10,000"
-    },
-    {
-      number: "98765-43210",
-      category: "REVERSE",
-      price: "₹8,500"
-    },
-    {
-      number: "11111-22222",
-      category: "DOUBLE",
-      price: "₹12,000"
-    },
-    {
-      number: "12321-54345",
-      category: "MIRROR",
-      price: "₹9,000"
-    }
-  ];
 
   const filterTags = ["VIP", "Premium", "Lucky", "Sequential", "Repeating", "Mirror"];
 
@@ -2100,26 +2060,55 @@ const Home: React.FC = () => {
       {/* Numbers Section with Sidebar */}
       <NumbersWithSidebar>
         <Sidebar>
-          <SidebarTitle>Number Categories</SidebarTitle>
+          <SidebarTitle>Category</SidebarTitle>
           <CategoryList>
-            {sidebarCategories.map((category, index) => (
-              <CategoryItem key={index}>
-                <CategoryLink
-                  as="label"
-                  $isActive={category.isActive}
-                >
-                  <CategoryInfo>
-                    <CategoryName>{category.name}</CategoryName>
-                    <CategoryCount>{category.count}</CategoryCount>
-                  </CategoryInfo>
-                  <CategoryCheckbox
-                    type="checkbox"
-                    checked={category.isActive}
-                    onChange={() => console.log('Category toggled:', category.name)}
-                  />
-                </CategoryLink>
-              </CategoryItem>
-            ))}
+            {/* All Option */}
+            <CategoryItem>
+              <CategoryLink
+                as="label"
+                $isActive={selectedCategories.length === 0}
+              >
+                <CategoryCheckbox
+                  type="checkbox"
+                  checked={selectedCategories.length === 0}
+                  onChange={() => setSelectedCategories([])}
+                />
+                <CategoryInfo>
+                  <CategoryName>All</CategoryName>
+                </CategoryInfo>
+              </CategoryLink>
+            </CategoryItem>
+
+            {/* Dynamic Categories from Database */}
+            {dbCategories.length > 0 ? (
+              dbCategories.map((category) => (
+                <CategoryItem key={category.id}>
+                  <CategoryLink
+                    as="label"
+                    $isActive={selectedCategories.includes(category.id)}
+                  >
+                    <CategoryCheckbox
+                      type="checkbox"
+                      checked={selectedCategories.includes(category.id)}
+                      onChange={() => {
+                        setSelectedCategories(prev =>
+                          prev.includes(category.id)
+                            ? prev.filter(id => id !== category.id)
+                            : [...prev, category.id]
+                        );
+                      }}
+                    />
+                    <CategoryInfo>
+                      <CategoryName>{category.name}</CategoryName>
+                    </CategoryInfo>
+                  </CategoryLink>
+                </CategoryItem>
+              ))
+            ) : (
+              <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.7)', textAlign: 'center', fontSize: '0.875rem' }}>
+                Loading categories...
+              </div>
+            )}
           </CategoryList>
         </Sidebar>
 
@@ -2171,31 +2160,46 @@ const Home: React.FC = () => {
         {/* Featured Numbers Grid */}
         <NumbersSection>
           <NumbersGrid>
-            {featuredNumbers.map((number, index) => (
-              <NumberCard key={index}>
-                <NumberDisplay>+91 {number.number}</NumberDisplay>
-                <NumberInfo>
-                  <NumberCategory>{number.category}</NumberCategory>
-                  <NumberPrice>{number.price}</NumberPrice>
-                  <SumTotal>Sum Total = {calculateSumTotal(number.number)}</SumTotal>
-                </NumberInfo>
-                <NumberActions>
-                  <NumberAction
-                    $variant="primary"
-                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
-                  >
-                    Buy Nowc
-                  </NumberAction>
-                  <NumberAction
-                    $variant="secondary"
-                    onClick={() => alert(`Details for +91 ${number.number}\nCategory: ${number.category}\nPrice: ${number.price}\n\nCall +91 97722-97722 for more details.`)}
-                  >
-                    Details
-                  </NumberAction>
-                </NumberActions>
-              </NumberCard>
-            ))}
+            {featuredNumbers.length > 0 ? (
+              featuredNumbers.map((number) => (
+                <NumberCard key={number.id}>
+                  <NumberDisplay>+91 {number.number}</NumberDisplay>
+                  <NumberInfo>
+                    <NumberCategory>{dbCategories.find(c => c.id === number.category_id)?.name || 'Premium'}</NumberCategory>
+                    <NumberPrice>₹{number.price.toLocaleString()}</NumberPrice>
+                    <SumTotal>Sum Total = {calculateSumTotal(number.number)}</SumTotal>
+                  </NumberInfo>
+                  <NumberActions>
+                    <NumberAction
+                      $variant="primary"
+                      onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
+                    >
+                      Buy Now
+                    </NumberAction>
+                    <NumberAction
+                      $variant="secondary"
+                      onClick={() => alert(`Details for +91 ${number.number}\nPrice: ₹${number.price.toLocaleString()}\n\nCall +91 97722-97722 for more details.`)}
+                    >
+                      Details
+                    </NumberAction>
+                  </NumberActions>
+                </NumberCard>
+              ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
+                Loading featured numbers...
+              </div>
+            )}
           </NumbersGrid>
+
+          {/* View All Button */}
+          {featuredNumbers.length > 0 && (
+            <div style={{ textAlign: 'center', marginTop: '40px' }}>
+              <ViewAllButton to="/featured-numbers">
+                View All Featured Numbers
+              </ViewAllButton>
+            </div>
+          )}
         </NumbersSection>
 
         {/* VVIP Numbers Section - Horizontal Scroller */}

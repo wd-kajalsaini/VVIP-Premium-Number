@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaWhatsapp, FaPhone, FaChevronDown, FaChevronUp, FaArrowRight, FaCog, FaStar } from '../utils/iconComponents';
 import { carouselService, CarouselSlide as CarouselSlideType } from '../services/carouselService';
+import { categoryService, Category } from '../services/categoryService';
+import { phoneNumberService, PhoneNumber } from '../services/phoneNumberService';
 
 const HomeContainer = styled.div`
   margin-top: 70px;
@@ -1553,6 +1555,9 @@ const Home: React.FC = () => {
   const [activeSearchTab, setActiveSearchTab] = useState('global');
   const [sumTotalSearch, setSumTotalSearch] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['All']);
+  const [dbCategories, setDbCategories] = useState<Category[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [dbFeaturedNumbers, setDbFeaturedNumbers] = useState<PhoneNumber[]>([]);
   // Touch/Swipe handling for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -1962,6 +1967,26 @@ const Home: React.FC = () => {
     return true;
   });
 
+  // Fetch categories from database
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const fetchedCategories = await categoryService.getActiveCategories();
+      console.log('Fetched categories:', fetchedCategories);
+      setDbCategories(fetchedCategories);
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch featured numbers (last 20)
+  useEffect(() => {
+    const fetchFeaturedNumbers = async () => {
+      const numbers = await phoneNumberService.getFeaturedNumbers(20);
+      console.log('Fetched featured numbers:', numbers);
+      setDbFeaturedNumbers(numbers);
+    };
+    fetchFeaturedNumbers();
+  }, []);
+
   // Load carousel slides from admin panel
   useEffect(() => {
     const loadCarouselSlides = async () => {
@@ -2243,206 +2268,81 @@ const Home: React.FC = () => {
 
                 <SidebarTitle style={{ paddingTop: '0', marginBottom: '20px' }}>CATEGORY</SidebarTitle>
                 <CategoryList>
+                  {/* All Option */}
                   <CategoryItem>
-                    <CategoryLink $isActive={selectedCategories.includes('All')}>
+                    <CategoryLink $isActive={selectedCategoryIds.length === 0}>
                       <CategoryCheckbox
                         type="checkbox"
-                        checked={selectedCategories.includes('All')}
-                        onChange={() => handleCategoryToggle('All')}
+                        checked={selectedCategoryIds.length === 0}
+                        onChange={() => setSelectedCategoryIds([])}
                       />
                       <CategoryInfo>
                         <CategoryName>All</CategoryName>
                       </CategoryInfo>
                     </CategoryLink>
                   </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>Numerology Without 2 4 8</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>PENTA NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>HEXA NUMBER</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>SEPTA (XYY AAA AAA A)</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>OCTA NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>ENDING AAAA NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>AB AB (XXXXXX 1212)</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>ABC ABC NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>MIRROR NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>SEMI MIRROR NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>123456 NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>786 NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>11 12 13 NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>UNIQUE NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>AAA BBB</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>XY XY XY NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>DOUBLING NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>ENDING AAA NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>AB XXXXXXY</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
-                  <CategoryItem>
-                    <CategoryLink>
-                      <CategoryCheckbox type="checkbox" />
-                      <CategoryInfo>
-                        <CategoryName>ABCD ABCD NUMBERS</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
+
+                  {/* Dynamic Categories from Database */}
+                  {dbCategories.length > 0 ? (
+                    dbCategories.map((category) => (
+                      <CategoryItem key={category.id}>
+                        <CategoryLink $isActive={selectedCategoryIds.includes(category.id)}>
+                          <CategoryCheckbox
+                            type="checkbox"
+                            checked={selectedCategoryIds.includes(category.id)}
+                            onChange={() => {
+                              setSelectedCategoryIds(prev =>
+                                prev.includes(category.id)
+                                  ? prev.filter(id => id !== category.id)
+                                  : [...prev, category.id]
+                              );
+                            }}
+                          />
+                          <CategoryInfo>
+                            <CategoryName>{category.name}</CategoryName>
+                          </CategoryInfo>
+                        </CategoryLink>
+                      </CategoryItem>
+                    ))
+                  ) : (
+                    <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.7)', textAlign: 'center', fontSize: '0.875rem' }}>
+                      Loading categories...
+                    </div>
+                  )}
                 </CategoryList>
               </CategorySection>
             </Sidebar>
 
             <div style={{ flex: 1 }}>
               <NumbersGrid>
-                {filteredFeaturedNumbers.slice(0, numbersToShow).map((item, index) => (
-                  <NumberCard key={index}>
-                    <NumberDisplay>
-                      {formatNumberDisplay(item.number, item.highlights)}
-                    </NumberDisplay>
-                    <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
-                    <NumberPrice>{item.price}</NumberPrice>
-                    <CardActions>
-                      <CardButton
-                        $primary
-                        onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
-                      >
-                        Buy Now
-                      </CardButton>
-                    </CardActions>
-                  </NumberCard>
-                ))}
+                {dbFeaturedNumbers.length > 0 ? (
+                  dbFeaturedNumbers.map((item) => (
+                    <NumberCard key={item.id}>
+                      <NumberDisplay>
+                        {item.number}
+                      </NumberDisplay>
+                      <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
+                      <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
+                      <CardActions>
+                        <CardButton
+                          $primary
+                          onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
+                        >
+                          Buy Now
+                        </CardButton>
+                      </CardActions>
+                    </NumberCard>
+                  ))
+                ) : (
+                  <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
+                    Loading featured numbers...
+                  </div>
+                )}
               </NumbersGrid>
 
               <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                <MoreButton onClick={() => window.location.href = '/vvip-collection'}>
-                  View All VIP Numbers
+                <MoreButton onClick={() => window.location.href = '/featured-numbers'}>
+                  View All Featured Numbers
                 </MoreButton>
               </div>
             </div>

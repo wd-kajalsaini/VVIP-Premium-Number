@@ -577,6 +577,58 @@ const BulkText = styled.span`
   margin-right: auto;
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  border-top: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const PaginationInfo = styled.div`
+  color: #666;
+  font-size: 0.9rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+  }
+`;
+
+const PaginationButtons = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+const PageButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: ${props => props.$active ? '#3498db' : 'white'};
+  color: ${props => props.$active ? 'white' : '#666'};
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  min-width: 40px;
+
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? '#2980b9' : '#f0f0f0'};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
 const AdminPhoneNumbers: React.FC = () => {
   const [phoneNumbers, setPhoneNumbers] = useState<PhoneNumber[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -586,6 +638,8 @@ const AdminPhoneNumbers: React.FC = () => {
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingNumber, setEditingNumber] = useState<PhoneNumber | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(15);
   const [formData, setFormData] = useState<PhoneNumberInput>({
     number: '',
     price: 0,
@@ -728,8 +782,14 @@ const AdminPhoneNumbers: React.FC = () => {
     if (!num || !num.number) return false;
 
     const searchLower = searchTerm.toLowerCase();
+
+    // Get category name for this number
+    const categoryName = categories.find(c => c.id === num.category_id)?.name || '';
+
+    // Search in both phone number and category name
     const matchesSearch = searchTerm === '' ||
-      num.number.toLowerCase().includes(searchLower);
+      num.number.toLowerCase().includes(searchLower) ||
+      categoryName.toLowerCase().includes(searchLower);
 
     const matchesFilter =
       filter === 'all' ||
@@ -740,6 +800,47 @@ const AdminPhoneNumbers: React.FC = () => {
 
     return matchesSearch && matchesFilter;
   });
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredNumbers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentNumbers = filteredNumbers.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filter]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <PageButton
+          key={i}
+          $active={currentPage === i}
+          onClick={() => goToPage(i)}
+        >
+          {i}
+        </PageButton>
+      );
+    }
+
+    return pages;
+  };
 
 
   return (
@@ -835,7 +936,7 @@ const AdminPhoneNumbers: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredNumbers.map(number => (
+            {currentNumbers.map(number => (
               <Tr key={number.id}>
                 <Td>
                   <input
@@ -889,6 +990,45 @@ const AdminPhoneNumbers: React.FC = () => {
             ))}
           </Tbody>
           </Table>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <PaginationContainer>
+              <PaginationInfo>
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredNumbers.length)} of {filteredNumbers.length} numbers
+              </PaginationInfo>
+
+              <PaginationButtons>
+                <PageButton
+                  onClick={() => goToPage(1)}
+                  disabled={currentPage === 1}
+                >
+                  First
+                </PageButton>
+                <PageButton
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </PageButton>
+
+                {renderPageNumbers()}
+
+                <PageButton
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </PageButton>
+                <PageButton
+                  onClick={() => goToPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                >
+                  Last
+                </PageButton>
+              </PaginationButtons>
+            </PaginationContainer>
+          )}
         </TableContainer>
       )}
 
