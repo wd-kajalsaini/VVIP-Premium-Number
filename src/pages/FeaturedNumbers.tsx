@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { phoneNumberService, PhoneNumber } from '../services/phoneNumberService';
 import { categoryService, Category } from '../services/categoryService';
 import { theme } from '../styles/theme';
@@ -316,17 +317,41 @@ const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
   return <><strong>{firstSum}-{secondSum}-{thirdSum}</strong></>;
 };
 
+// Function to get sum total as string for filtering
+const getSumTotalString = (phoneNumber: string): string => {
+  const digits = phoneNumber.replace(/\D/g, '');
+  const firstSum = digits.split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  const secondSum = firstSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  const thirdSum = secondSum.toString().split('').reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+  return `${firstSum}-${secondSum}-${thirdSum}`;
+};
+
 const FeaturedNumbers: React.FC = () => {
+  const location = useLocation();
   const [numbers, setNumbers] = useState<PhoneNumber[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sumTotalSearch, setSumTotalSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(0);
-  const loaderRef = useRef<HTMLDivElement>(null);
 
-  const ITEMS_PER_PAGE = 20;
+  // Parse URL params on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoriesParam = params.get('categories');
+    const sumParam = params.get('sum');
+
+    if (categoriesParam) {
+      const categoryIds = categoriesParam.split(',').map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+      setSelectedCategories(categoryIds);
+      console.log('Loaded categories from URL:', categoryIds);
+    }
+
+    if (sumParam) {
+      setSumTotalSearch(sumParam);
+      console.log('Loaded sum search from URL:', sumParam);
+    }
+  }, [location.search]);
 
   // Fetch categories
   useEffect(() => {
@@ -337,24 +362,17 @@ const FeaturedNumbers: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch featured numbers
-  const fetchNumbers = useCallback(async (pageNum: number) => {
+  // Fetch all featured numbers at once
+  const fetchNumbers = useCallback(async () => {
     if (loading) return;
 
     setLoading(true);
     try {
-      const offset = pageNum * ITEMS_PER_PAGE;
-      const newNumbers = await phoneNumberService.getFeaturedNumbersPaginated(offset, ITEMS_PER_PAGE);
+      // Fetch all featured numbers (no pagination needed since they're limited)
+      const allNumbers = await phoneNumberService.getActivePhoneNumbers({ is_featured: true });
 
-      if (newNumbers.length < ITEMS_PER_PAGE) {
-        setHasMore(false);
-      }
-
-      if (pageNum === 0) {
-        setNumbers(newNumbers);
-      } else {
-        setNumbers(prev => [...prev, ...newNumbers]);
-      }
+      console.log('Fetched all featured numbers:', allNumbers);
+      setNumbers(allNumbers);
     } catch (error) {
       console.error('Error fetching numbers:', error);
     } finally {
@@ -364,38 +382,12 @@ const FeaturedNumbers: React.FC = () => {
 
   // Initial load
   useEffect(() => {
-    fetchNumbers(0);
-  }, []);
+    fetchNumbers();
+  }, [fetchNumbers]);
 
-  // Infinite scroll observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const first = entries[0];
-        if (first.isIntersecting && hasMore && !loading) {
-          setPage(prev => {
-            const nextPage = prev + 1;
-            fetchNumbers(nextPage);
-            return nextPage;
-          });
-        }
-      },
-      { threshold: 0.1 }
-    );
+  // No infinite scroll needed - all numbers loaded at once
 
-    const currentLoader = loaderRef.current;
-    if (currentLoader) {
-      observer.observe(currentLoader);
-    }
-
-    return () => {
-      if (currentLoader) {
-        observer.unobserve(currentLoader);
-      }
-    };
-  }, [hasMore, loading, fetchNumbers]);
-
-  // Filter numbers by selected categories and search term
+  // Filter numbers by selected categories, search term, and sum total
   const filteredNumbers = numbers.filter(num => {
     // Filter by category
     let matchesCategory = false;
@@ -416,7 +408,13 @@ const FeaturedNumbers: React.FC = () => {
       num.price.toString().includes(searchTerm) ||
       (num.category_id && categories.find(c => c.id === num.category_id)?.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    return matchesCategory && matchesSearch;
+    // Filter by sum total
+    const matchesSumTotal = sumTotalSearch === '' || (() => {
+      const sumTotal = getSumTotalString(num.number);
+      return sumTotal.includes(sumTotalSearch);
+    })();
+
+    return matchesCategory && matchesSearch && matchesSumTotal;
   });
 
   // Debug logging
@@ -434,6 +432,16 @@ const FeaturedNumbers: React.FC = () => {
       <ContentWrapper>
         {/* Sidebar with dynamic categories */}
         <Sidebar>
+          <SidebarTitle>Sum Total</SidebarTitle>
+          <div style={{ padding: '0 20px 20px' }}>
+            <SearchInput
+              type="text"
+              placeholder="Search by sum (e.g., 20)"
+              value={sumTotalSearch}
+              onChange={(e) => setSumTotalSearch(e.target.value)}
+            />
+          </div>
+
           <SidebarTitle>Category</SidebarTitle>
           <CategoryList>
             {/* All Option */}
@@ -549,12 +557,7 @@ const FeaturedNumbers: React.FC = () => {
                 })}
               </NumbersGrid>
 
-              {/* Infinite scroll trigger */}
-              {hasMore && selectedCategories.length === 0 && (
-                <LoadMoreTrigger ref={loaderRef}>
-                  {loading ? 'Loading more numbers...' : 'Scroll for more'}
-                </LoadMoreTrigger>
-              )}
+              {/* All numbers loaded */}
             </>
           )}
         </MainContent>

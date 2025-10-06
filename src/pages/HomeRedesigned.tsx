@@ -1982,20 +1982,33 @@ const Home: React.FC = () => {
   // Fetch featured numbers, attractive numbers, and today's offers
   useEffect(() => {
     const fetchAllNumbers = async () => {
-      // Fetch featured numbers (is_featured = true)
-      const featuredNumbers = await phoneNumberService.getFeaturedNumbers(20);
+      try {
+        // Fetch ALL featured numbers for filtering (no limit)
+        const featuredNumbers = await phoneNumberService.getFeaturedNumbers();
 
-      // Fetch attractive numbers and today's offers for home sections
-      const attractiveNumbers = await phoneNumberService.getAttractiveNumbers();
-      const todayOffers = await phoneNumberService.getTodayOffers();
+        // Fetch attractive numbers and today's offers for home sections
+        const attractiveNumbers = await phoneNumberService.getAttractiveNumbers();
+        const todayOffers = await phoneNumberService.getTodayOffers();
 
-      console.log('Fetched featured numbers:', featuredNumbers);
-      console.log('Fetched attractive numbers:', attractiveNumbers);
-      console.log('Fetched today offers:', todayOffers);
+        console.log('===== HOME PAGE DATA FETCH =====');
+        console.log('Fetched featured numbers count:', featuredNumbers.length);
+        if (featuredNumbers.length > 0) {
+          console.log('First 3 featured numbers with categories:', featuredNumbers.slice(0, 3).map(n => ({
+            id: n.id,
+            number: n.number,
+            category_id: n.category_id,
+            is_featured: n.is_featured
+          })));
+        }
+        console.log('Fetched attractive numbers count:', attractiveNumbers.length);
+        console.log('Fetched today offers count:', todayOffers.length);
 
-      setDbFeaturedNumbers(featuredNumbers);
-      setDbAttractiveNumbers(attractiveNumbers.slice(0, 8)); // Limit to 8
-      setDbTodayOffers(todayOffers.slice(0, 8)); // Limit to 8
+        setDbFeaturedNumbers(featuredNumbers); // All featured numbers for filtering
+        setDbAttractiveNumbers(attractiveNumbers.slice(0, 8)); // Limit to 8
+        setDbTodayOffers(todayOffers.slice(0, 8)); // Limit to 8
+      } catch (error) {
+        console.error('Error fetching numbers:', error);
+      }
     };
     fetchAllNumbers();
   }, []);
@@ -2329,23 +2342,82 @@ const Home: React.FC = () => {
             <div style={{ flex: 1 }}>
               <NumbersGrid>
                 {dbFeaturedNumbers.length > 0 ? (
-                  dbFeaturedNumbers.map((item) => (
-                    <NumberCard key={item.id}>
-                      <NumberDisplay>
-                        {item.number}
-                      </NumberDisplay>
-                      <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
-                      <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
-                      <CardActions>
-                        <CardButton
-                          $primary
-                          onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
-                        >
-                          Buy Now
-                        </CardButton>
-                      </CardActions>
-                    </NumberCard>
-                  ))
+                  (() => {
+                    // Filter numbers based on category and sum total
+                    let filtered = dbFeaturedNumbers;
+
+                    // Debug logging
+                    console.log('===== FILTERING DEBUG =====');
+                    console.log('Total featured numbers:', dbFeaturedNumbers.length);
+                    console.log('Selected category IDs:', selectedCategoryIds);
+                    console.log('Sum total search:', sumTotalSearch);
+
+                    if (dbFeaturedNumbers.length > 0) {
+                      const categoryCounts = dbFeaturedNumbers.reduce((acc: any, num) => {
+                        const catId = num.category_id || 'null';
+                        acc[catId] = (acc[catId] || 0) + 1;
+                        return acc;
+                      }, {});
+                      console.log('Numbers by category_id:', categoryCounts);
+                      console.log('First 5 numbers:', dbFeaturedNumbers.slice(0, 5).map(n => ({
+                        id: n.id,
+                        number: n.number,
+                        category_id: n.category_id
+                      })));
+                    }
+
+                    // Filter by category
+                    if (selectedCategoryIds.length > 0) {
+                      console.log('Filtering by categories:', selectedCategoryIds);
+                      const beforeFilter = filtered.length;
+                      filtered = filtered.filter(num => {
+                        if (num.category_id === null || num.category_id === undefined) {
+                          return false;
+                        }
+                        return selectedCategoryIds.includes(num.category_id);
+                      });
+                      console.log(`Category filter: ${beforeFilter} -> ${filtered.length} numbers`);
+                      if (filtered.length > 0) {
+                        console.log('Sample filtered number:', filtered[0]);
+                      }
+                    }
+
+                    // Filter by sum total
+                    if (sumTotalSearch) {
+                      filtered = filtered.filter(num => {
+                        const sumTotal = getSumTotalString(num.number);
+                        return sumTotal.includes(sumTotalSearch);
+                      });
+                      console.log('After sum total filter:', filtered.length);
+                    }
+
+                    // Limit to 20 numbers
+                    const displayNumbers = filtered.slice(0, 20);
+
+                    return displayNumbers.length > 0 ? (
+                      displayNumbers.map((item) => (
+                        <NumberCard key={item.id}>
+                          <NumberDisplay>
+                            {item.number}
+                          </NumberDisplay>
+                          <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
+                          <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
+                          <CardActions>
+                            <CardButton
+                              $primary
+                              onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
+                            >
+                              Buy Now
+                            </CardButton>
+                          </CardActions>
+                        </NumberCard>
+                      ))
+                    ) : (
+                      <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
+                        No numbers found matching your criteria.
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
                     Loading featured numbers...
@@ -2354,7 +2426,18 @@ const Home: React.FC = () => {
               </NumbersGrid>
 
               <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                <MoreButton onClick={() => window.location.href = '/featured-numbers'}>
+                <MoreButton onClick={() => {
+                  // Build URL with search params
+                  const params = new URLSearchParams();
+                  if (selectedCategoryIds.length > 0) {
+                    params.set('categories', selectedCategoryIds.join(','));
+                  }
+                  if (sumTotalSearch) {
+                    params.set('sum', sumTotalSearch);
+                  }
+                  const url = params.toString() ? `/featured-numbers?${params.toString()}` : '/featured-numbers';
+                  window.location.href = url;
+                }}>
                   View All Numbers
                 </MoreButton>
               </div>
