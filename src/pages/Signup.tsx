@@ -462,7 +462,6 @@ const Signup: React.FC = () => {
               </PasswordStrength>
             )}
           </FormGroup>
-
           <FormGroup>
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <InputWrapper>
