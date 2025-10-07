@@ -651,6 +651,7 @@ const AdminPhoneNumbers: React.FC = () => {
     is_sold: false,
     is_active: true
   });
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
 
   useEffect(() => {
     fetchPhoneNumbers();
@@ -694,6 +695,22 @@ const AdminPhoneNumbers: React.FC = () => {
         is_sold: number.is_sold,
         is_active: number.is_active
       });
+
+      // Parse category_id if it's stored as comma-separated string
+      if (number.category_id) {
+        const categoryIdStr = String(number.category_id);
+        if (categoryIdStr.includes(',')) {
+          // Multiple categories
+          const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+          setSelectedCategoryIds(catIds);
+        } else {
+          // Single category
+          const catId = parseInt(categoryIdStr);
+          setSelectedCategoryIds(!isNaN(catId) && catId !== 0 ? [catId] : []);
+        }
+      } else {
+        setSelectedCategoryIds([]);
+      }
     } else {
       setEditingNumber(null);
       setFormData({
@@ -707,6 +724,7 @@ const AdminPhoneNumbers: React.FC = () => {
         is_sold: false,
         is_active: true
       });
+      setSelectedCategoryIds([]);
     }
     setIsModalOpen(true);
   };
@@ -719,10 +737,15 @@ const AdminPhoneNumbers: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Convert selected category IDs to comma-separated string
+    const categoriesString = selectedCategoryIds.length > 0
+      ? selectedCategoryIds.join(',')
+      : undefined;
+
     // Clean the data before submitting
     const cleanData = {
       ...formData,
-      category_id: formData.category_id === 0 ? undefined : formData.category_id,
+      category_id: categoriesString as any, // Store as comma-separated string
       price: isNaN(formData.price) ? 0 : formData.price
     };
 
@@ -954,7 +977,20 @@ const AdminPhoneNumbers: React.FC = () => {
                   <PriceTag>₹{(number.price || 0).toLocaleString()}</PriceTag>
                 </Td>
                 <Td>
-                  {categories.find(c => c.id === number.category_id)?.name || '-'}
+                  {(() => {
+                    if (!number.category_id) return '-';
+                    const categoryIdStr = String(number.category_id);
+                    if (categoryIdStr.includes(',')) {
+                      // Multiple categories
+                      const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+                      const catNames = catIds.map(id => categories.find(c => c.id === id)?.name).filter(Boolean);
+                      return catNames.join(', ') || '-';
+                    } else {
+                      // Single category
+                      const catId = parseInt(categoryIdStr);
+                      return categories.find(c => c.id === catId)?.name || '-';
+                    }
+                  })()}
                 </Td>
                 <Td>
                   {number.is_vvip && <Badge $type="vvip">VVIP</Badge>}
@@ -1066,17 +1102,26 @@ const AdminPhoneNumbers: React.FC = () => {
                 />
               </FormGroup>
 
-              <FormGroup>
-                <Label>Category</Label>
-                <Select
-                  value={formData.category_id}
-                  onChange={(e) => setFormData({...formData, category_id: parseInt(e.target.value)})}
-                >
-                  <option value="0">Select Category</option>
+              <FormGroup $fullWidth>
+                <Label>Categories (Select Multiple)</Label>
+                <CheckboxGroup style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px', borderRadius: '6px' }}>
                   {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    <CheckboxLabel key={cat.id}>
+                      <input
+                        type="checkbox"
+                        checked={selectedCategoryIds.includes(cat.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedCategoryIds([...selectedCategoryIds, cat.id]);
+                          } else {
+                            setSelectedCategoryIds(selectedCategoryIds.filter(id => id !== cat.id));
+                          }
+                        }}
+                      />
+                      {cat.name}
+                    </CheckboxLabel>
                   ))}
-                </Select>
+                </CheckboxGroup>
               </FormGroup>
 
 

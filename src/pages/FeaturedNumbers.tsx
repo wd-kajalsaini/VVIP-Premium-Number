@@ -398,7 +398,18 @@ const FeaturedNumbers: React.FC = () => {
     } else {
       // Category selected, check if number's category_id matches
       if (num.category_id) {
-        matchesCategory = selectedCategories.includes(num.category_id);
+        const categoryIdStr = String(num.category_id);
+
+        // Check if category_id contains comma-separated values
+        if (categoryIdStr.includes(',')) {
+          // Multiple categories - split and check if any match
+          const numberCategories = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+          matchesCategory = selectedCategories.some(selectedId => numberCategories.includes(selectedId));
+        } else {
+          // Single category - direct match
+          const catId = parseInt(categoryIdStr);
+          matchesCategory = !isNaN(catId) && selectedCategories.includes(catId);
+        }
       }
     }
 
@@ -526,11 +537,25 @@ const FeaturedNumbers: React.FC = () => {
             <>
               <NumbersGrid>
                 {filteredNumbers.map((number) => {
-                  const categoryName = categories.find(c => c.id === number.category_id)?.name || 'Premium';
+                  // Handle multiple categories
+                  let categoryName = 'Premium';
+                  if (number.category_id) {
+                    const categoryIdStr = String(number.category_id);
+                    if (categoryIdStr.includes(',')) {
+                      // Multiple categories
+                      const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+                      const catNames = catIds.map(id => categories.find(c => c.id === id)?.name).filter(Boolean);
+                      categoryName = catNames.join(', ') || 'Premium';
+                    } else {
+                      // Single category
+                      const catId = parseInt(categoryIdStr);
+                      categoryName = categories.find(c => c.id === catId)?.name || 'Premium';
+                    }
+                  }
 
                   return (
                     <NumberCard key={number.id}>
-                      <NumberDisplay>+91 {number.number}</NumberDisplay>
+                      <NumberDisplay>{number.number}</NumberDisplay>
                       <NumberInfo>
                         <NumberCategory title={categoryName}>
                           {categoryName}
@@ -541,13 +566,13 @@ const FeaturedNumbers: React.FC = () => {
                       <NumberActions>
                         <NumberAction
                           $variant="primary"
-                          onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}
+                          onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy ${number.number}`, '_blank')}
                         >
                           Buy Now
                         </NumberAction>
                         <NumberAction
                           $variant="secondary"
-                          onClick={() => alert(`Details for +91 ${number.number}\nCategory: ${categoryName}\nPrice: ₹${number.price.toLocaleString()}\n\nCall +91 97722-97722 for more details.`)}
+                          onClick={() => alert(`Details for ${number.number}\nCategory: ${categoryName}\nPrice: ₹${number.price.toLocaleString()}\n\nCall 97722-97722 for more details.`)}
                         >
                           Details
                         </NumberAction>

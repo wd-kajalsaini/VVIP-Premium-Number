@@ -1494,7 +1494,7 @@ const Gallery: React.FC = () => {
                 >
                   🪄
                 </NumerologyBottomIcon>
-                <NumerologyNumber>+91 {number.number}</NumerologyNumber>
+                <NumerologyNumber> {number.number}</NumerologyNumber>
                 <NumerologyMeaning>{number.meaning}</NumerologyMeaning>
                 <NumerologyPrice>{number.price}</NumerologyPrice>
                 <div style={{ fontSize: '0.85rem', marginBottom: '15px', opacity: 0.9, textAlign: 'center' }}>
@@ -1502,7 +1502,7 @@ const Gallery: React.FC = () => {
                 </div>
                 <NumerologyActions>
                   <NumerologyButton
-                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy numerology number +91 ${number.number} for ${number.price}`, '_blank')}
+                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy numerology number  ${number.number} for ${number.price}`, '_blank')}
                   >
                     Buy Now
                   </NumerologyButton>

@@ -41,6 +41,8 @@ const Sidebar = styled.aside<{ $isOpen: boolean }>`
   transform: translateX(${props => props.$isOpen ? '0' : '-100%'});
   transition: transform 0.3s ease;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 
   @media (max-width: 767px) {
     width: 100%;
@@ -60,6 +62,7 @@ const SidebarHeader = styled.div`
     ${theme.colors.primary.orange}10,
     ${theme.colors.primary.skyBlue}10
   );
+  flex-shrink: 0;
 
   @media (max-width: 768px) {
     padding: ${theme.spacing.lg};
@@ -90,6 +93,9 @@ const SidebarSubtitle = styled.p`
 
 const SidebarNav = styled.nav`
   padding: ${theme.spacing.lg} 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 const NavItem = styled(Link)<{ $isActive: boolean }>`
@@ -132,13 +138,11 @@ const NavIcon = styled.div`
 `
 
 const SidebarFooter = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   padding: ${theme.spacing.lg} ${theme.spacing.xl};
   border-top: 2px solid ${theme.colors.neutral.gray200};
   background: ${theme.colors.neutral.white};
+  flex-shrink: 0;
+  margin-top: auto;
 `
 
 const UserInfo = styled.div`

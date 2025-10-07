@@ -428,7 +428,7 @@ const Signup: React.FC = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+91 98765 43210"
+                placeholder="98765 43210"
                 required
               />
             </InputWrapper>

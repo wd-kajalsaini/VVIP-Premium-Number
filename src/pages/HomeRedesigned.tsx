@@ -2348,7 +2348,19 @@ const Home: React.FC = () => {
                         if (num.category_id === null || num.category_id === undefined) {
                           return false;
                         }
-                        return selectedCategoryIds.includes(num.category_id);
+
+                        const categoryIdStr = String(num.category_id);
+
+                        // Check if category_id contains comma-separated values
+                        if (categoryIdStr.includes(',')) {
+                          // Multiple categories - split and check if any match
+                          const numberCategories = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+                          return selectedCategoryIds.some(selectedId => numberCategories.includes(selectedId));
+                        } else {
+                          // Single category - direct match
+                          const catId = parseInt(categoryIdStr);
+                          return !isNaN(catId) && selectedCategoryIds.includes(catId);
+                        }
                       });
                       console.log(`Category filter: ${beforeFilter} -> ${filtered.length} numbers`);
                       if (filtered.length > 0) {
@@ -2428,7 +2440,7 @@ const Home: React.FC = () => {
                 [...dbTodayOffers, ...dbTodayOffers].map((item, index) => (
                   <VipCard key={index}>
                     <NumberDisplay>
-                      +91 {item.number}
+                      {item.number}
                     </NumberDisplay>
                     <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
                     <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
@@ -2460,7 +2472,7 @@ const Home: React.FC = () => {
                 [...dbAttractiveNumbers, ...dbAttractiveNumbers].map((item, index) => (
                   <AttractiveCard key={index}>
                     <AttractiveNumberDisplay>
-                      +91 {item.number}
+                      {item.number}
                     </AttractiveNumberDisplay>
                     <AttractiveSum>Sum Total = {calculateSumTotal(item.number)}</AttractiveSum>
                     <AttractivePrice>₹{item.price.toLocaleString()}</AttractivePrice>

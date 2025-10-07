@@ -781,7 +781,7 @@ Please provide me with a detailed numerology analysis and recommend the perfect 
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    placeholder="+91 98765 43210"
+                    placeholder="98765 43210"
                     required
                   />
                 </CompactFormGroup>
