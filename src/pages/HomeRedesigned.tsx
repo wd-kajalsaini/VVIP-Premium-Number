@@ -125,7 +125,7 @@ const CarouselSection = styled.section`
   height: 449px;
   max-width: calc(100% - 40px);
   overflow: hidden;
-  background: #1e3a5f;
+  background: transparent;
   margin: 0 auto;
   border-radius: 8px;
   user-select: none; /* Prevent text selection during swipe */
@@ -592,6 +592,35 @@ const SidebarTitle = styled.h3`
     height: 3px;
     background: linear-gradient(90deg, #ff6b35, #e55a2b);
     border-radius: 2px;
+  }
+`;
+
+const CategoryToggleButton = styled.button`
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
+  padding: 16px 24px;
+  background: rgba(255, 107, 53, 0.1);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 107, 53, 0.2);
+    border-color: rgba(255, 107, 53, 0.5);
+  }
+
+  svg {
+    transition: transform 0.3s ease;
+    transform: ${props => props.className?.includes('open') ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
 `;
 
@@ -1560,6 +1589,7 @@ const Home: React.FC = () => {
   const [dbFeaturedNumbers, setDbFeaturedNumbers] = useState<PhoneNumber[]>([]);
   const [dbTodayOffers, setDbTodayOffers] = useState<PhoneNumber[]>([]);
   const [dbAttractiveNumbers, setDbAttractiveNumbers] = useState<PhoneNumber[]>([]);
+  const [showCategories, setShowCategories] = useState(false);
   // Touch/Swipe handling for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -2180,6 +2210,53 @@ const Home: React.FC = () => {
 
   // Component for rendering animated phone number - removed
 
+  // Function to get diverse mix of numbers from different categories
+  const getDiverseNumbers = (numbers: PhoneNumber[], limit: number = 20): PhoneNumber[] => {
+    if (numbers.length === 0) return [];
+
+    // Group numbers by category_id
+    const groupedByCategory: { [key: string]: PhoneNumber[] } = {};
+
+    numbers.forEach(num => {
+      const categoryKey = num.category_id ? String(num.category_id) : 'uncategorized';
+      if (!groupedByCategory[categoryKey]) {
+        groupedByCategory[categoryKey] = [];
+      }
+      groupedByCategory[categoryKey].push(num);
+    });
+
+    const categories = Object.keys(groupedByCategory);
+    const result: PhoneNumber[] = [];
+    let categoryIndex = 0;
+
+    // Round-robin selection from each category
+    while (result.length < limit) {
+      const categoryKey = categories[categoryIndex % categories.length];
+      const categoryNumbers = groupedByCategory[categoryKey];
+
+      if (categoryNumbers && categoryNumbers.length > 0) {
+        // Take first available number from this category
+        const num = categoryNumbers.shift();
+        if (num) {
+          result.push(num);
+        }
+      }
+
+      // Remove category if empty
+      if (!categoryNumbers || categoryNumbers.length === 0) {
+        delete groupedByCategory[categoryKey];
+        const newCategories = Object.keys(groupedByCategory);
+        if (newCategories.length === 0) break; // No more numbers
+        categories.splice(categoryIndex % categories.length, 1);
+        if (categories.length === 0) break;
+      } else {
+        categoryIndex++;
+      }
+    }
+
+    return result;
+  };
+
   return (
     <HomeContainer>
       <MainContent>
@@ -2266,50 +2343,59 @@ const Home: React.FC = () => {
                   style={{ marginBottom: '20px' }}
                 />
 
-                <SidebarTitle style={{ paddingTop: '0', marginBottom: '20px' }}>CATEGORY</SidebarTitle>
-                <CategoryList>
-                  {/* All Option */}
-                  <CategoryItem>
-                    <CategoryLink $isActive={selectedCategoryIds.length === 0}>
-                      <CategoryCheckbox
-                        type="checkbox"
-                        checked={selectedCategoryIds.length === 0}
-                        onChange={() => setSelectedCategoryIds([])}
-                      />
-                      <CategoryInfo>
-                        <CategoryName>All</CategoryName>
-                      </CategoryInfo>
-                    </CategoryLink>
-                  </CategoryItem>
+                <CategoryToggleButton
+                  onClick={() => setShowCategories(!showCategories)}
+                  className={showCategories ? 'open' : ''}
+                >
+                  <span>Search by Category</span>
+                  <FaChevronDown />
+                </CategoryToggleButton>
 
-                  {/* Dynamic Categories from Database */}
-                  {dbCategories.length > 0 ? (
-                    dbCategories.map((category) => (
-                      <CategoryItem key={category.id}>
-                        <CategoryLink $isActive={selectedCategoryIds.includes(category.id)}>
-                          <CategoryCheckbox
-                            type="checkbox"
-                            checked={selectedCategoryIds.includes(category.id)}
-                            onChange={() => {
-                              setSelectedCategoryIds(prev =>
-                                prev.includes(category.id)
-                                  ? prev.filter(id => id !== category.id)
-                                  : [...prev, category.id]
-                              );
-                            }}
-                          />
-                          <CategoryInfo>
-                            <CategoryName>{category.name}</CategoryName>
-                          </CategoryInfo>
-                        </CategoryLink>
-                      </CategoryItem>
-                    ))
-                  ) : (
-                    <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.7)', textAlign: 'center', fontSize: '0.875rem' }}>
-                      Loading categories...
-                    </div>
-                  )}
-                </CategoryList>
+                {showCategories && (
+                  <CategoryList>
+                    {/* All Option */}
+                    <CategoryItem>
+                      <CategoryLink $isActive={selectedCategoryIds.length === 0}>
+                        <CategoryCheckbox
+                          type="checkbox"
+                          checked={selectedCategoryIds.length === 0}
+                          onChange={() => setSelectedCategoryIds([])}
+                        />
+                        <CategoryInfo>
+                          <CategoryName>All</CategoryName>
+                        </CategoryInfo>
+                      </CategoryLink>
+                    </CategoryItem>
+
+                    {/* Dynamic Categories from Database */}
+                    {dbCategories.length > 0 ? (
+                      dbCategories.map((category) => (
+                        <CategoryItem key={category.id}>
+                          <CategoryLink $isActive={selectedCategoryIds.includes(category.id)}>
+                            <CategoryCheckbox
+                              type="checkbox"
+                              checked={selectedCategoryIds.includes(category.id)}
+                              onChange={() => {
+                                setSelectedCategoryIds(prev =>
+                                  prev.includes(category.id)
+                                    ? prev.filter(id => id !== category.id)
+                                    : [...prev, category.id]
+                                );
+                              }}
+                            />
+                            <CategoryInfo>
+                              <CategoryName>{category.name}</CategoryName>
+                            </CategoryInfo>
+                          </CategoryLink>
+                        </CategoryItem>
+                      ))
+                    ) : (
+                      <div style={{ padding: '1rem', color: 'rgba(255,255,255,0.7)', textAlign: 'center', fontSize: '0.875rem' }}>
+                        Loading categories...
+                      </div>
+                    )}
+                  </CategoryList>
+                )}
               </CategorySection>
             </Sidebar>
 
@@ -2377,8 +2463,9 @@ const Home: React.FC = () => {
                       console.log('After sum total filter:', filtered.length);
                     }
 
-                    // Limit to 20 numbers
-                    const displayNumbers = filtered.slice(0, 20);
+                    // Get diverse mix of 20 numbers from different categories
+                    const displayNumbers = getDiverseNumbers(filtered, 20);
+                    console.log('Display numbers (diverse mix):', displayNumbers.length);
 
                     return displayNumbers.length > 0 ? (
                       displayNumbers.map((item) => (

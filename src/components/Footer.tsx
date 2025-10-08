@@ -342,11 +342,10 @@ const Footer: React.FC = () => {
             </LocationCard>
 
             <LocationCard>
-              <LocationTitle>Happy Communication</LocationTitle>
+              <LocationTitle>Elite Vip Numbers</LocationTitle>
               <LocationAddress>
                 <FaMapMarkerAlt style={{ marginRight: '8px', color: '#ff6b35' }} />
-                Booth No. 20, Main Market<br />
-                Opp. Nijjer Tourist, Sunny Enclave<br />
+                Booth No. 20<br /><br />
                 Kharar, Punjab - 140301
               </LocationAddress>
             </LocationCard>

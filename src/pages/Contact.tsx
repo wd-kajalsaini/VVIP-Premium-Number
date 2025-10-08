@@ -517,7 +517,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
               <ContactDetail>
                 <FaPhone />
-                <ContactLink href="tel:+919876543210">+91 98765 43210</ContactLink>
+                <ContactLink href="tel:+917700071600">+91 77000 71600</ContactLink>
               </ContactDetail>
 
               <ContactDetail>
@@ -527,7 +527,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
               <QuickActions>
                 <ActionButton
-                  href="https://wa.me/919876543210?text=Hi! I'm interested in premium numbers from Elite Vip Numbers, Moga."
+                  href="https://wa.me/917700071600?text=Hi! I'm interested in premium numbers from Elite Vip Numbers, Moga."
                   target="_blank"
                   rel="noopener noreferrer"
                   $variant="whatsapp"
@@ -548,21 +548,20 @@ Please respond to this inquiry at your earliest convenience. Thank you!
             <ShopCard>
               <ShopName>
                 <FaStore />
-                Happy Communication
+                Elite Vip Numbers
               </ShopName>
               
               <ContactDetail>
                 <FaMapMarkerAlt />
                 <div>
-                  Booth No. 20, Main Market<br />
-                  Opp. Nijjer Tourist, Sunny Enclave<br />
+                  Shop No. 20<br /><br />
                   Kharar, Punjab - 140301
                 </div>
               </ContactDetail>
 
               <ContactDetail>
                 <FaPhone />
-                <ContactLink href="tel:+919876543210">+91 98765 43210</ContactLink>
+                <ContactLink href="tel:+917700071600">+91 77000 71600</ContactLink>
               </ContactDetail>
 
               <ContactDetail>
@@ -572,7 +571,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
               <QuickActions>
                 <ActionButton
-                  href="https://wa.me/919876543210?text=Hi! I'm interested in premium numbers from Happy Communication, Kharar."
+                  href="https://wa.me/917700071600?text=Hi! I'm interested in premium numbers from Elite Vip Numbers, Kharar."
                   target="_blank"
                   rel="noopener noreferrer"
                   $variant="whatsapp"

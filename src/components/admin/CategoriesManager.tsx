@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { supabase } from '../../lib/supabase'
 import { categoryService, Category } from '../../services/categoryService'
 import { theme } from '../../styles/theme'
-import { 
-  FaPlus, 
-  FaEdit, 
-  FaTrash, 
-  FaSave, 
+import {
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSave,
   FaTimes,
-  FaSearch
+  FaSearch,
+  FaChevronLeft,
+  FaChevronRight
 } from '../../utils/iconComponents'
 
 const Container = styled.div`
@@ -317,6 +318,95 @@ const ErrorMessage = styled.div`
   margin-bottom: ${theme.spacing.md};
 `
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${theme.spacing.lg};
+  padding: ${theme.spacing.md};
+  background: ${theme.colors.neutral.gray50};
+  border-radius: ${theme.borderRadius.lg};
+  flex-wrap: wrap;
+  gap: ${theme.spacing.md};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`
+
+const PaginationInfo = styled.div`
+  color: ${theme.colors.neutral.gray700};
+  font-size: ${theme.typography.fontSize.sm};
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`
+
+const PaginationControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`
+
+const PageButton = styled.button<{ $active?: boolean }>`
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  min-width: 36px;
+  height: 36px;
+  border: 2px solid ${props => props.$active ? theme.colors.primary.orange : theme.colors.neutral.gray300};
+  background: ${props => props.$active ? theme.colors.primary.orange : theme.colors.neutral.white};
+  color: ${props => props.$active ? theme.colors.neutral.white : theme.colors.neutral.gray700};
+  border-radius: ${theme.borderRadius.md};
+  font-weight: ${theme.typography.fontWeight.medium};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? theme.colors.primary.orange : theme.colors.neutral.gray100};
+    border-color: ${theme.colors.primary.orange};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+
+const ItemsPerPageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  font-size: ${theme.typography.fontSize.sm};
+  color: ${theme.colors.neutral.gray700};
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`
+
+const ItemsPerPageSelect = styled.select`
+  padding: ${theme.spacing.xs} ${theme.spacing.sm};
+  border: 2px solid ${theme.colors.neutral.gray300};
+  border-radius: ${theme.borderRadius.md};
+  font-size: ${theme.typography.fontSize.sm};
+  background: ${theme.colors.neutral.white};
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: ${theme.colors.primary.orange};
+  }
+`
+
 const CategoriesManager: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([])
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([])
@@ -329,6 +419,8 @@ const CategoriesManager: React.FC = () => {
   const [editingStatus, setEditingStatus] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [saving, setSaving] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   useEffect(() => {
     fetchCategories()
@@ -339,6 +431,7 @@ const CategoriesManager: React.FC = () => {
       category.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredCategories(filtered)
+    setCurrentPage(1) // Reset to first page when search changes
   }, [categories, searchTerm])
 
   const fetchCategories = async () => {
@@ -440,6 +533,22 @@ const CategoriesManager: React.FC = () => {
     }
   }
 
+  // Pagination calculations
+  const totalItems = filteredCategories.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedCategories = filteredCategories.slice(startIndex, endIndex)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value)
+    setCurrentPage(1) // Reset to first page when changing items per page
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -530,7 +639,7 @@ const CategoriesManager: React.FC = () => {
                 </TableRow>
               </TableHeader>
             <tbody>
-              {filteredCategories.map((category) => (
+              {paginatedCategories.map((category) => (
                 <TableRow key={category.id} $isEditing={editingId === category.id}>
                   <TableCell>{category.id}</TableCell>
                   <TableCell>
@@ -615,6 +724,71 @@ const CategoriesManager: React.FC = () => {
             </tbody>
             </Table>
           </TableContainer>
+        )}
+
+        {filteredCategories.length > 0 && (
+          <PaginationContainer>
+            <PaginationInfo>
+              Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of {totalItems} categories
+            </PaginationInfo>
+
+            <PaginationControls>
+              <PageButton
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft />
+              </PageButton>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                // Show first page, last page, current page, and pages around current
+                const showPage =
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+
+                // Show ellipsis
+                const showEllipsisBefore = page === currentPage - 2 && currentPage > 3
+                const showEllipsisAfter = page === currentPage + 2 && currentPage < totalPages - 2
+
+                return (
+                  <React.Fragment key={page}>
+                    {showEllipsisBefore && <span>...</span>}
+                    {showPage && (
+                      <PageButton
+                        $active={currentPage === page}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </PageButton>
+                    )}
+                    {showEllipsisAfter && <span>...</span>}
+                  </React.Fragment>
+                )
+              })}
+
+              <PageButton
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <FaChevronRight />
+              </PageButton>
+            </PaginationControls>
+
+            <ItemsPerPageContainer>
+              <span>Show:</span>
+              <ItemsPerPageSelect
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </ItemsPerPageSelect>
+              <span>per page</span>
+            </ItemsPerPageContainer>
+          </PaginationContainer>
         )}
       </Content>
     </Container>

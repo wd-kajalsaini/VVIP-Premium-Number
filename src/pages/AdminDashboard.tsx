@@ -29,7 +29,7 @@ const DashboardContainer = styled.div`
 `
 
 const Sidebar = styled.aside<{ $isOpen: boolean }>`
-  width: 280px;
+  width: 320px;
   background: linear-gradient(180deg,
     ${theme.colors.neutral.white},
     ${theme.colors.neutral.gray50}
