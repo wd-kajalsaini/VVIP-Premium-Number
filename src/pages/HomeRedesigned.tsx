@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaWhatsapp, FaPhone, FaChevronDown, FaChevronUp, FaArrowRight, FaCog, FaStar } from '../utils/iconComponents';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaWhatsapp, FaPhone, FaChevronDown, FaChevronUp, FaArrowRight, FaCog, FaStar, FaTimes } from '../utils/iconComponents';
 import { carouselService, CarouselSlide as CarouselSlideType } from '../services/carouselService';
 import { categoryService, Category } from '../services/categoryService';
 import { phoneNumberService, PhoneNumber } from '../services/phoneNumberService';
@@ -318,44 +318,49 @@ const SearchButtonsContainer = styled.div`
 `;
 
 const SearchTabButton = styled.button<{ $active?: boolean }>`
-  background: ${props => props.$active ? '#ff6b35' : '#f5f5f5'};
+  background: ${props => props.$active ? '#ff6b35' : '#f9f9f9'};
   color: ${props => props.$active ? 'white' : '#666'};
-  border: 1px solid ${props => props.$active ? '#ff6b35' : '#ddd'};
-  border-bottom: none;
-  padding: 12px 24px;
-  font-weight: 600;
+  border: 2px solid ${props => props.$active ? '#ff6b35' : '#e8e8e8'};
+  border-bottom: ${props => props.$active ? '2px solid #ff6b35' : '2px solid #e8e8e8'};
+  padding: 14px 32px;
+  font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  z-index: 2;
-  
+  z-index: ${props => props.$active ? '3' : '2'};
+
   &:first-child {
     border-top-left-radius: 8px;
-    border-right: ${props => props.$active ? '1px solid #ff6b35' : '1px solid #ddd'};
+    border-right: ${props => props.$active ? '2px solid #ff6b35' : 'none'};
   }
-  
+
   &:last-child {
     border-top-right-radius: 8px;
-    border-left: none;
+    border-left: ${props => props.$active ? '2px solid #ff6b35' : '2px solid #e8e8e8'};
   }
-  
+
   &:hover {
-    background: ${props => props.$active ? '#e55a2b' : '#e9e9e9'};
+    background: ${props => props.$active ? '#e55a2b' : '#efefef'};
+  }
+
+  @media (max-width: 640px) {
+    padding: 12px 20px;
+    font-size: 0.9rem;
   }
 `;
 
 const SearchInputContainer = styled.div`
   display: flex;
   width: 100%;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 2px solid #e8e8e8;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
   overflow: hidden;
   background: white;
   position: relative;
   z-index: 1;
-  margin-top: 10px;
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -381,13 +386,102 @@ const SearchIconButton = styled.button`
   padding: 15px 20px;
   cursor: pointer;
   transition: background 0.3s ease;
-  
+
   &:hover {
     background: #e55a2b;
   }
-  
+
   svg {
     font-size: 1.2rem;
+  }
+`;
+
+// Advanced Search Form Styles
+const AdvancedSearchForm = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 0;
+  padding: 32px;
+  background: white;
+  border: 2px solid #e8e8e8;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+
+  @media (max-width: 968px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px;
+  }
+`;
+
+const AdvancedSearchField = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const AdvancedSearchLabel = styled.label`
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 2px;
+`;
+
+const AdvancedSearchInput = styled.input`
+  padding: 14px 16px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #fff;
+
+  &:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  }
+
+  &::placeholder {
+    color: #aaa;
+  }
+`;
+
+const AdvancedSearchHelper = styled.small`
+  color: #ff6b35;
+  font-size: 0.8rem;
+  margin-top: -4px;
+`;
+
+const AdvancedSearchButton = styled.button`
+  grid-column: 1 / -1;
+  padding: 16px 40px;
+  background: #ff6b35;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 12px;
+  letter-spacing: 1px;
+
+  &:hover {
+    background: #e55a2b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -622,6 +716,55 @@ const CategoryToggleButton = styled.button`
     transition: transform 0.3s ease;
     transform: ${props => props.className?.includes('open') ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
+`;
+
+const ClearFiltersButton = styled.button`
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const ActiveFiltersContainer = styled.div`
+  padding: 0 24px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const FilterBadge = styled.div`
+  background: rgba(255, 107, 53, 0.2);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 107, 53, 0.4);
 `;
 
 const CategoryList = styled.ul`
@@ -1590,11 +1733,24 @@ const Home: React.FC = () => {
   const [dbTodayOffers, setDbTodayOffers] = useState<PhoneNumber[]>([]);
   const [dbAttractiveNumbers, setDbAttractiveNumbers] = useState<PhoneNumber[]>([]);
   const [showCategories, setShowCategories] = useState(false);
+  // Advanced search states
+  const [advancedSearch, setAdvancedSearch] = useState({
+    startWith: '',
+    anywhere: '',
+    endWith: '',
+    mustContain: '',
+    notContain: '',
+    total: '',
+    sum: ''
+  });
   // Touch/Swipe handling for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   // Removed highlightedIndex state
+
+  // Ref for numbers section
+  const numbersGridRef = useRef<HTMLDivElement>(null);
 
   // Format number with highlights
   const formatNumberDisplay = (number: string, highlights: number[]): React.ReactElement => {
@@ -2013,8 +2169,27 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchAllNumbers = async () => {
       try {
-        // Fetch ALL featured numbers for filtering (no limit)
-        const featuredNumbers = await phoneNumberService.getFeaturedNumbers();
+        // Fetch ALL active numbers for filtering (not just featured)
+        const featuredNumbers = await phoneNumberService.getActivePhoneNumbers({});
+
+        console.log('===== FETCH DEBUG =====');
+        console.log('Total active numbers fetched:', featuredNumbers.length);
+
+        // Check category distribution
+        const catDistribution = featuredNumbers.reduce((acc: any, num) => {
+          const catId = String(num.category_id || 'null');
+          acc[catId] = (acc[catId] || 0) + 1;
+          return acc;
+        }, {});
+        console.log('Category distribution:', catDistribution);
+
+        // Check if category 15 exists
+        const cat15Count = featuredNumbers.filter(n => String(n.category_id) === '15').length;
+        console.log('Numbers with category_id = 15:', cat15Count);
+
+        if (cat15Count > 0) {
+          console.log('Sample category 15 number:', featuredNumbers.find(n => String(n.category_id) === '15'));
+        }
 
         // Fetch attractive numbers and today's offers for home sections
         const attractiveNumbers = await phoneNumberService.getAttractiveNumbers();
@@ -2113,6 +2288,13 @@ const Home: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [carouselSlides.length, isUserInteracting]);
+
+  // Auto-scroll when sum total search changes
+  useEffect(() => {
+    if (sumTotalSearch) {
+      setTimeout(() => scrollToNumbers(), 100);
+    }
+  }, [sumTotalSearch]);
 
   // Animation for phone number highlighting - removed
 
@@ -2257,6 +2439,108 @@ const Home: React.FC = () => {
     return result;
   };
 
+  // Scroll to numbers section
+  const scrollToNumbers = () => {
+    if (numbersGridRef.current) {
+      const offset = 100; // Offset from top
+      const elementPosition = numbersGridRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Handle category selection with scroll
+  const handleCategorySelect = (categoryId: number) => {
+    setSelectedCategoryIds(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+    // Scroll to numbers after a short delay to allow state update
+    setTimeout(() => scrollToNumbers(), 100);
+  };
+
+  // Handle clear all filters
+  const handleClearFilters = () => {
+    setSelectedCategoryIds([]);
+    setSumTotalSearch('');
+    setSearchTerm('');
+    setAdvancedSearch({
+      startWith: '',
+      anywhere: '',
+      endWith: '',
+      mustContain: '',
+      notContain: '',
+      total: '',
+      sum: ''
+    });
+    setTimeout(() => scrollToNumbers(), 100);
+  };
+
+  // Get selected category names for display
+  const getSelectedCategoryNames = () => {
+    return dbCategories
+      .filter(cat => selectedCategoryIds.includes(cat.id))
+      .map(cat => cat.name);
+  };
+
+  const navigate = useNavigate();
+
+  // Handle global search - just scroll to numbers
+  const handleGlobalSearch = () => {
+    scrollToNumbers();
+  };
+
+  // Handle advanced search - just scroll to numbers
+  const handleAdvancedSearch = () => {
+    scrollToNumbers();
+  };
+
+  // Handle View All - redirect to featured-numbers page with all filters
+  const handleViewAll = () => {
+    const params = new URLSearchParams();
+
+    // Add search term if present
+    if (searchTerm.trim()) {
+      params.append('search', searchTerm.trim());
+    }
+
+    // Add advanced search params if present
+    if (advancedSearch.startWith) params.append('startWith', advancedSearch.startWith);
+    if (advancedSearch.anywhere) params.append('anywhere', advancedSearch.anywhere);
+    if (advancedSearch.endWith) params.append('endWith', advancedSearch.endWith);
+    if (advancedSearch.mustContain) params.append('mustContain', advancedSearch.mustContain);
+    if (advancedSearch.notContain) params.append('notContain', advancedSearch.notContain);
+    if (advancedSearch.total) params.append('total', advancedSearch.total);
+    if (advancedSearch.sum) params.append('sum', advancedSearch.sum);
+
+    // Add category filters
+    if (selectedCategoryIds.length > 0) {
+      params.append('categories', selectedCategoryIds.join(','));
+    }
+
+    // Add sum total filter
+    if (sumTotalSearch) {
+      params.append('sum', sumTotalSearch);
+    }
+
+    // Navigate to featured-numbers page with all search parameters
+    const queryString = params.toString();
+    navigate(`/featured-numbers${queryString ? `?${queryString}` : ''}`);
+  };
+
+  // Handle advanced search field change
+  const handleAdvancedSearchChange = (field: string, value: string) => {
+    setAdvancedSearch(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   return (
     <HomeContainer>
       <MainContent>
@@ -2314,17 +2598,108 @@ const Home: React.FC = () => {
               </SearchTabButton>
             </SearchButtonsContainer>
 
-            <SearchInputContainer>
-              <SearchInputField
-                type="text"
-                placeholder="Search Any Number"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <SearchIconButton onClick={() => window.location.href = `/gallery?search=${searchTerm}`}>
-                <FaSearch />
-              </SearchIconButton>
-            </SearchInputContainer>
+            {/* Global Search */}
+            {activeSearchTab === 'global' && (
+              <SearchInputContainer>
+                <SearchInputField
+                  type="text"
+                  placeholder="Search Any Number"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleGlobalSearch();
+                    }
+                  }}
+                />
+                <SearchIconButton onClick={handleGlobalSearch}>
+                  <FaSearch />
+                </SearchIconButton>
+              </SearchInputContainer>
+            )}
+
+            {/* Advanced Search */}
+            {activeSearchTab === 'advanced' && (
+              <AdvancedSearchForm>
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Start With</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Start With"
+                    value={advancedSearch.startWith}
+                    onChange={(e) => handleAdvancedSearchChange('startWith', e.target.value)}
+                  />
+                  <AdvancedSearchHelper>Put this type 1,5,9</AdvancedSearchHelper>
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Anywhere</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Anywhere"
+                    value={advancedSearch.anywhere}
+                    onChange={(e) => handleAdvancedSearchChange('anywhere', e.target.value)}
+                  />
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>End With</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="End With"
+                    value={advancedSearch.endWith}
+                    onChange={(e) => handleAdvancedSearchChange('endWith', e.target.value)}
+                  />
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Must Contain</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Must Contain"
+                    value={advancedSearch.mustContain}
+                    onChange={(e) => handleAdvancedSearchChange('mustContain', e.target.value)}
+                  />
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Not Contain</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Not Contain"
+                    value={advancedSearch.notContain}
+                    onChange={(e) => handleAdvancedSearchChange('notContain', e.target.value)}
+                  />
+                  <AdvancedSearchHelper>Check this type 2,4,8</AdvancedSearchHelper>
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Total</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Total"
+                    value={advancedSearch.total}
+                    onChange={(e) => handleAdvancedSearchChange('total', e.target.value)}
+                  />
+                  <AdvancedSearchHelper>Check total this type 41</AdvancedSearchHelper>
+                </AdvancedSearchField>
+
+                <AdvancedSearchField>
+                  <AdvancedSearchLabel>Sum</AdvancedSearchLabel>
+                  <AdvancedSearchInput
+                    type="text"
+                    placeholder="Sum"
+                    value={advancedSearch.sum}
+                    onChange={(e) => handleAdvancedSearchChange('sum', e.target.value)}
+                  />
+                  <AdvancedSearchHelper>Check total this type single 5</AdvancedSearchHelper>
+                </AdvancedSearchField>
+
+                <AdvancedSearchButton onClick={handleAdvancedSearch}>
+                  SEARCH
+                </AdvancedSearchButton>
+              </AdvancedSearchForm>
+            )}
           </SearchContainer>
         </SearchSection>
 
@@ -2343,6 +2718,76 @@ const Home: React.FC = () => {
                   style={{ marginBottom: '20px' }}
                 />
 
+                {/* Show active filters */}
+                {(selectedCategoryIds.length > 0 || sumTotalSearch || searchTerm ||
+                  advancedSearch.startWith || advancedSearch.anywhere || advancedSearch.endWith ||
+                  advancedSearch.mustContain || advancedSearch.notContain || advancedSearch.total || advancedSearch.sum) && (
+                  <ActiveFiltersContainer>
+                    {selectedCategoryIds.length > 0 && getSelectedCategoryNames().map((name, index) => (
+                      <FilterBadge key={index}>
+                        Category: {name}
+                      </FilterBadge>
+                    ))}
+                    {sumTotalSearch && (
+                      <FilterBadge>
+                        Sum: {sumTotalSearch}
+                      </FilterBadge>
+                    )}
+                    {searchTerm && (
+                      <FilterBadge>
+                        Search: {searchTerm}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.startWith && (
+                      <FilterBadge>
+                        Start: {advancedSearch.startWith}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.anywhere && (
+                      <FilterBadge>
+                        Contains: {advancedSearch.anywhere}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.endWith && (
+                      <FilterBadge>
+                        End: {advancedSearch.endWith}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.mustContain && (
+                      <FilterBadge>
+                        Must: {advancedSearch.mustContain}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.notContain && (
+                      <FilterBadge>
+                        Not: {advancedSearch.notContain}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.total && (
+                      <FilterBadge>
+                        Total: {advancedSearch.total}
+                      </FilterBadge>
+                    )}
+                    {advancedSearch.sum && (
+                      <FilterBadge>
+                        Sum: {advancedSearch.sum}
+                      </FilterBadge>
+                    )}
+                  </ActiveFiltersContainer>
+                )}
+
+                {/* Clear filters button */}
+                {(selectedCategoryIds.length > 0 || sumTotalSearch || searchTerm ||
+                  advancedSearch.startWith || advancedSearch.anywhere || advancedSearch.endWith ||
+                  advancedSearch.mustContain || advancedSearch.notContain || advancedSearch.total || advancedSearch.sum) && (
+                  <div style={{ padding: '0 24px' }}>
+                    <ClearFiltersButton onClick={handleClearFilters}>
+                      <FaTimes />
+                      Clear All Filters
+                    </ClearFiltersButton>
+                  </div>
+                )}
+
                 <CategoryToggleButton
                   onClick={() => setShowCategories(!showCategories)}
                   className={showCategories ? 'open' : ''}
@@ -2359,7 +2804,10 @@ const Home: React.FC = () => {
                         <CategoryCheckbox
                           type="checkbox"
                           checked={selectedCategoryIds.length === 0}
-                          onChange={() => setSelectedCategoryIds([])}
+                          onChange={() => {
+                            setSelectedCategoryIds([]);
+                            setTimeout(() => scrollToNumbers(), 100);
+                          }}
                         />
                         <CategoryInfo>
                           <CategoryName>All</CategoryName>
@@ -2375,13 +2823,7 @@ const Home: React.FC = () => {
                             <CategoryCheckbox
                               type="checkbox"
                               checked={selectedCategoryIds.includes(category.id)}
-                              onChange={() => {
-                                setSelectedCategoryIds(prev =>
-                                  prev.includes(category.id)
-                                    ? prev.filter(id => id !== category.id)
-                                    : [...prev, category.id]
-                                );
-                              }}
+                              onChange={() => handleCategorySelect(category.id)}
                             />
                             <CategoryInfo>
                               <CategoryName>{category.name}</CategoryName>
@@ -2399,7 +2841,7 @@ const Home: React.FC = () => {
               </CategorySection>
             </Sidebar>
 
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1 }} ref={numbersGridRef}>
               <NumbersGrid>
                 {dbFeaturedNumbers.length > 0 ? (
                   (() => {
@@ -2463,6 +2905,78 @@ const Home: React.FC = () => {
                       console.log('After sum total filter:', filtered.length);
                     }
 
+                    // Filter by global search term
+                    if (searchTerm.trim()) {
+                      filtered = filtered.filter(num => {
+                        const cleanNumber = num.number.replace(/\D/g, '');
+                        const searchClean = searchTerm.replace(/\D/g, '');
+                        return num.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                               cleanNumber.includes(searchClean) ||
+                               num.price.toString().includes(searchTerm);
+                      });
+                      console.log('After global search filter:', filtered.length);
+                    }
+
+                    // Advanced search filters
+                    if (advancedSearch.startWith || advancedSearch.anywhere || advancedSearch.endWith ||
+                        advancedSearch.mustContain || advancedSearch.notContain || advancedSearch.total || advancedSearch.sum) {
+                      filtered = filtered.filter(num => {
+                        const cleanNumber = num.number.replace(/\D/g, '');
+
+                        // Start With
+                        if (advancedSearch.startWith && !cleanNumber.startsWith(advancedSearch.startWith.replace(/\D/g, ''))) {
+                          return false;
+                        }
+
+                        // Anywhere
+                        if (advancedSearch.anywhere && !cleanNumber.includes(advancedSearch.anywhere.replace(/\D/g, ''))) {
+                          return false;
+                        }
+
+                        // End With
+                        if (advancedSearch.endWith && !cleanNumber.endsWith(advancedSearch.endWith.replace(/\D/g, ''))) {
+                          return false;
+                        }
+
+                        // Must Contain
+                        if (advancedSearch.mustContain) {
+                          const mustContainDigits = advancedSearch.mustContain.split(',').map(d => d.trim().replace(/\D/g, '')).filter(d => d);
+                          if (!mustContainDigits.every(digit => cleanNumber.includes(digit))) {
+                            return false;
+                          }
+                        }
+
+                        // Not Contain
+                        if (advancedSearch.notContain) {
+                          const notContainDigits = advancedSearch.notContain.split(',').map(d => d.trim().replace(/\D/g, '')).filter(d => d);
+                          if (!notContainDigits.every(digit => !cleanNumber.includes(digit))) {
+                            return false;
+                          }
+                        }
+
+                        // Total
+                        if (advancedSearch.total) {
+                          const digits = cleanNumber.split('');
+                          const total = digits.reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+                          if (total.toString() !== advancedSearch.total.trim()) {
+                            return false;
+                          }
+                        }
+
+                        // Sum
+                        if (advancedSearch.sum) {
+                          const sumTotal = getSumTotalString(num.number);
+                          const parts = sumTotal.split('-');
+                          if (!parts.some(part => part === advancedSearch.sum.trim())) {
+                            return false;
+                          }
+                        }
+
+                        return true;
+                      });
+                      console.log('After advanced search filter:', filtered.length);
+                    }
+
                     // Get diverse mix of 20 numbers from different categories
                     const displayNumbers = getDiverseNumbers(filtered, 20);
                     console.log('Display numbers (diverse mix):', displayNumbers.length);
@@ -2499,18 +3013,7 @@ const Home: React.FC = () => {
               </NumbersGrid>
 
               <div style={{ textAlign: 'center', marginTop: '30px' }}>
-                <MoreButton onClick={() => {
-                  // Build URL with search params
-                  const params = new URLSearchParams();
-                  if (selectedCategoryIds.length > 0) {
-                    params.set('categories', selectedCategoryIds.join(','));
-                  }
-                  if (sumTotalSearch) {
-                    params.set('sum', sumTotalSearch);
-                  }
-                  const url = params.toString() ? `/featured-numbers?${params.toString()}` : '/featured-numbers';
-                  window.location.href = url;
-                }}>
+                <MoreButton onClick={handleViewAll}>
                   View All Numbers
                 </MoreButton>
               </div>

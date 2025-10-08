@@ -806,8 +806,22 @@ const AdminPhoneNumbers: React.FC = () => {
 
     const searchLower = searchTerm.toLowerCase();
 
-    // Get category name for this number
-    const categoryName = categories.find(c => c.id === num.category_id)?.name || '';
+    // Get category name(s) for this number (handles both single and comma-separated IDs)
+    let categoryNames: string[] = [];
+    if (num.category_id) {
+      const categoryIdStr = String(num.category_id);
+      if (categoryIdStr.includes(',')) {
+        // Multiple categories
+        const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        categoryNames = catIds.map(catId => categories.find(c => c.id === catId)?.name).filter(Boolean) as string[];
+      } else {
+        // Single category
+        const catId = parseInt(categoryIdStr);
+        const catName = categories.find(c => c.id === catId)?.name;
+        if (catName) categoryNames = [catName];
+      }
+    }
+    const categoryName = categoryNames.join(', ');
 
     // Search in both phone number and category name
     const matchesSearch = searchTerm === '' ||

@@ -369,12 +369,79 @@ const EmptyState = styled.div`
   color: #999;
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+`;
+
+const PaginationInfo = styled.div`
+  color: #666;
+  font-size: 0.9rem;
+`;
+
+const PaginationControls = styled.div`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+`;
+
+const PageButton = styled.button<{ $active?: boolean }>`
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: ${props => props.$active ? '#3498db' : 'white'};
+  color: ${props => props.$active ? 'white' : '#333'};
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  min-width: 40px;
+
+  &:hover:not(:disabled) {
+    background: ${props => props.$active ? '#2980b9' : '#f8f9fa'};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ItemsPerPageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+const ItemsPerPageSelect = styled.select`
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #3498db;
+  }
+`;
+
 const AdminCurrencyNumbers: React.FC = () => {
   const [currencyNumbers, setCurrencyNumbers] = useState<CurrencyNumber[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<CurrencyNumber | null>(null);
   const [formData, setFormData] = useState<CurrencyNumberInput>({
@@ -499,6 +566,54 @@ const AdminCurrencyNumbers: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
+  // Pagination calculations
+  const totalItems = filteredEntries.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedEntries = filteredEntries.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow + 2) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - (maxPagesToShow - 1); i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
+
   return (
     <AdminContainer>
       <Header>
@@ -546,6 +661,7 @@ const AdminCurrencyNumbers: React.FC = () => {
           </Button>
         </EmptyState>
       ) : (
+        <>
         <Table>
           <Thead>
             <Tr>
@@ -558,7 +674,7 @@ const AdminCurrencyNumbers: React.FC = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredEntries.map(entry => (
+            {paginatedEntries.map(entry => (
               <Tr key={entry.id}>
                 <Td>
                   {entry.primary_image ? (
@@ -576,7 +692,7 @@ const AdminCurrencyNumbers: React.FC = () => {
                   {categories.find(c => c.id === entry.category_id)?.name || '-'}
                 </Td>
                 <Td>
-                  ₹{entry.price}
+                  ₹{entry.price % 1 === 0 ? entry.price.toLocaleString('en-IN') : entry.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Td>
                 <Td>
                   {entry.is_active && <Badge $type="active">Active</Badge>}
@@ -596,6 +712,62 @@ const AdminCurrencyNumbers: React.FC = () => {
             ))}
           </Tbody>
         </Table>
+
+        {/* Pagination Controls */}
+        <PaginationContainer>
+          <PaginationInfo>
+            Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of {totalItems} entries
+          </PaginationInfo>
+
+          <PaginationControls>
+            <PageButton
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </PageButton>
+
+            {getPageNumbers().map((page, index) => (
+              typeof page === 'number' ? (
+                <PageButton
+                  key={index}
+                  $active={currentPage === page}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </PageButton>
+              ) : (
+                <span key={index} style={{ padding: '0 8px', color: '#999' }}>
+                  {page}
+                </span>
+              )
+            ))}
+
+            <PageButton
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </PageButton>
+          </PaginationControls>
+
+          <ItemsPerPageContainer>
+            <span>Items per page:</span>
+            <ItemsPerPageSelect
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </ItemsPerPageSelect>
+          </ItemsPerPageContainer>
+        </PaginationContainer>
+      </>
       )}
 
       {/* Add/Edit Modal */}

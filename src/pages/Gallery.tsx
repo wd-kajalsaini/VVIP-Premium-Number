@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { vehicleNumberService, VehicleNumber as VehicleNumberType } from '../services/carNumberService';
+import { numerologyService, NumerologyEntry } from '../services/numerologyService';
 
 const GalleryContainer = styled.div`
   margin-top: 70px;
@@ -1124,70 +1126,53 @@ const CurrencyButton = styled.button`
 
 
 const Gallery: React.FC = () => {
+  const [vehicleNumbers, setVehicleNumbers] = useState<VehicleNumberType[]>([]);
+  const [numerologyNumbers, setNumerologyNumbers] = useState<NumerologyEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [numerologyLoading, setNumerologyLoading] = useState(true);
 
-  // Vehicle VIP Numbers Data
-  const vehicleNumbers = [
-    {
-      number: "PB-66-7777",
-      category: "VEHICLE VIP",
-      price: "₹85,000",
-      type: "Car"
-    },
-    {
-      number: "CH-99-9999",
-      category: "VEHICLE PREMIUM",
-      price: "₹65,000",
-      type: "Bike"
-    },
-    {
-      number: "HR-88-8888",
-      category: "VEHICLE SPECIAL",
-      price: "₹55,000",
-      type: "Car"
-    },
-    {
-      number: "DL-77-7777",
-      category: "VEHICLE VIP",
-      price: "₹75,000",
-      type: "Bike"
-    },
-    {
-      number: "MH-55-5555",
-      category: "VEHICLE PREMIUM",
-      price: "₹45,000",
-      type: "Car"
-    },
-    {
-      number: "UP-11-1111",
-      category: "VEHICLE ULTRA",
-      price: "₹95,000",
-      type: "Bike"
-    },
-    {
-      number: "KA-33-3333",
-      category: "VEHICLE GOLD",
-      price: "₹70,000",
-      type: "Car"
-    },
-    {
-      number: "TN-44-4444",
-      category: "VEHICLE PLATINUM",
-      price: "₹80,000",
-      type: "Bike"
-    },
-    {
-      number: "GJ-22-2222",
-      category: "VEHICLE DIAMOND",
-      price: "₹60,000",
-      type: "Car"
-    },
-    {
-      number: "RJ-00-0001",
-      category: "VEHICLE ROYAL",
-      price: "₹1,20,000",
-      type: "Bike"
+  useEffect(() => {
+    fetchVehicleNumbers();
+    fetchNumerologyNumbers();
+  }, []);
+
+  const fetchVehicleNumbers = async () => {
+    setLoading(true);
+    try {
+      const data = await vehicleNumberService.getActiveVehicleNumbers();
+      setVehicleNumbers(data || []);
+    } catch (error) {
+      console.error('Error fetching vehicle numbers:', error);
+      setVehicleNumbers([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const fetchNumerologyNumbers = async () => {
+    setNumerologyLoading(true);
+    try {
+      const data = await numerologyService.getActiveNumerologyEntries();
+      setNumerologyNumbers(data || []);
+    } catch (error) {
+      console.error('Error fetching numerology numbers:', error);
+      setNumerologyNumbers([]);
+    } finally {
+      setNumerologyLoading(false);
+    }
+  };
+
+  // Format price for display
+  const formatPrice = (price: number): string => {
+    if (price === 0) {
+      return '₹';
+    }
+    // Show whole numbers without decimals, otherwise show 2 decimal places
+    if (price % 1 === 0) {
+      return `₹${price.toLocaleString('en-IN')}`;
+    }
+    return `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   // Currency Numbers Data
   const currencyNumbers = [
@@ -1266,80 +1251,6 @@ const Gallery: React.FC = () => {
   ];
 
   // Numerology Special Numbers Data
-  const numerologyNumbers = [
-    {
-      number: "73366-0055",
-      category: "NUMEROLOGY SPECIAL",
-      price: "₹25,000",
-      meaning: "Without 2, 4, 8"
-    },
-    {
-      number: "91357-1357",
-      category: "LUCKY SEQUENCE",
-      price: "₹18,000",
-      meaning: "Fortune & Prosperity"
-    },
-    {
-      number: "96396-9639",
-      category: "MYSTIC NUMBER",
-      price: "₹22,000",
-      meaning: "Spiritual Growth"
-    },
-    {
-      number: "81919-1919",
-      category: "POWER NUMBER",
-      price: "₹30,000",
-      meaning: "Success & Leadership"
-    },
-    {
-      number: "13579-13579",
-      category: "ASCENDING POWER",
-      price: "₹35,000",
-      meaning: "Progressive Success"
-    },
-    {
-      number: "97531-97531",
-      category: "DESCENDING LUCK",
-      price: "₹28,000",
-      meaning: "Wealth & Abundance"
-    },
-    {
-      number: "11133-11133",
-      category: "MASTER NUMBER",
-      price: "₹40,000",
-      meaning: "Divine Protection"
-    },
-    {
-      number: "66699-66699",
-      category: "BALANCE NUMBER",
-      price: "₹32,000",
-      meaning: "Harmony & Peace"
-    },
-    {
-      number: "77755-77755",
-      category: "SPIRITUAL ENERGY",
-      price: "₹38,000",
-      meaning: "Inner Wisdom"
-    },
-    {
-      number: "99911-99911",
-      category: "COMPLETION CYCLE",
-      price: "₹45,000",
-      meaning: "Achievement & Victory"
-    },
-    {
-      number: "15963-15963",
-      category: "GOLDEN RATIO",
-      price: "₹50,000",
-      meaning: "Perfect Balance"
-    },
-    {
-      number: "70905-70905",
-      category: "MYSTIC SEQUENCE",
-      price: "₹26,000",
-      meaning: "Hidden Knowledge"
-    }
-  ];
 
   // Function to calculate sum total of digits in a phone number
   const calculateSumTotal = (phoneNumber: string): React.ReactNode => {
@@ -1386,32 +1297,42 @@ const Gallery: React.FC = () => {
         </div>
         <VehicleScrollContainer>
           <VehicleScrollWrapper>
-            {[...vehicleNumbers, ...vehicleNumbers].map((vehicle, index) => (
-              <VehicleScrollCard key={index}>
-                <VehicleTopIcon style={{
-                  filter: vehicle.type === 'Bike' ? 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.9)) hue-rotate(0deg) brightness(1.4) contrast(1.5) saturate(2)' : 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.3))',
-                  color: vehicle.type === 'Bike' ? '#ff3333' : 'rgba(255, 255, 255, 0.8)'
-                }}>
-                  {vehicle.type === 'Car' ? '🛻' : '🏍️'}
-                </VehicleTopIcon>
-                <VehicleBottomIcon style={{
-                  filter: vehicle.type === 'Bike' ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.3))' : 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.9)) hue-rotate(0deg) brightness(1.4) contrast(1.5) saturate(2)',
-                  color: vehicle.type === 'Bike' ? 'rgba(255, 255, 255, 0.8)' : '#ff3333'
-                }}>
-                  {vehicle.type === 'Car' ? '🏍️' : '🛻'}
-                </VehicleBottomIcon>
-                <VehicleNumber>{vehicle.number}</VehicleNumber>
-                <VehicleType>{vehicle.type} VIP Number</VehicleType>
-                <VehiclePrice>{vehicle.price}</VehiclePrice>
-                <VehicleActions>
-                  <VehicleButton
-                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy vehicle number ${vehicle.number} for ${vehicle.price}`, '_blank')}
-                  >
-                    Buy Now
-                  </VehicleButton>
-                </VehicleActions>
-              </VehicleScrollCard>
-            ))}
+            {loading ? (
+              <div style={{ color: 'white', textAlign: 'center', width: '100%', padding: '40px' }}>
+                Loading vehicle numbers...
+              </div>
+            ) : vehicleNumbers.length === 0 ? (
+              <div style={{ color: 'white', textAlign: 'center', width: '100%', padding: '40px' }}>
+                No vehicle numbers available
+              </div>
+            ) : (
+              [...vehicleNumbers, ...vehicleNumbers].map((vehicle, index) => (
+                <VehicleScrollCard key={index}>
+                  <VehicleTopIcon style={{
+                    filter: vehicle.vehicle_type === 'bike' ? 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.9)) hue-rotate(0deg) brightness(1.4) contrast(1.5) saturate(2)' : 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.3))',
+                    color: vehicle.vehicle_type === 'bike' ? '#ff3333' : 'rgba(255, 255, 255, 0.8)'
+                  }}>
+                    {vehicle.vehicle_type === 'car' ? '🛻' : '🏍️'}
+                  </VehicleTopIcon>
+                  <VehicleBottomIcon style={{
+                    filter: vehicle.vehicle_type === 'bike' ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.3))' : 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.9)) hue-rotate(0deg) brightness(1.4) contrast(1.5) saturate(2)',
+                    color: vehicle.vehicle_type === 'bike' ? 'rgba(255, 255, 255, 0.8)' : '#ff3333'
+                  }}>
+                    {vehicle.vehicle_type === 'car' ? '🏍️' : '🛻'}
+                  </VehicleBottomIcon>
+                  <VehicleNumber>{vehicle.vehicle_number}</VehicleNumber>
+                  <VehicleType style={{ textTransform: 'capitalize' }}>{vehicle.vehicle_type} VIP Number</VehicleType>
+                  <VehiclePrice>{formatPrice(vehicle.price)}</VehiclePrice>
+                  <VehicleActions>
+                    <VehicleButton
+                      onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy vehicle number ${vehicle.vehicle_number} for ${formatPrice(vehicle.price)}`, '_blank')}
+                    >
+                      Buy Now
+                    </VehicleButton>
+                  </VehicleActions>
+                </VehicleScrollCard>
+              ))
+            )}
           </VehicleScrollWrapper>
         </VehicleScrollContainer>
       </VehicleSection>
@@ -1482,33 +1403,42 @@ const Gallery: React.FC = () => {
         </div>
         <NumerologyScrollContainer>
           <NumerologyScrollWrapper>
-            {[...numerologyNumbers, ...numerologyNumbers].map((number, index) => (
-              <NumerologyScrollCard key={index}>
-                <NumerologyTopIcon
-                  onClick={() => window.open('https://www.instagram.com/numerologypodcast?igsh=cG0xN3N5ZjVvMm8w', '_blank')}
-                >
-                  🔮
-                </NumerologyTopIcon>
-                <NumerologyBottomIcon
-                  onClick={() => window.open('https://www.instagram.com/numerologypodcast?igsh=cG0xN3N5ZjVvMm8w', '_blank')}
-                >
-                  🪄
-                </NumerologyBottomIcon>
-                <NumerologyNumber> {number.number}</NumerologyNumber>
-                <NumerologyMeaning>{number.meaning}</NumerologyMeaning>
-                <NumerologyPrice>{number.price}</NumerologyPrice>
-                <div style={{ fontSize: '0.85rem', marginBottom: '15px', opacity: 0.9, textAlign: 'center' }}>
-                  Sum Total = {calculateSumTotal(number.number)}
-                </div>
-                <NumerologyActions>
-                  <NumerologyButton
-                    onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy numerology number  ${number.number} for ${number.price}`, '_blank')}
+            {numerologyLoading ? (
+              <div style={{ color: 'white', textAlign: 'center', width: '100%', padding: '40px' }}>
+                Loading numerology numbers...
+              </div>
+            ) : numerologyNumbers.length === 0 ? (
+              <div style={{ color: 'white', textAlign: 'center', width: '100%', padding: '40px' }}>
+                No numerology numbers available
+              </div>
+            ) : (
+              [...numerologyNumbers, ...numerologyNumbers].map((number, index) => (
+                <NumerologyScrollCard key={index}>
+                  <NumerologyTopIcon
+                    onClick={() => window.open('https://www.instagram.com/numerologypodcast?igsh=cG0xN3N5ZjVvMm8w', '_blank')}
                   >
-                    Buy Now
-                  </NumerologyButton>
-                </NumerologyActions>
-              </NumerologyScrollCard>
-            ))}
+                    🔮
+                  </NumerologyTopIcon>
+                  <NumerologyBottomIcon
+                    onClick={() => window.open('https://www.instagram.com/numerologypodcast?igsh=cG0xN3N5ZjVvMm8w', '_blank')}
+                  >
+                    🪄
+                  </NumerologyBottomIcon>
+                  <NumerologyNumber>{number.number}</NumerologyNumber>
+                  <NumerologyPrice>{formatPrice(number.price)}</NumerologyPrice>
+                  <div style={{ fontSize: '0.85rem', marginBottom: '15px', opacity: 0.9, textAlign: 'center' }}>
+                    Sum Total = {calculateSumTotal(number.number)}
+                  </div>
+                  <NumerologyActions>
+                    <NumerologyButton
+                      onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy numerology number ${number.number} for ${formatPrice(number.price)}`, '_blank')}
+                    >
+                      Buy Now
+                    </NumerologyButton>
+                  </NumerologyActions>
+                </NumerologyScrollCard>
+              ))
+            )}
           </NumerologyScrollWrapper>
         </NumerologyScrollContainer>
       </NumerologySection>

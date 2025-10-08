@@ -4,7 +4,7 @@ export interface PhoneNumber {
   id: number;
   number: string;
   price: number;
-  category_id?: number;
+  category_id?: number | string; // Can be single number or comma-separated string
   operator?: string;
   circle?: string;
   is_vvip: boolean;
@@ -23,7 +23,7 @@ export interface PhoneNumber {
 export interface PhoneNumberInput {
   number: string;
   price: number;
-  category_id?: number;
+  category_id?: number | string; // Can be single number or comma-separated string
   operator?: string;
   circle?: string;
   is_vvip?: boolean;

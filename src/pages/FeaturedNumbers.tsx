@@ -335,11 +335,32 @@ const FeaturedNumbers: React.FC = () => {
   const [sumTotalSearch, setSumTotalSearch] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Advanced search states
+  const [advancedSearch, setAdvancedSearch] = useState({
+    startWith: '',
+    anywhere: '',
+    endWith: '',
+    mustContain: '',
+    notContain: '',
+    total: '',
+    sum: ''
+  });
+
   // Parse URL params on mount
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoriesParam = params.get('categories');
     const sumParam = params.get('sum');
+    const searchParam = params.get('search');
+
+    // Advanced search params
+    const startWith = params.get('startWith') || '';
+    const anywhere = params.get('anywhere') || '';
+    const endWith = params.get('endWith') || '';
+    const mustContain = params.get('mustContain') || '';
+    const notContain = params.get('notContain') || '';
+    const total = params.get('total') || '';
+    const advSum = params.get('sum') || '';
 
     if (categoriesParam) {
       const categoryIds = categoriesParam.split(',').map(id => parseInt(id, 10)).filter(id => !isNaN(id));
@@ -350,6 +371,25 @@ const FeaturedNumbers: React.FC = () => {
     if (sumParam) {
       setSumTotalSearch(sumParam);
       console.log('Loaded sum search from URL:', sumParam);
+    }
+
+    if (searchParam) {
+      setSearchTerm(searchParam);
+      console.log('Loaded search term from URL:', searchParam);
+    }
+
+    // Set advanced search params
+    if (startWith || anywhere || endWith || mustContain || notContain || total || advSum) {
+      setAdvancedSearch({
+        startWith,
+        anywhere,
+        endWith,
+        mustContain,
+        notContain,
+        total,
+        sum: advSum
+      });
+      console.log('Loaded advanced search from URL:', { startWith, anywhere, endWith, mustContain, notContain, total, sum: advSum });
     }
   }, [location.search]);
 
@@ -362,16 +402,33 @@ const FeaturedNumbers: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch all featured numbers at once
+  // Fetch all active numbers at once (not just featured)
   const fetchNumbers = useCallback(async () => {
     if (loading) return;
 
     setLoading(true);
     try {
-      // Fetch all featured numbers (no pagination needed since they're limited)
-      const allNumbers = await phoneNumberService.getActivePhoneNumbers({ is_featured: true });
+      // Fetch ALL active numbers for filtering
+      const allNumbers = await phoneNumberService.getActivePhoneNumbers({});
 
-      console.log('Fetched all featured numbers:', allNumbers);
+      console.log('Fetched all active numbers:', allNumbers);
+      console.log('Total active numbers:', allNumbers.length);
+
+      // Debug: Show category_id distribution
+      const categoryDistribution = allNumbers.reduce((acc: any, num) => {
+        const catId = num.category_id;
+        const catIdType = typeof catId;
+        const key = `${catId} (${catIdType})`;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+      console.log('Category distribution with types:', categoryDistribution);
+
+      // Debug: Show a few examples
+      console.log('Sample numbers with category 15:',
+        allNumbers.filter(n => String(n.category_id) === '15').slice(0, 3)
+      );
+
       setNumbers(allNumbers);
     } catch (error) {
       console.error('Error fetching numbers:', error);
@@ -389,6 +446,8 @@ const FeaturedNumbers: React.FC = () => {
 
   // Filter numbers by selected categories, search term, and sum total
   const filteredNumbers = numbers.filter(num => {
+    const cleanNumber = num.number.replace(/\D/g, ''); // Remove all non-digit characters
+
     // Filter by category
     let matchesCategory = false;
 
@@ -414,10 +473,27 @@ const FeaturedNumbers: React.FC = () => {
     }
 
     // Filter by search term (search in number, price, and category name)
+    let categoryMatches = false;
+    if (num.category_id && searchTerm) {
+      const categoryIdStr = String(num.category_id);
+      if (categoryIdStr.includes(',')) {
+        // Multiple categories
+        const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        categoryMatches = catIds.some(catId =>
+          categories.find(c => c.id === catId)?.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else {
+        // Single category
+        const catId = parseInt(categoryIdStr);
+        categoryMatches = !isNaN(catId) && !!categories.find(c => c.id === catId)?.name.toLowerCase().includes(searchTerm.toLowerCase());
+      }
+    }
+
     const matchesSearch = searchTerm === '' ||
       num.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cleanNumber.includes(searchTerm.replace(/\D/g, '')) ||
       num.price.toString().includes(searchTerm) ||
-      (num.category_id && categories.find(c => c.id === num.category_id)?.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      categoryMatches;
 
     // Filter by sum total
     const matchesSumTotal = sumTotalSearch === '' || (() => {
@@ -425,7 +501,39 @@ const FeaturedNumbers: React.FC = () => {
       return sumTotal.includes(sumTotalSearch);
     })();
 
-    return matchesCategory && matchesSearch && matchesSumTotal;
+    // Advanced search filters
+    const matchesStartWith = !advancedSearch.startWith || cleanNumber.startsWith(advancedSearch.startWith.replace(/\D/g, ''));
+
+    const matchesAnywhere = !advancedSearch.anywhere || cleanNumber.includes(advancedSearch.anywhere.replace(/\D/g, ''));
+
+    const matchesEndWith = !advancedSearch.endWith || cleanNumber.endsWith(advancedSearch.endWith.replace(/\D/g, ''));
+
+    const matchesMustContain = !advancedSearch.mustContain || (() => {
+      const mustContainDigits = advancedSearch.mustContain.split(',').map(d => d.trim().replace(/\D/g, '')).filter(d => d);
+      return mustContainDigits.every(digit => cleanNumber.includes(digit));
+    })();
+
+    const matchesNotContain = !advancedSearch.notContain || (() => {
+      const notContainDigits = advancedSearch.notContain.split(',').map(d => d.trim().replace(/\D/g, '')).filter(d => d);
+      return notContainDigits.every(digit => !cleanNumber.includes(digit));
+    })();
+
+    const matchesTotal = !advancedSearch.total || (() => {
+      const digits = cleanNumber.split('');
+      const total = digits.reduce((acc, digit) => acc + parseInt(digit, 10), 0);
+      return total.toString() === advancedSearch.total.trim();
+    })();
+
+    const matchesAdvSum = !advancedSearch.sum || (() => {
+      const sumTotal = getSumTotalString(num.number);
+      const parts = sumTotal.split('-');
+      // Check if any part of the sum total matches
+      return parts.some(part => part === advancedSearch.sum.trim());
+    })();
+
+    return matchesCategory && matchesSearch && matchesSumTotal &&
+           matchesStartWith && matchesAnywhere && matchesEndWith &&
+           matchesMustContain && matchesNotContain && matchesTotal && matchesAdvSum;
   });
 
   // Debug logging

@@ -3,8 +3,6 @@ import { supabase } from '../lib/supabase';
 export interface VehicleNumber {
   id: number;
   vehicle_number: string;
-  state: string;
-  rto_code?: string;
   vehicle_type: 'car' | 'bike';
   price: number;
   category_id?: number;
@@ -19,8 +17,6 @@ export interface VehicleNumber {
 
 export interface VehicleNumberInput {
   vehicle_number: string;
-  state: string;
-  rto_code?: string;
   vehicle_type: 'car' | 'bike';
   price: number;
   category_id?: number;
@@ -54,7 +50,6 @@ export const vehicleNumberService = {
     is_vip?: boolean;
     is_todays_offer?: boolean;
     category_id?: number;
-    state?: string;
     vehicle_type?: 'car' | 'bike';
     min_price?: number;
     max_price?: number;
@@ -77,9 +72,6 @@ export const vehicleNumberService = {
       if (filters?.category_id) {
         query = query.eq('category_id', filters.category_id);
       }
-      if (filters?.state) {
-        query = query.eq('state', filters.state);
-      }
       if (filters?.vehicle_type) {
         query = query.eq('vehicle_type', filters.vehicle_type);
       }
@@ -90,7 +82,7 @@ export const vehicleNumberService = {
         query = query.lte('price', filters.max_price);
       }
       if (filters?.search) {
-        query = query.or(`vehicle_number.ilike.%${filters.search}%,state.ilike.%${filters.search}%`);
+        query = query.ilike('vehicle_number', `%${filters.search}%`);
       }
 
       const { data, error } = await query.order('created_at', { ascending: false });

@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 export interface NumerologyEntry {
   id: number;
   number: string;
+  price: number;
   category_id?: number;
   is_active: boolean;
   is_sold: boolean;
@@ -12,6 +13,7 @@ export interface NumerologyEntry {
 
 export interface NumerologyInput {
   number: string;
+  price: number;
   category_id?: number;
   is_active?: boolean;
   is_sold?: boolean;
@@ -170,7 +172,7 @@ export const numerologyService = {
         .from('numerology')
         .select('*')
         .eq('is_active', true)
-        .or(`description.ilike.%${query}%,positive_traits.ilike.%${query}%,planet.ilike.%${query}%,zodiac_sign.ilike.%${query}%`)
+        .ilike('number', `%${query}%`)
         .order('number', { ascending: true });
 
       if (error) throw error;
