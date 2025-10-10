@@ -305,13 +305,13 @@ const Footer: React.FC = () => {
             </CompanyDescription>
             <ContactItem>
               <FaWhatsapp />
-              <a href="https://wa.me/9177000716000" target="_blank" rel="noopener noreferrer">
-                +91 77000716000
+              <a href="https://wa.me/917700071600" target="_blank" rel="noopener noreferrer">
+                +91 7700071600
               </a>
             </ContactItem>
             <ContactItem>
               <FaPhone />
-              <a href="tel:+9177000716000">+9177000716000</a>
+              <a href="tel:+917700071600">+917700071600</a>
             </ContactItem>
             <ContactItem>
               <FaEnvelope />
