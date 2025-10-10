@@ -9,8 +9,8 @@ const ContactContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}15, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green}15,
     ${theme.colors.primary.skyBlue}15
   );
   padding: ${theme.spacing.xl} 0;
@@ -18,8 +18,8 @@ const HeroSection = styled.section`
 `;
 
 const HeroTitle = styled.h1`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -80,8 +80,8 @@ const ContactForm = styled.div`
 
 const FormTitle = styled.h2`
   margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -143,8 +143,8 @@ const TextArea = styled.textarea`
 
 const SubmitButton = styled.button`
   padding: ${theme.spacing.md} ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   color: ${theme.colors.neutral.white};
@@ -178,8 +178,8 @@ const ContactInfo = styled.div`
 `;
 
 const InfoTitle = styled.h2`
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -259,7 +259,7 @@ const ActionButton = styled.a<{ $variant: 'whatsapp' | 'call' }>`
   transition: all 0.2s ease;
   font-size: ${theme.typography.fontSize.sm};
 
-  ${props => props.$variant === 'whatsapp' 
+  ${props => props.$variant === 'whatsapp'
     ? `
       background: #25D366;
       color: ${theme.colors.neutral.white};
@@ -283,8 +283,8 @@ const ActionButton = styled.a<{ $variant: 'whatsapp' | 'call' }>`
 
 const MapSection = styled.section`
   padding: ${theme.spacing['3xl']} 0;
-  background: linear-gradient(135deg, 
-    ${theme.colors.neutral.gray100}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.neutral.gray100},
     ${theme.colors.neutral.white}
   );
 `;
@@ -301,7 +301,7 @@ const MapFrame = styled.div`
   border-radius: ${theme.borderRadius.xl};
   padding: ${theme.spacing.lg};
   box-shadow: ${theme.shadows.md};
-  
+
   iframe {
     width: 100%;
     height: 400px;
@@ -346,8 +346,8 @@ const HourRow = styled.div`
 const SectionTitle = styled.h2`
   text-align: center;
   margin-bottom: ${theme.spacing.xl};
-  background: linear-gradient(135deg, 
-    ${theme.colors.primary.green}, 
+  background: linear-gradient(135deg,
+    ${theme.colors.primary.green},
     ${theme.colors.primary.skyBlue}
   );
   -webkit-background-clip: text;
@@ -363,7 +363,7 @@ const Contact: React.FC = () => {
     subject: '',
     message: ''
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -397,7 +397,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
     const whatsappUrl = `https://wa.me/917700071600?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
-    
+
     setTimeout(() => {
       setIsSubmitting(false);
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -410,13 +410,13 @@ Please respond to this inquiry at your earliest convenience. Thank you!
       <HeroSection>
         <div className="container">
           <HeroTitle>Contact Us</HeroTitle>
-          <p style={{ 
-            color: theme.colors.neutral.gray600, 
+          <p style={{
+            color: theme.colors.neutral.gray600,
             fontSize: theme.typography.fontSize.lg,
             maxWidth: '600px',
             margin: '0 auto'
           }}>
-            Get in touch with our premium number experts. We're here to help you find 
+            Get in touch with our premium number experts. We're here to help you find
             the perfect number that matches your needs and preferences.
           </p>
         </div>
@@ -500,13 +500,13 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
           <ContactInfo>
             <InfoTitle>Our Locations</InfoTitle>
-            
+
             <ShopCard>
               <ShopName>
                 <FaStore />
                 Elite Vip Numbers
               </ShopName>
-              
+
               <ContactDetail>
                 <FaMapMarkerAlt />
                 <div>
@@ -536,7 +536,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
                   WhatsApp
                 </ActionButton>
                 <ActionButton
-                  href="tel:+919876543210"
+                  href="tel:+917700071600"
                   $variant="call"
                 >
                   <FaPhone />
@@ -550,7 +550,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
                 <FaStore />
                 Elite Vip Numbers
               </ShopName>
-              
+
               <ContactDetail>
                 <FaMapMarkerAlt />
                 <div>
@@ -580,7 +580,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
                   WhatsApp
                 </ActionButton>
                 <ActionButton
-                  href="tel:+919876543210"
+                  href="tel:+9176700071600"
                   $variant="call"
                 >
                   <FaPhone />
@@ -624,12 +624,12 @@ Please respond to this inquiry at your earliest convenience. Thank you!
               title="Our Locations"
             ></iframe>
           </MapFrame>
-          <p style={{ 
+          <p style={{
             marginTop: theme.spacing.lg,
             color: theme.colors.neutral.gray600,
             fontSize: theme.typography.fontSize.md
           }}>
-            Visit our physical stores for personalized consultation and immediate assistance. 
+            Visit our physical stores for personalized consultation and immediate assistance.
             Our experts are always ready to help you find the perfect premium number!
           </p>
         </MapContainer>

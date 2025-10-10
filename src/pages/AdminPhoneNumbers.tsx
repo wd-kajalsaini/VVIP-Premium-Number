@@ -635,6 +635,7 @@ const AdminPhoneNumbers: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'vvip' | 'offer' | 'featured' | 'attractive'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<number>(0); // 0 = All categories
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingNumber, setEditingNumber] = useState<PhoneNumber | null>(null);
@@ -808,20 +809,28 @@ const AdminPhoneNumbers: React.FC = () => {
 
     // Get category name(s) for this number (handles both single and comma-separated IDs)
     let categoryNames: string[] = [];
+    let categoryIds: number[] = [];
     if (num.category_id) {
       const categoryIdStr = String(num.category_id);
       if (categoryIdStr.includes(',')) {
         // Multiple categories
         const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        categoryIds = catIds;
         categoryNames = catIds.map(catId => categories.find(c => c.id === catId)?.name).filter(Boolean) as string[];
       } else {
         // Single category
         const catId = parseInt(categoryIdStr);
-        const catName = categories.find(c => c.id === catId)?.name;
-        if (catName) categoryNames = [catName];
+        if (!isNaN(catId)) {
+          categoryIds = [catId];
+          const catName = categories.find(c => c.id === catId)?.name;
+          if (catName) categoryNames = [catName];
+        }
       }
     }
     const categoryName = categoryNames.join(', ');
+
+    // Filter by category dropdown
+    const matchesCategory = categoryFilter === 0 || categoryIds.includes(categoryFilter);
 
     // Search in both phone number and category name
     const matchesSearch = searchTerm === '' ||
@@ -835,7 +844,7 @@ const AdminPhoneNumbers: React.FC = () => {
       (filter === 'featured' && num.is_featured) ||
       (filter === 'attractive' && num.is_attractive);
 
-    return matchesSearch && matchesFilter;
+    return matchesCategory && matchesSearch && matchesFilter;
   });
 
   // Pagination calculations
@@ -847,7 +856,7 @@ const AdminPhoneNumbers: React.FC = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filter]);
+  }, [searchTerm, filter, categoryFilter]);
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
@@ -898,6 +907,17 @@ const AdminPhoneNumbers: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </SearchContainer>
+
+        <Select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(parseInt(e.target.value))}
+          style={{ minWidth: '200px' }}
+        >
+          <option value={0}>All Categories</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>{cat.name}</option>
+          ))}
+        </Select>
 
         <Button onClick={() => window.location.reload()}>
           Refresh

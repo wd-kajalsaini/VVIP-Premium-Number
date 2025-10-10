@@ -101,7 +101,7 @@ interface WhatsAppButtonProps {
 }
 
 const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
-  phoneNumber = "+919876543210",
+  phoneNumber = "+9176700071600",
   message = "Hi! I'm interested in premium numbers."
 }) => {
   const whatsappUrl = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
