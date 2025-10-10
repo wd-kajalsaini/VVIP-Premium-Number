@@ -2155,11 +2155,11 @@ const Home: React.FC = () => {
     return true;
   });
 
-  // Fetch categories from database
+  // Fetch categories from database - show all active categories (same as Featured page)
   useEffect(() => {
     const fetchCategories = async () => {
       const fetchedCategories = await categoryService.getActiveCategories();
-      console.log('Fetched categories:', fetchedCategories);
+      console.log('Fetched active categories:', fetchedCategories);
       setDbCategories(fetchedCategories);
     };
     fetchCategories();
@@ -2871,28 +2871,70 @@ const Home: React.FC = () => {
                     // Filter by category
                     if (selectedCategoryIds.length > 0) {
                       console.log('Filtering by categories:', selectedCategoryIds);
+                      console.log('Selected category types:', selectedCategoryIds.map(id => typeof id));
                       const beforeFilter = filtered.length;
+
+                      // Debug: Check what category_id types we have
+                      const sampleCategoryIds = dbFeaturedNumbers.slice(0, 10).map(n => ({
+                        id: n.id,
+                        category_id: n.category_id,
+                        category_id_type: typeof n.category_id,
+                        category_id_string: String(n.category_id)
+                      }));
+                      console.log('Sample category_id data:', sampleCategoryIds);
+
                       filtered = filtered.filter(num => {
                         if (num.category_id === null || num.category_id === undefined) {
                           return false;
                         }
 
-                        const categoryIdStr = String(num.category_id);
+                        const categoryIdStr = String(num.category_id).trim();
 
                         // Check if category_id contains comma-separated values
                         if (categoryIdStr.includes(',')) {
                           // Multiple categories - split and check if any match
-                          const numberCategories = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-                          return selectedCategoryIds.some(selectedId => numberCategories.includes(selectedId));
+                          const numberCategories = categoryIdStr.split(',')
+                            .map(id => id.trim())
+                            .filter(id => id.length > 0)
+                            .map(id => parseInt(id))
+                            .filter(id => !isNaN(id));
+
+                          const matches = selectedCategoryIds.some(selectedId =>
+                            numberCategories.includes(Number(selectedId))
+                          );
+
+                          if (matches && selectedCategoryIds.includes(15)) {
+                            console.log('MATCH (comma-separated):', num.number, 'has categories:', numberCategories, 'selected:', selectedCategoryIds);
+                          }
+                          return matches;
                         } else {
-                          // Single category - direct match
-                          const catId = parseInt(categoryIdStr);
-                          return !isNaN(catId) && selectedCategoryIds.includes(catId);
+                          // Single category - direct match (compare as both string and number)
+                          const catIdNum = parseInt(categoryIdStr);
+                          const catIdStr = categoryIdStr;
+
+                          const matches = selectedCategoryIds.some(selectedId => {
+                            // Try both number and string comparison
+                            return Number(selectedId) === catIdNum ||
+                                   String(selectedId) === catIdStr;
+                          });
+
+                          if (matches && selectedCategoryIds.includes(15)) {
+                            console.log('MATCH (single):', num.number, 'has category:', catIdNum, 'type:', typeof num.category_id, 'selected:', selectedCategoryIds);
+                          }
+                          return matches;
                         }
                       });
                       console.log(`Category filter: ${beforeFilter} -> ${filtered.length} numbers`);
                       if (filtered.length > 0) {
                         console.log('Sample filtered number:', filtered[0]);
+                      } else {
+                        console.log('NO MATCHES FOUND! Checking why...');
+                        // Show numbers that have category_id = 15
+                        const cat15Numbers = dbFeaturedNumbers.filter(n => String(n.category_id) === '15' || n.category_id === 15);
+                        console.log('Numbers with category_id = 15 in full dataset:', cat15Numbers.length);
+                        if (cat15Numbers.length > 0) {
+                          console.log('Example cat 15 number:', cat15Numbers[0]);
+                        }
                       }
                     }
 
@@ -2977,32 +3019,59 @@ const Home: React.FC = () => {
                       console.log('After advanced search filter:', filtered.length);
                     }
 
-                    // Get diverse mix of 20 numbers from different categories
-                    const displayNumbers = getDiverseNumbers(filtered, 20);
-                    console.log('Display numbers (diverse mix):', displayNumbers.length);
+                    // Get display numbers
+                    // Only use diverse mix when NO filters are applied
+                    // If any filter is active, show filtered results directly (up to 20)
+                    const hasAnyFilter = selectedCategoryIds.length > 0 ||
+                                        sumTotalSearch ||
+                                        searchTerm.trim() ||
+                                        advancedSearch.startWith ||
+                                        advancedSearch.anywhere ||
+                                        advancedSearch.endWith ||
+                                        advancedSearch.mustContain ||
+                                        advancedSearch.notContain ||
+                                        advancedSearch.total ||
+                                        advancedSearch.sum;
 
-                    return displayNumbers.length > 0 ? (
-                      displayNumbers.map((item) => (
-                        <NumberCard key={item.id}>
-                          <NumberDisplay>
-                            {item.number}
-                          </NumberDisplay>
-                          <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
-                          <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
-                          <CardActions>
-                            <CardButton
-                              $primary
-                              onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
-                            >
-                              Buy Now
-                            </CardButton>
-                          </CardActions>
-                        </NumberCard>
-                      ))
-                    ) : (
-                      <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
-                        No numbers found matching your criteria.
-                      </div>
+                    const displayNumbers = hasAnyFilter
+                      ? filtered.slice(0, 20) // Direct slice when any filter is active
+                      : getDiverseNumbers(filtered, 20); // Diverse mix only when no filters
+
+                    console.log('Display numbers:', displayNumbers.length);
+                    console.log('Has filters:', hasAnyFilter);
+                    console.log('Filtered count before display limit:', filtered.length);
+
+                    return (
+                      <>
+                        {hasAnyFilter && filtered.length > 0 && (
+                          <div style={{ gridColumn: '1 / -1', padding: '10px 20px', background: '#f0f9ff', borderRadius: '8px', marginBottom: '10px', textAlign: 'center', color: '#0369a1', fontSize: '0.9rem', fontWeight: '600' }}>
+                            Found {filtered.length} number{filtered.length !== 1 ? 's' : ''} {displayNumbers.length < filtered.length && `(showing first ${displayNumbers.length})`}
+                          </div>
+                        )}
+                        {displayNumbers.length > 0 ? (
+                          displayNumbers.map((item) => (
+                            <NumberCard key={item.id}>
+                              <NumberDisplay>
+                                {item.number}
+                              </NumberDisplay>
+                              <FeaturedSum>Sum Total = {calculateSumTotal(item.number)}</FeaturedSum>
+                              <NumberPrice>₹{item.price.toLocaleString()}</NumberPrice>
+                              <CardActions>
+                                <CardButton
+                                  $primary
+                                  onClick={() => window.open(`https://wa.me/917700071600?text=I'm interested in ${item.number}`, '_blank')}
+                                >
+                                  Buy Now
+                                </CardButton>
+                              </CardActions>
+                            </NumberCard>
+                          ))
+                        ) : (
+                          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
+                            No numbers found matching your criteria.
+                          </div>
+                        )}
+                      </>
                     );
                   })()
                 ) : (

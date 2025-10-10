@@ -28,15 +28,19 @@ const Sidebar = styled.div`
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   border-radius: 12px;
   padding: 24px;
-  height: fit-content;
+  max-height: calc(100vh - 120px);
   position: sticky;
   top: 90px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   @media (max-width: 968px) {
     width: 100%;
     position: relative;
     top: 0;
+    max-height: none;
   }
 `;
 
@@ -50,6 +54,7 @@ const SidebarTitle = styled.h3`
   padding-bottom: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 `;
 
 const CategoryList = styled.ul`
@@ -59,6 +64,28 @@ const CategoryList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 53, 0.6);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 107, 53, 0.8);
+  }
 `;
 
 const CategoryItem = styled.li`
@@ -457,17 +484,30 @@ const FeaturedNumbers: React.FC = () => {
     } else {
       // Category selected, check if number's category_id matches
       if (num.category_id) {
-        const categoryIdStr = String(num.category_id);
+        const categoryIdStr = String(num.category_id).trim();
 
         // Check if category_id contains comma-separated values
         if (categoryIdStr.includes(',')) {
           // Multiple categories - split and check if any match
-          const numberCategories = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-          matchesCategory = selectedCategories.some(selectedId => numberCategories.includes(selectedId));
+          const numberCategories = categoryIdStr.split(',')
+            .map(id => id.trim())
+            .filter(id => id.length > 0)
+            .map(id => parseInt(id))
+            .filter(id => !isNaN(id));
+
+          matchesCategory = selectedCategories.some(selectedId =>
+            numberCategories.includes(Number(selectedId))
+          );
         } else {
-          // Single category - direct match
-          const catId = parseInt(categoryIdStr);
-          matchesCategory = !isNaN(catId) && selectedCategories.includes(catId);
+          // Single category - direct match (compare as both string and number)
+          const catIdNum = parseInt(categoryIdStr);
+          const catIdStr = categoryIdStr;
+
+          matchesCategory = selectedCategories.some(selectedId => {
+            // Try both number and string comparison
+            return Number(selectedId) === catIdNum ||
+                   String(selectedId) === catIdStr;
+          });
         }
       }
     }
@@ -475,10 +515,15 @@ const FeaturedNumbers: React.FC = () => {
     // Filter by search term (search in number, price, and category name)
     let categoryMatches = false;
     if (num.category_id && searchTerm) {
-      const categoryIdStr = String(num.category_id);
+      const categoryIdStr = String(num.category_id).trim();
       if (categoryIdStr.includes(',')) {
         // Multiple categories
-        const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        const catIds = categoryIdStr.split(',')
+          .map(id => id.trim())
+          .filter(id => id.length > 0)
+          .map(id => parseInt(id))
+          .filter(id => !isNaN(id));
+
         categoryMatches = catIds.some(catId =>
           categories.find(c => c.id === catId)?.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -551,17 +596,19 @@ const FeaturedNumbers: React.FC = () => {
       <ContentWrapper>
         {/* Sidebar with dynamic categories */}
         <Sidebar>
-          <SidebarTitle>Sum Total</SidebarTitle>
-          <div style={{ padding: '0 20px 20px' }}>
-            <SearchInput
-              type="text"
-              placeholder="Search by sum (e.g., 20)"
-              value={sumTotalSearch}
-              onChange={(e) => setSumTotalSearch(e.target.value)}
-            />
-          </div>
+          <div style={{ flexShrink: 0 }}>
+            <SidebarTitle>Sum Total</SidebarTitle>
+            <div style={{ padding: '0 0 20px' }}>
+              <SearchInput
+                type="text"
+                placeholder="Search by sum (e.g., 20)"
+                value={sumTotalSearch}
+                onChange={(e) => setSumTotalSearch(e.target.value)}
+              />
+            </div>
 
-          <SidebarTitle>Category</SidebarTitle>
+            <SidebarTitle>Category</SidebarTitle>
+          </div>
           <CategoryList>
             {/* All Option */}
             <CategoryItem>

@@ -527,20 +527,97 @@ const AdminCurrencyNumbers: React.FC = () => {
     setImagePreview('');
   };
 
+  const uploadImage = async (file: File): Promise<string | null> => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // Try proxy first, fallback to direct WAMP URL
+      let response;
+      try {
+        response = await fetch('/api/upload-currency-image.php', {
+          method: 'POST',
+          body: formData,
+        });
+      } catch (proxyError) {
+        console.log('Proxy failed, trying direct WAMP URL...');
+        response = await fetch('http://localhost/premium-numbers/public/api/upload-currency-image.php', {
+          method: 'POST',
+          body: formData,
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      return result.imagePath;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Fallback to data URL if upload fails
+      console.log('Upload failed, using data URL as fallback...');
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target?.result as string;
+          resolve(dataUrl);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (editingEntry) {
-      const updated = await currencyNumberService.updateCurrencyNumber(editingEntry.id, formData);
-      if (updated) {
-        fetchCurrencyNumbers();
-        handleCloseModal();
+    let imageUrl = formData.primary_image;
+
+    // Upload new image if selected
+    if (selectedImage) {
+      const uploadedPath = await uploadImage(selectedImage);
+      if (uploadedPath) {
+        imageUrl = uploadedPath;
+      } else {
+        // If upload failed and it's a required field, stop submission
+        return;
       }
-    } else {
-      const created = await currencyNumberService.createCurrencyNumber(formData);
-      if (created) {
-        fetchCurrencyNumbers();
-        handleCloseModal();
+    }
+
+    const dataToSubmit = {
+      ...formData,
+      primary_image: imageUrl
+    };
+
+    try {
+      if (editingEntry) {
+        const updated = await currencyNumberService.updateCurrencyNumber(editingEntry.id, dataToSubmit);
+        if (updated) {
+          fetchCurrencyNumbers();
+          handleCloseModal();
+        } else {
+          alert('Failed to update currency number. Please check the console for errors.');
+        }
+      } else {
+        const created = await currencyNumberService.createCurrencyNumber(dataToSubmit);
+        if (created) {
+          fetchCurrencyNumbers();
+          handleCloseModal();
+        } else {
+          alert('Failed to create currency number. This serial number may already exist. Please use a different serial number.');
+        }
+      }
+    } catch (error: any) {
+      console.error('Error submitting form:', error);
+      if (error?.code === '23505' || error?.message?.includes('duplicate key')) {
+        alert('This serial number already exists. Please use a different serial number.');
+      } else {
+        alert('An error occurred. Please try again.');
       }
     }
   };

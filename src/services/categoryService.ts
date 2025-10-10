@@ -57,6 +57,65 @@ export const categoryService = {
     }
   },
 
+  // Get active categories that have at least one active phone number
+  async getCategoriesWithActivePhoneNumbers(): Promise<Category[]> {
+    try {
+      // Get all active phone numbers with their categories
+      const { data: phoneNumbers, error: phoneError } = await supabase
+        .from('phone_numbers')
+        .select('category_id')
+        .eq('is_active', true)
+        .eq('is_sold', false);
+
+      if (phoneError) throw phoneError;
+
+      // Extract unique category IDs that have active phone numbers
+      const categoryIds = new Set<number>();
+      (phoneNumbers || []).forEach(phone => {
+        if (phone.category_id) {
+          // Handle comma-separated category IDs
+          const categoryIdStr = String(phone.category_id);
+          if (categoryIdStr.includes(',')) {
+            categoryIdStr.split(',').forEach(id => {
+              const numId = parseInt(id.trim());
+              if (!isNaN(numId)) {
+                categoryIds.add(numId);
+              }
+            });
+          } else {
+            const numId = parseInt(categoryIdStr);
+            if (!isNaN(numId)) {
+              categoryIds.add(numId);
+            }
+          }
+        }
+      });
+
+      if (categoryIds.size === 0) {
+        return [];
+      }
+
+      // Fetch only categories that have active phone numbers
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('is_active', 1)
+        .in('id', Array.from(categoryIds))
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+
+      // Convert is_active from smallint to boolean if needed
+      return (data || []).map(cat => ({
+        ...cat,
+        is_active: Boolean(cat.is_active)
+      }));
+    } catch (error) {
+      console.error('Error fetching categories with active phone numbers:', error);
+      return [];
+    }
+  },
+
 
   // Get single category
   async getCategory(id: number): Promise<Category | null> {

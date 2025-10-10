@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { vehicleNumberService, VehicleNumber as VehicleNumberType } from '../services/carNumberService';
 import { numerologyService, NumerologyEntry } from '../services/numerologyService';
+import { currencyNumberService, CurrencyNumber as CurrencyNumberType } from '../services/currencyNumberService';
 
 const GalleryContainer = styled.div`
   margin-top: 70px;
@@ -1128,12 +1129,15 @@ const CurrencyButton = styled.button`
 const Gallery: React.FC = () => {
   const [vehicleNumbers, setVehicleNumbers] = useState<VehicleNumberType[]>([]);
   const [numerologyNumbers, setNumerologyNumbers] = useState<NumerologyEntry[]>([]);
+  const [currencyNumbers, setCurrencyNumbers] = useState<CurrencyNumberType[]>([]);
   const [loading, setLoading] = useState(true);
   const [numerologyLoading, setNumerologyLoading] = useState(true);
+  const [currencyLoading, setCurrencyLoading] = useState(true);
 
   useEffect(() => {
     fetchVehicleNumbers();
     fetchNumerologyNumbers();
+    fetchCurrencyNumbers();
   }, []);
 
   const fetchVehicleNumbers = async () => {
@@ -1162,6 +1166,19 @@ const Gallery: React.FC = () => {
     }
   };
 
+  const fetchCurrencyNumbers = async () => {
+    setCurrencyLoading(true);
+    try {
+      const data = await currencyNumberService.getActiveCurrencyNumbers();
+      setCurrencyNumbers(data || []);
+    } catch (error) {
+      console.error('Error fetching currency numbers:', error);
+      setCurrencyNumbers([]);
+    } finally {
+      setCurrencyLoading(false);
+    }
+  };
+
   // Format price for display
   const formatPrice = (price: number): string => {
     if (price === 0) {
@@ -1174,81 +1191,7 @@ const Gallery: React.FC = () => {
     return `₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
-  // Currency Numbers Data
-  const currencyNumbers = [
-    {
-      number: "88888-88888",
-      category: "MILLIONAIRE",
-      price: "₹1,50,000",
-      feature: "Ultimate Wealth Number"
-    },
-    {
-      number: "77777-77777",
-      category: "JACKPOT",
-      price: "₹1,25,000",
-      feature: "Lucky Fortune Number"
-    },
-    {
-      number: "99999-00001",
-      category: "GOLD RUSH",
-      price: "₹85,000",
-      feature: "Business Success"
-    },
-    {
-      number: "78900-12345",
-      category: "MONEY FLOW",
-      price: "₹45,000",
-      feature: "Ascending Prosperity"
-    },
-    {
-      number: "56789-56789",
-      category: "WEALTH LADDER",
-      price: "₹55,000",
-      feature: "Growing Fortune"
-    },
-    {
-      number: "10000-00001",
-      category: "BILLIONAIRE",
-      price: "₹95,000",
-      feature: "Power & Money"
-    },
-    {
-      number: "36936-36936",
-      category: "TRIPLE FORTUNE",
-      price: "₹62,000",
-      feature: "Multiplying Wealth"
-    },
-    {
-      number: "50505-50505",
-      category: "GOLDEN REPEAT",
-      price: "₹58,000",
-      feature: "Consistent Gains"
-    },
-    {
-      number: "11111-22222",
-      category: "DOUBLE POWER",
-      price: "₹75,000",
-      feature: "Dual Prosperity"
-    },
-    {
-      number: "00700-00700",
-      category: "BOND NUMBER",
-      price: "₹1,00,000",
-      feature: "Elite Status"
-    },
-    {
-      number: "42042-42042",
-      category: "MEANING OF WEALTH",
-      price: "₹52,000",
-      feature: "Life & Fortune"
-    },
-    {
-      number: "31415-92653",
-      category: "PI FORTUNE",
-      price: "₹72,000",
-      feature: "Mathematical Wealth"
-    }
-  ];
+  // Currency Numbers Data - Now fetched from database dynamically
 
   // Numerology Special Numbers Data
 
@@ -1343,38 +1286,61 @@ const Gallery: React.FC = () => {
         </CurrencyIconsContainer>
         <CurrencyScrollContainer>
           <CurrencyScrollWrapper>
-            {[...currencyNumbers, ...currencyNumbers].map((currency, index) => {
-              const imageNumber = ((index % currencyNumbers.length) % 5) + 1;
-              return (
-                <CurrencyScrollCard key={index}>
-                  <CurrencyImageContainer>
-                    <img
-                      src={`/currency${imageNumber}.jpg`}
-                      alt={`Currency ${imageNumber}`}
-                      onError={(e) => {
-                        // Fallback to gradient background if image fails to load
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    <CurrencyImageOverlay>
-                      <CurrencyImageNumber>{currency.number}</CurrencyImageNumber>
-                    </CurrencyImageOverlay>
-                  </CurrencyImageContainer>
-                  <CurrencyCardContent>
-                    <CurrencyCardNumber>{currency.number}</CurrencyCardNumber>
-                    <CurrencyBadge>{currency.category}</CurrencyBadge>
-                    <CurrencyPrice>{currency.price}</CurrencyPrice>
-                    <CurrencyActions>
-                      <CurrencyButton
-                        onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy currency number${currency.number} for ${currency.price}`, '_blank')}
-                      >
-                        Buy Now
-                      </CurrencyButton>
-                    </CurrencyActions>
-                  </CurrencyCardContent>
-                </CurrencyScrollCard>
-              );
-            })}
+            {currencyLoading ? (
+              <div style={{ color: '#2c1810', textAlign: 'center', width: '100%', padding: '40px' }}>
+                Loading currency numbers...
+              </div>
+            ) : currencyNumbers.length === 0 ? (
+              <div style={{ color: '#2c1810', textAlign: 'center', width: '100%', padding: '40px' }}>
+                No currency numbers available
+              </div>
+            ) : (
+              [...currencyNumbers, ...currencyNumbers].map((currency, index) => {
+                return (
+                  <CurrencyScrollCard key={index}>
+                    <CurrencyImageContainer>
+                      {currency.primary_image ? (
+                        <img
+                          src={currency.primary_image}
+                          alt={`Currency ${currency.serial_number}`}
+                          onError={(e) => {
+                            // Fallback to gradient background if image fails to load
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div style={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          fontSize: '1rem'
+                        }}>
+                          No Image
+                        </div>
+                      )}
+                      <CurrencyImageOverlay>
+                        <CurrencyImageNumber>{currency.serial_number}</CurrencyImageNumber>
+                      </CurrencyImageOverlay>
+                    </CurrencyImageContainer>
+                    <CurrencyCardContent>
+                      <CurrencyCardNumber>{currency.serial_number}</CurrencyCardNumber>
+                      {currency.is_sold && <CurrencyBadge style={{ background: 'linear-gradient(135deg, #95a5a6, #7f8c8d)' }}>Sold</CurrencyBadge>}
+                      <CurrencyPrice>{formatPrice(currency.price)}</CurrencyPrice>
+                      <CurrencyActions>
+                        <CurrencyButton
+                          onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy currency number ${currency.serial_number} for ${formatPrice(currency.price)}`, '_blank')}
+                        >
+                          Buy Now
+                        </CurrencyButton>
+                      </CurrencyActions>
+                    </CurrencyCardContent>
+                  </CurrencyScrollCard>
+                );
+              })
+            )}
           </CurrencyScrollWrapper>
         </CurrencyScrollContainer>
       </CurrencySection>
