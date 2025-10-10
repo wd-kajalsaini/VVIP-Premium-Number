@@ -522,7 +522,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
               <ContactDetail>
                 <FaEnvelope />
-                <ContactLink href="mailto:elite@premiumnumbers.com">elite@premiumnumbers.com</ContactLink>
+                <ContactLink href="mailto:info@premiumnumbers.com">info@premiumnumbers.com</ContactLink>
               </ContactDetail>
 
               <QuickActions>
@@ -566,7 +566,7 @@ Please respond to this inquiry at your earliest convenience. Thank you!
 
               <ContactDetail>
                 <FaEnvelope />
-                <ContactLink href="mailto:happy@premiumnumbers.com">happy@premiumnumbers.com</ContactLink>
+                <ContactLink href="mailto:info@premiumnumbers.com">info@premiumnumbers.com</ContactLink>
               </ContactDetail>
 
               <QuickActions>
