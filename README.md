@@ -184,7 +184,7 @@ Create a `.env` file in the root directory for configuration:
 
 ```env
 # WhatsApp Business Number
-REACT_APP_WHATSAPP_NUMBER=+9176700071600
+REACT_APP_WHATSAPP_NUMBER=+9177000716000
 # API Endpoints (if needed)
 REACT_APP_API_BASE_URL=https://api.yourbackend.com
 ```
