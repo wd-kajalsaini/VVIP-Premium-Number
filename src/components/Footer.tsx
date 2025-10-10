@@ -311,7 +311,7 @@ const Footer: React.FC = () => {
             </ContactItem>
             <ContactItem>
               <FaPhone />
-              <a href="tel:+917700071600">+917700071600</a>
+              <a href="tel:+917700071600">+91 7700071600</a>
             </ContactItem>
             <ContactItem>
               <FaEnvelope />
