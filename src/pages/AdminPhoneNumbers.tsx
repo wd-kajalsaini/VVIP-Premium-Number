@@ -663,6 +663,24 @@ const AdminPhoneNumbers: React.FC = () => {
     setLoading(true);
     try {
       const data = await phoneNumberService.getAllPhoneNumbers();
+      console.log('===== FETCHED PHONE NUMBERS =====');
+      console.log('Total phone numbers:', data?.length || 0);
+
+      // Log category distribution
+      if (data && data.length > 0) {
+        const categoryDistribution: { [key: string]: number } = {};
+        data.forEach(num => {
+          const catId = num.category_id ? String(num.category_id).trim() : 'null';
+          categoryDistribution[catId] = (categoryDistribution[catId] || 0) + 1;
+        });
+        console.log('Category distribution:', categoryDistribution);
+        console.log('Sample numbers with categories:', data.slice(0, 5).map(n => ({
+          number: n.number,
+          category_id: n.category_id,
+          category_id_type: typeof n.category_id
+        })));
+      }
+
       setPhoneNumbers(data || []);
     } catch (error) {
       console.error('Error fetching phone numbers:', error);
@@ -675,6 +693,9 @@ const AdminPhoneNumbers: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const data = await categoryService.getAllCategories();
+      console.log('===== FETCHED CATEGORIES =====');
+      console.log('Total categories fetched:', data?.length || 0);
+      console.log('Categories:', data?.map(c => ({ id: c.id, name: c.name })));
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -808,18 +829,29 @@ const AdminPhoneNumbers: React.FC = () => {
     const searchLower = searchTerm.toLowerCase();
 
     // Get category name(s) for this number (handles both single and comma-separated IDs)
+    // Since category_id is TEXT in database, we need to handle string comparisons
     let categoryNames: string[] = [];
     let categoryIds: number[] = [];
+    let categoryIdStrings: string[] = [];
+
     if (num.category_id) {
-      const categoryIdStr = String(num.category_id);
+      const categoryIdStr = String(num.category_id).trim(); // Trim the entire string first
+
       if (categoryIdStr.includes(',')) {
-        // Multiple categories
-        const catIds = categoryIdStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        // Multiple categories - handle comma-separated values with proper trimming
+        const catIdStrs = categoryIdStr.split(',').map(id => id.trim()).filter(id => id.length > 0);
+        categoryIdStrings = catIdStrs;
+
+        // Also convert to numbers for display
+        const catIds = catIdStrs.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
         categoryIds = catIds;
-        categoryNames = catIds.map(catId => categories.find(c => c.id === catId)?.name).filter(Boolean) as string[];
+        categoryNames = catIds
+          .map(catId => categories.find(c => c.id === catId)?.name)
+          .filter(Boolean) as string[];
       } else {
         // Single category
-        const catId = parseInt(categoryIdStr);
+        categoryIdStrings = [categoryIdStr];
+        const catId = parseInt(categoryIdStr, 10);
         if (!isNaN(catId)) {
           categoryIds = [catId];
           const catName = categories.find(c => c.id === catId)?.name;
@@ -829,8 +861,34 @@ const AdminPhoneNumbers: React.FC = () => {
     }
     const categoryName = categoryNames.join(', ');
 
-    // Filter by category dropdown
-    const matchesCategory = categoryFilter === 0 || categoryIds.includes(categoryFilter);
+    // Filter by category dropdown - compare both as strings and numbers
+    const matchesCategory = categoryFilter === 0 ||
+      categoryIds.includes(categoryFilter) ||
+      categoryIdStrings.includes(String(categoryFilter));
+
+    // Debug logging for specific category (only log first 5 matches for each category)
+    if (categoryFilter !== 0) {
+      const debugKey = `debug_cat_${categoryFilter}`;
+      if (!(window as any)[debugKey]) {
+        (window as any)[debugKey] = 0;
+      }
+
+      if ((window as any)[debugKey] < 5) {
+        if (categoryIds.length > 0) {
+          console.log('Checking number:', {
+            number: num.number,
+            selectedCategoryFilter: categoryFilter,
+            numberCategoryIds: categoryIds,
+            matchesCategory,
+            rawCategoryId: num.category_id,
+            rawType: typeof num.category_id
+          });
+          if (matchesCategory) {
+            (window as any)[debugKey]++;
+          }
+        }
+      }
+    }
 
     // Search in both phone number and category name
     const matchesSearch = searchTerm === '' ||
@@ -910,13 +968,52 @@ const AdminPhoneNumbers: React.FC = () => {
 
         <Select
           value={categoryFilter}
-          onChange={(e) => setCategoryFilter(parseInt(e.target.value))}
+          onChange={(e) => {
+            const newCategoryFilter = parseInt(e.target.value);
+            console.log('===== CATEGORY FILTER CHANGED =====');
+            console.log('Selected category ID:', newCategoryFilter);
+            console.log('Selected category name:', categories.find(c => c.id === newCategoryFilter)?.name || 'All');
+            setCategoryFilter(newCategoryFilter);
+          }}
           style={{ minWidth: '200px' }}
         >
-          <option value={0}>All Categories</option>
-          {categories.map(cat => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
-          ))}
+          <option value={0}>All Categories ({phoneNumbers.length})</option>
+          {categories.map(cat => {
+            // Count numbers in this category (handles comma-separated)
+            // Since category_id is TEXT, compare as both string and number
+            const matchingNumbers = phoneNumbers.filter(num => {
+              if (!num.category_id) return false;
+              const categoryIdStr = String(num.category_id).trim();
+
+              if (categoryIdStr.includes(',')) {
+                // Comma-separated - check both string and number matches
+                const catIdStrs = categoryIdStr.split(',').map(id => id.trim());
+                const catIds = catIdStrs.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+                return catIds.includes(cat.id) || catIdStrs.includes(String(cat.id));
+              } else {
+                // Single category - compare both as string and number
+                return parseInt(categoryIdStr, 10) === cat.id || categoryIdStr === String(cat.id);
+              }
+            });
+            const count = matchingNumbers.length;
+
+            // Log for debugging
+            if (count > 0) {
+              console.log(`Category "${cat.name}" (ID: ${cat.id}) has ${count} numbers`);
+              if (count > 0 && count < 3) {
+                console.log('  Sample numbers:', matchingNumbers.slice(0, 3).map(n => ({
+                  number: n.number,
+                  category_id: n.category_id
+                })));
+              }
+            }
+
+            return (
+              <option key={cat.id} value={cat.id}>
+                {cat.name} ({count})
+              </option>
+            );
+          })}
         </Select>
 
         <Button onClick={() => window.location.reload()}>

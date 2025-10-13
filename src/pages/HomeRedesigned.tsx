@@ -2166,14 +2166,25 @@ const Home: React.FC = () => {
   }, []);
 
   // Fetch featured numbers, attractive numbers, and today's offers
+  // Refetch when categories change to use optimized server-side filtering
   useEffect(() => {
     const fetchAllNumbers = async () => {
       try {
-        // Fetch ALL active numbers for filtering (not just featured)
-        const featuredNumbers = await phoneNumberService.getActivePhoneNumbers({});
+        // Fetch featured numbers with optional category filtering
+        let featuredNumbers;
+        if (selectedCategoryIds.length > 0) {
+          // Use server-side filtering for better performance
+          featuredNumbers = await phoneNumberService.getActivePhoneNumbers({
+            category_ids: selectedCategoryIds
+          });
+        } else {
+          // Fetch ALL active numbers when no category filter is applied
+          featuredNumbers = await phoneNumberService.getActivePhoneNumbers({});
+        }
 
         console.log('===== FETCH DEBUG =====');
         console.log('Total active numbers fetched:', featuredNumbers.length);
+        console.log('Selected category IDs:', selectedCategoryIds);
 
         // Check category distribution
         const catDistribution = featuredNumbers.reduce((acc: any, num) => {
@@ -2216,7 +2227,7 @@ const Home: React.FC = () => {
       }
     };
     fetchAllNumbers();
-  }, []);
+  }, [selectedCategoryIds]);
 
   // Load carousel slides from admin panel
   useEffect(() => {

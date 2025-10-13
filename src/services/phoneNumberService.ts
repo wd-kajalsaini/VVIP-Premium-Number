@@ -56,13 +56,32 @@ export const phoneNumberService = {
   // Get all phone numbers (admin)
   async getAllPhoneNumbers(): Promise<PhoneNumber[]> {
     try {
-      const { data, error } = await supabase
-        .from('phone_numbers')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Fetch all records by setting a high limit and using pagination if needed
+      let allData: PhoneNumber[] = [];
+      let hasMore = true;
+      let offset = 0;
+      const batchSize = 1000;
 
-      if (error) throw error;
-      return data || [];
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from('phone_numbers')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .range(offset, offset + batchSize - 1);
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          allData = [...allData, ...data];
+          offset += batchSize;
+          hasMore = data.length === batchSize; // Continue if we got a full batch
+        } else {
+          hasMore = false;
+        }
+      }
+
+      console.log(`Fetched total of ${allData.length} phone numbers from database`);
+      return allData;
     } catch (error) {
       console.error('Error fetching phone numbers:', error);
       return [];
@@ -76,6 +95,7 @@ export const phoneNumberService = {
     is_featured?: boolean;
     is_attractive?: boolean;
     category_id?: number;
+    category_ids?: number[]; // Support for multiple category filtering
     operator?: string;
     circle?: string;
     min_price?: number;
@@ -83,48 +103,94 @@ export const phoneNumberService = {
     search?: string;
   }): Promise<PhoneNumber[]> {
     try {
-      let query = supabase
-        .from('phone_numbers')
-        .select('*')
-        .eq('is_active', true)
-        .eq('is_sold', false);
+      // Fetch all records using pagination (handle Supabase 1000 row limit)
+      let allData: PhoneNumber[] = [];
+      let hasMore = true;
+      let offset = 0;
+      const batchSize = 1000;
 
-      // Apply filters
-      if (filters?.is_vvip !== undefined) {
-        query = query.eq('is_vvip', filters.is_vvip);
-      }
-      if (filters?.is_today_offer !== undefined) {
-        query = query.eq('is_today_offer', filters.is_today_offer);
-      }
-      if (filters?.is_featured !== undefined) {
-        query = query.eq('is_featured', filters.is_featured);
-      }
-      if (filters?.is_attractive !== undefined) {
-        query = query.eq('is_attractive', filters.is_attractive);
-      }
-      if (filters?.category_id) {
-        query = query.eq('category_id', filters.category_id);
-      }
-      if (filters?.operator) {
-        query = query.eq('operator', filters.operator);
-      }
-      if (filters?.circle) {
-        query = query.eq('circle', filters.circle);
-      }
-      if (filters?.min_price) {
-        query = query.gte('price', filters.min_price);
-      }
-      if (filters?.max_price) {
-        query = query.lte('price', filters.max_price);
-      }
-      if (filters?.search) {
-        query = query.or(`number.ilike.%${filters.search}%,display_number.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+      while (hasMore) {
+        let query = supabase
+          .from('phone_numbers')
+          .select('*')
+          .eq('is_active', true)
+          .eq('is_sold', false);
+
+        // Apply filters
+        if (filters?.is_vvip !== undefined) {
+          query = query.eq('is_vvip', filters.is_vvip);
+        }
+        if (filters?.is_today_offer !== undefined) {
+          query = query.eq('is_today_offer', filters.is_today_offer);
+        }
+        if (filters?.is_featured !== undefined) {
+          query = query.eq('is_featured', filters.is_featured);
+        }
+        if (filters?.is_attractive !== undefined) {
+          query = query.eq('is_attractive', filters.is_attractive);
+        }
+        if (filters?.category_id) {
+          query = query.eq('category_id', filters.category_id);
+        }
+        if (filters?.operator) {
+          query = query.eq('operator', filters.operator);
+        }
+        if (filters?.circle) {
+          query = query.eq('circle', filters.circle);
+        }
+        if (filters?.min_price) {
+          query = query.gte('price', filters.min_price);
+        }
+        if (filters?.max_price) {
+          query = query.lte('price', filters.max_price);
+        }
+        if (filters?.search) {
+          query = query.or(`number.ilike.%${filters.search}%,display_number.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+        }
+
+        const { data, error } = await query
+          .order('created_at', { ascending: false })
+          .range(offset, offset + batchSize - 1);
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          allData = [...allData, ...data];
+          offset += batchSize;
+          hasMore = data.length === batchSize; // Continue if we got a full batch
+        } else {
+          hasMore = false;
+        }
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      let result = allData;
 
-      if (error) throw error;
-      return data || [];
+      // Handle multiple category filtering (client-side)
+      // This handles comma-separated category_ids in the database (stored as TEXT)
+      if (filters?.category_ids && filters.category_ids.length > 0) {
+        result = result.filter(phoneNumber => {
+          if (!phoneNumber.category_id) return false;
+
+          // Handle both single and comma-separated category IDs
+          const categoryIdStr = String(phoneNumber.category_id).trim();
+
+          if (categoryIdStr.includes(',')) {
+            // Parse comma-separated category IDs and trim spaces
+            const phoneCategories = categoryIdStr.split(',').map(id => parseInt(id.trim(), 10));
+            // Check if any of the phone's categories match any of the selected categories
+            return phoneCategories.some(catId =>
+              !isNaN(catId) && filters.category_ids!.includes(catId)
+            );
+          } else {
+            // Single category ID
+            const catId = parseInt(categoryIdStr, 10);
+            return !isNaN(catId) && filters.category_ids!.includes(catId);
+          }
+        });
+      }
+
+      console.log(`getActivePhoneNumbers: Fetched ${result.length} active phone numbers (from ${allData.length} total active)`);
+      return result;
     } catch (error) {
       console.error('Error fetching active phone numbers:', error);
       return [];

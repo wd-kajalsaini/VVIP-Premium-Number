@@ -1772,15 +1772,25 @@ const Home: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch featured numbers
+  // Fetch featured numbers based on selected categories
   useEffect(() => {
     const fetchFeaturedNumbers = async () => {
-      const numbers = await phoneNumberService.getFeaturedNumbers(20);
+      let numbers;
+      if (selectedCategories.length > 0) {
+        // Fetch all featured numbers and filter by selected categories
+        numbers = await phoneNumberService.getActivePhoneNumbers({
+          is_featured: true,
+          category_ids: selectedCategories
+        });
+      } else {
+        // Fetch all featured numbers when no category is selected
+        numbers = await phoneNumberService.getFeaturedNumbers(20);
+      }
       console.log('Fetched featured numbers:', numbers);
       setFeaturedNumbers(numbers);
     };
     fetchFeaturedNumbers();
-  }, []);
+  }, [selectedCategories]);
 
   // Animation for phone number highlighting
   useEffect(() => {
