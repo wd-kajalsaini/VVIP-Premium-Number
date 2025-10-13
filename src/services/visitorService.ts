@@ -35,7 +35,8 @@ export const visitorService = {
       const { data: existing, error: fetchError } = await supabase
         .from('visitor_stats')
         .select('*')
-        .single();
+        .limit(1)
+        .maybeSingle();
 
       if (fetchError && fetchError.code !== 'PGRST116') {
         // PGRST116 is "no rows returned" - which is fine for first insert
@@ -67,18 +68,23 @@ export const visitorService = {
         // Increment existing count
         newCount = existing.total_visits + 1;
 
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('visitor_stats')
           .update({
             total_visits: newCount,
             last_updated: new Date().toISOString()
           })
-          .eq('id', existing.id);
+          .eq('id', existing.id)
+          .select()
+          .single();
 
         if (error) {
           console.error('Error updating visitor count:', error);
           return existing.total_visits;
         }
+
+        // Return the updated count from the database
+        newCount = data?.total_visits || newCount;
       }
 
       return newCount;
