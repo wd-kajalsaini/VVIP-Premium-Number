@@ -80,7 +80,6 @@ export const phoneNumberService = {
         }
       }
 
-      console.log(`Fetched total of ${allData.length} phone numbers from database`);
       return allData;
     } catch (error) {
       console.error('Error fetching phone numbers:', error);
@@ -189,7 +188,6 @@ export const phoneNumberService = {
         });
       }
 
-      console.log(`getActivePhoneNumbers: Fetched ${result.length} active phone numbers (from ${allData.length} total active)`);
       return result;
     } catch (error) {
       console.error('Error fetching active phone numbers:', error);

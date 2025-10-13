@@ -3,6 +3,7 @@
 
 export const fetchWorkingInstagramPosts = async (profileUrl) => {
   try {
+    console.log('🚀 Fetching Instagram posts using working methods from:', profileUrl);
 
     // Extract username from URL
     const username = extractUsernameFromUrl(profileUrl);
@@ -10,31 +11,37 @@ export const fetchWorkingInstagramPosts = async (profileUrl) => {
       throw new Error('Invalid Instagram URL');
     }
 
+    console.log('👤 Username extracted:', username);
 
     // Method 1: Try InstagramBasicDisplayApi alternative (Public endpoint)
     const publicPosts = await tryInstagramPublicEndpoint(username);
     if (publicPosts && publicPosts.length > 0) {
+      console.log('✅ SUCCESS via public endpoint:', publicPosts.length, 'posts');
       return publicPosts;
     }
 
     // Method 2: Try RSSHub (more reliable RSS service)
     const rssPosts = await tryRSSHub(username);
     if (rssPosts && rssPosts.length > 0) {
+      console.log('✅ SUCCESS via RSSHub:', rssPosts.length, 'posts');
       return rssPosts;
     }
 
     // Method 3: Try Picuki (Instagram viewer)
     const picukiPosts = await tryPicuki(username);
     if (picukiPosts && picukiPosts.length > 0) {
+      console.log('✅ SUCCESS via Picuki:', picukiPosts.length, 'posts');
       return picukiPosts;
     }
 
     // Method 4: Try Instagram web interface parsing
     const webPosts = await tryInstagramWebParsing(username);
     if (webPosts && webPosts.length > 0) {
+      console.log('✅ SUCCESS via web parsing:', webPosts.length, 'posts');
       return webPosts;
     }
 
+    console.log('⚠️ All working methods failed');
     return null;
 
   } catch (error) {
@@ -67,6 +74,7 @@ const extractUsernameFromUrl = (url) => {
 // Method 1: Instagram public endpoint (sometimes works without authentication)
 const tryInstagramPublicEndpoint = async (username) => {
   try {
+    console.log('🔄 Trying Instagram public endpoint...');
 
     // Use a working CORS proxy
     const instagramUrl = `https://www.instagram.com/${username}/`;
@@ -88,6 +96,7 @@ const tryInstagramPublicEndpoint = async (username) => {
 
     return null;
   } catch (error) {
+    console.log('❌ Public endpoint failed:', error.message);
     return null;
   }
 };
@@ -95,6 +104,7 @@ const tryInstagramPublicEndpoint = async (username) => {
 // Method 2: RSSHub (reliable RSS service)
 const tryRSSHub = async (username) => {
   try {
+    console.log('🔄 Trying RSSHub...');
 
     const rssUrl = `https://rsshub.app/instagram/user/${username}`;
     const corsProxy = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
@@ -111,6 +121,7 @@ const tryRSSHub = async (username) => {
 
     return null;
   } catch (error) {
+    console.log('❌ RSSHub failed:', error.message);
     return null;
   }
 };
@@ -118,6 +129,7 @@ const tryRSSHub = async (username) => {
 // Method 3: Picuki (Instagram viewer/downloader)
 const tryPicuki = async (username) => {
   try {
+    console.log('🔄 Trying Picuki...');
 
     const picukiUrl = `https://www.picuki.com/profile/${username}`;
     const corsProxy = `https://corsproxy.io/?${encodeURIComponent(picukiUrl)}`;
@@ -134,6 +146,7 @@ const tryPicuki = async (username) => {
 
     return null;
   } catch (error) {
+    console.log('❌ Picuki failed:', error.message);
     return null;
   }
 };
@@ -141,6 +154,7 @@ const tryPicuki = async (username) => {
 // Method 4: Instagram web interface parsing with different approach
 const tryInstagramWebParsing = async (username) => {
   try {
+    console.log('🔄 Trying Instagram web parsing...');
 
     // Try a different approach - use Instagram's mobile web interface
     const mobileUrl = `https://www.instagram.com/${username}/?hl=en`;
@@ -160,6 +174,7 @@ const tryInstagramWebParsing = async (username) => {
 
     return null;
   } catch (error) {
+    console.log('❌ Web parsing failed:', error.message);
     return null;
   }
 };
@@ -201,11 +216,13 @@ const parseInstagramHTML = (html, username) => {
           return posts;
         }
       } catch (parseError) {
+        console.log('Shared data parsing failed');
       }
     }
 
     return null;
   } catch (error) {
+    console.log('HTML parsing failed:', error);
     return null;
   }
 };
@@ -245,6 +262,7 @@ const parseRSSFeed = (rssContent, username) => {
 
     return null;
   } catch (error) {
+    console.log('RSS parsing failed:', error);
     return null;
   }
 };
@@ -277,6 +295,7 @@ const parsePicukiHTML = (html, username) => {
 
     return null;
   } catch (error) {
+    console.log('Picuki parsing failed:', error);
     return null;
   }
 };
@@ -306,6 +325,7 @@ const extractPostsFromRequireData = (data, username) => {
 
     return null;
   } catch (error) {
+    console.log('Require data extraction failed:', error);
     return null;
   }
 };
@@ -323,6 +343,7 @@ const extractPostsFromSharedData = (sharedData, username) => {
 
     return null;
   } catch (error) {
+    console.log('Shared data extraction failed:', error);
     return null;
   }
 };
@@ -346,6 +367,7 @@ const formatInstagramPosts = (posts, username) => {
       };
     });
   } catch (error) {
+    console.log('Post formatting failed:', error);
     return null;
   }
 };

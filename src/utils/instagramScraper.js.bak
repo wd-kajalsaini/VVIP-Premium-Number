@@ -3,6 +3,7 @@
 
 export const scrapeInstagramPosts = async (instagramUrl) => {
   try {
+    console.log('🕷️ Starting Instagram scraping for:', instagramUrl);
 
     // Extract username from URL
     const username = extractUsernameFromInstagramUrl(instagramUrl);
@@ -10,31 +11,37 @@ export const scrapeInstagramPosts = async (instagramUrl) => {
       throw new Error('Invalid Instagram URL');
     }
 
+    console.log('👤 Extracted username:', username);
 
     // Method 1: Try RapidAPI Instagram scraper
     const rapidApiPosts = await tryRapidApiScraper(username);
     if (rapidApiPosts && rapidApiPosts.length > 0) {
+      console.log('✅ RapidAPI method successful:', rapidApiPosts.length, 'posts');
       return rapidApiPosts;
     }
 
     // Method 2: Try Instagram RSS feeds
     const rssPosts = await tryInstagramRSSFeeds(username);
     if (rssPosts && rssPosts.length > 0) {
+      console.log('✅ RSS method successful:', rssPosts.length, 'posts');
       return rssPosts;
     }
 
     // Method 3: Try web scraping with CORS proxy
     const scrapedPosts = await tryWebScraping(username);
     if (scrapedPosts && scrapedPosts.length > 0) {
+      console.log('✅ Web scraping successful:', scrapedPosts.length, 'posts');
       return scrapedPosts;
     }
 
     // Method 4: Try alternative APIs
     const altApiPosts = await tryAlternativeAPIs(username);
     if (altApiPosts && altApiPosts.length > 0) {
+      console.log('✅ Alternative API successful:', altApiPosts.length, 'posts');
       return altApiPosts;
     }
 
+    console.log('⚠️ All scraping methods failed');
     return null;
 
   } catch (error) {
@@ -69,6 +76,7 @@ const tryRapidApiScraper = async (username) => {
   try {
     // This is a placeholder - you would need to sign up for RapidAPI
     // and get an API key for an Instagram scraper service
+    console.log('🔄 Trying RapidAPI method...');
 
     // Example using a hypothetical RapidAPI endpoint
     // const response = await fetch(`https://instagram-scraper-api.p.rapidapi.com/posts/${username}`, {
@@ -81,6 +89,7 @@ const tryRapidApiScraper = async (username) => {
     // For now, skip this method
     return null;
   } catch (error) {
+    console.log('❌ RapidAPI method failed:', error.message);
     return null;
   }
 };
@@ -88,10 +97,13 @@ const tryRapidApiScraper = async (username) => {
 // Method 2: Instagram RSS feeds (simplified to avoid CORS errors)
 const tryInstagramRSSFeeds = async (username) => {
   try {
+    console.log('🔄 Trying RSS feeds...');
 
     // Skip RSS methods that cause CORS errors for now
+    console.log('📝 RSS methods temporarily disabled due to CORS restrictions');
     return null;
   } catch (error) {
+    console.log('❌ RSS method failed:', error.message);
     return null;
   }
 };
@@ -99,10 +111,13 @@ const tryInstagramRSSFeeds = async (username) => {
 // Method 3: Web scraping with CORS proxy (simplified)
 const tryWebScraping = async (username) => {
   try {
+    console.log('🔄 Trying web scraping...');
 
     // Skip web scraping methods that cause CORS errors for now
+    console.log('📝 Web scraping temporarily disabled due to CORS restrictions');
     return null;
   } catch (error) {
+    console.log('❌ Web scraping failed:', error.message);
     return null;
   }
 };
@@ -110,10 +125,13 @@ const tryWebScraping = async (username) => {
 // Method 4: Alternative APIs (simplified)
 const tryAlternativeAPIs = async (username) => {
   try {
+    console.log('🔄 Trying alternative APIs...');
 
     // Skip alternative APIs that cause CORS errors for now
+    console.log('📝 Alternative APIs temporarily disabled due to CORS restrictions');
     return null;
   } catch (error) {
+    console.log('❌ Alternative APIs failed:', error.message);
     return null;
   }
 };
@@ -177,6 +195,7 @@ const parseRSSContent = (rssContent, username) => {
 
     return null;
   } catch (error) {
+    console.log('RSS parsing failed:', error);
     return null;
   }
 };
@@ -215,6 +234,7 @@ const extractPostsFromHTML = (html, username) => {
 
     return null;
   } catch (error) {
+    console.log('HTML parsing failed:', error);
     return null;
   }
 };
@@ -253,6 +273,7 @@ const parseInstagramApiResponse = (responseContent, username) => {
 
     return null;
   } catch (error) {
+    console.log('API response parsing failed:', error);
     return null;
   }
 };

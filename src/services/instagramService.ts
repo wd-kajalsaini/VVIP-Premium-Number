@@ -6,8 +6,6 @@ export class InstagramService {
   // Get the current Instagram URL from database
   static async getInstagramUrl(): Promise<string | null> {
     try {
-      console.log('🔍 Fetching Instagram URL from database...');
-
       // Simple direct query - should work with the new policies
       const { data, error } = await supabase
         .from('admin_users')
@@ -16,21 +14,16 @@ export class InstagramService {
         .not('instagram_url', 'eq', '')
         .limit(1);
 
-      console.log('📱 Query result:', data);
-      console.log('❌ Query error:', error);
-
       if (error) {
         console.error('❌ Database error:', error);
         return null;
       }
 
       if (!data || data.length === 0) {
-        console.log('📝 No Instagram URL configured in database');
         return null;
       }
 
       const url = data[0]?.instagram_url;
-      console.log('✅ Found Instagram URL:', url);
       return url || null;
     } catch (error) {
       console.error('💥 Unexpected error fetching Instagram URL:', error);
@@ -117,7 +110,6 @@ export class InstagramService {
           table: 'admin_users'
         },
         (payload) => {
-          console.log('Instagram URL updated:', payload.new.instagram_url);
           callback(payload.new.instagram_url);
         }
       )

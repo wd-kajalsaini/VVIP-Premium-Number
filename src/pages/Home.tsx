@@ -1766,7 +1766,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const fetchedCategories = await categoryService.getActiveCategories();
-      console.log('Fetched categories:', fetchedCategories);
       setDbCategories(fetchedCategories);
     };
     fetchCategories();
@@ -1786,7 +1785,6 @@ const Home: React.FC = () => {
         // Fetch all featured numbers when no category is selected
         numbers = await phoneNumberService.getFeaturedNumbers(20);
       }
-      console.log('Fetched featured numbers:', numbers);
       setFeaturedNumbers(numbers);
     };
     fetchFeaturedNumbers();
@@ -2140,7 +2138,7 @@ const Home: React.FC = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FilterButton onClick={() => console.log('Open filters')}>
+                <FilterButton onClick={() => {}}>
                   <FaFilter />
                   Filters
                 </FilterButton>

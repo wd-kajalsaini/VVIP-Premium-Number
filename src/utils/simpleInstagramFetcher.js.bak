@@ -3,6 +3,7 @@
 // Method 1: Using Instagram's public feed endpoint (most reliable)
 export const fetchInstagramPublicFeed = async (username) => {
   try {
+    console.log(`🔄 Fetching Instagram data for: ${username}`);
 
     // Instagram's public endpoint that works without authentication
     const instagramUrl = `https://www.instagram.com/${username}/`;
@@ -23,11 +24,13 @@ export const fetchInstagramPublicFeed = async (username) => {
     }
 
     const html = await response.text();
+    console.log('📄 Instagram page loaded successfully');
 
     // Extract Instagram data from HTML
     return extractInstagramDataFromHTML(html, username);
 
   } catch (error) {
+    console.log('❌ Public feed method failed:', error.message);
     return null;
   }
 };
@@ -35,6 +38,7 @@ export const fetchInstagramPublicFeed = async (username) => {
 // Method 2: Alternative CORS proxy
 export const fetchInstagramAlternative = async (username) => {
   try {
+    console.log(`🔄 Trying alternative method for: ${username}`);
 
     const instagramUrl = `https://www.instagram.com/${username}/`;
     const proxyUrl = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(instagramUrl)}`;
@@ -43,12 +47,14 @@ export const fetchInstagramAlternative = async (username) => {
 
     if (response.ok) {
       const data = await response.json();
+      console.log('📄 Alternative method: page loaded');
 
       return extractInstagramDataFromHTML(data.contents, username);
     }
 
     throw new Error('Alternative method failed');
   } catch (error) {
+    console.log('❌ Alternative method failed:', error.message);
     return null;
   }
 };
@@ -56,12 +62,14 @@ export const fetchInstagramAlternative = async (username) => {
 // Extract Instagram post data from HTML
 const extractInstagramDataFromHTML = (html, username) => {
   try {
+    console.log('📊 Extracting Instagram data from HTML...');
 
     // Look for Instagram's shared data
     const sharedDataMatch = html.match(/window\._sharedData\s*=\s*({.+?});/) ||
                            html.match(/window\._sharedData = ({.+?});/);
 
     if (sharedDataMatch) {
+      console.log('✅ Found Instagram shared data');
 
       const sharedData = JSON.parse(sharedDataMatch[1]);
 
@@ -72,6 +80,7 @@ const extractInstagramDataFromHTML = (html, username) => {
       if (userData && userData.edge_owner_to_timeline_media) {
         const posts = userData.edge_owner_to_timeline_media.edges;
 
+        console.log(`📸 Found ${posts.length} Instagram posts`);
 
         return posts.slice(0, 12).map(postEdge => {
           const post = postEdge.node;
@@ -95,37 +104,45 @@ const extractInstagramDataFromHTML = (html, username) => {
     // Alternative: Look for JSON-LD data
     const jsonLdMatch = html.match(/<script type="application\/ld\+json">(.+?)<\/script>/);
     if (jsonLdMatch) {
+      console.log('✅ Found JSON-LD data');
       const jsonLd = JSON.parse(jsonLdMatch[1]);
       // Process JSON-LD data if needed
     }
 
+    console.log('⚠️ No usable Instagram data found in HTML');
     return null;
 
   } catch (error) {
+    console.log('❌ Data extraction failed:', error.message);
     return null;
   }
 };
 
 // Main function that tries multiple methods
 export const getInstagramPostsSimple = async (username) => {
+  console.log(`🎯 Starting Instagram fetch for: ${username}`);
 
   // Method 1: Public feed
   let posts = await fetchInstagramPublicFeed(username);
   if (posts && posts.length > 0) {
+    console.log(`✅ Success! Loaded ${posts.length} real Instagram posts`);
     return posts;
   }
 
   // Method 2: Alternative proxy
   posts = await fetchInstagramAlternative(username);
   if (posts && posts.length > 0) {
+    console.log(`✅ Alternative success! Loaded ${posts.length} posts`);
     return posts;
   }
 
+  console.log('❌ All simple methods failed');
   return null;
 };
 
 // Fallback function with real-looking data for your account
 export const getPremiumNumberPost = () => {
+  console.log('📦 Using Hanuman-themed fallback posts');
 
   return [
     {

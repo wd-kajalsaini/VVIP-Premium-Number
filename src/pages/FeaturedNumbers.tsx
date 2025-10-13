@@ -392,17 +392,14 @@ const FeaturedNumbers: React.FC = () => {
     if (categoriesParam) {
       const categoryIds = categoriesParam.split(',').map(id => parseInt(id, 10)).filter(id => !isNaN(id));
       setSelectedCategories(categoryIds);
-      console.log('Loaded categories from URL:', categoryIds);
     }
 
     if (sumParam) {
       setSumTotalSearch(sumParam);
-      console.log('Loaded sum search from URL:', sumParam);
     }
 
     if (searchParam) {
       setSearchTerm(searchParam);
-      console.log('Loaded search term from URL:', searchParam);
     }
 
     // Set advanced search params
@@ -416,7 +413,6 @@ const FeaturedNumbers: React.FC = () => {
         total,
         sum: advSum
       });
-      console.log('Loaded advanced search from URL:', { startWith, anywhere, endWith, mustContain, notContain, total, sum: advSum });
     }
   }, [location.search]);
 
@@ -437,24 +433,6 @@ const FeaturedNumbers: React.FC = () => {
     try {
       // Fetch ALL active numbers for filtering
       const allNumbers = await phoneNumberService.getActivePhoneNumbers({});
-
-      console.log('Fetched all active numbers:', allNumbers);
-      console.log('Total active numbers:', allNumbers.length);
-
-      // Debug: Show category_id distribution
-      const categoryDistribution = allNumbers.reduce((acc: any, num) => {
-        const catId = num.category_id;
-        const catIdType = typeof catId;
-        const key = `${catId} (${catIdType})`;
-        acc[key] = (acc[key] || 0) + 1;
-        return acc;
-      }, {});
-      console.log('Category distribution with types:', categoryDistribution);
-
-      // Debug: Show a few examples
-      console.log('Sample numbers with category 15:',
-        allNumbers.filter(n => String(n.category_id) === '15').slice(0, 3)
-      );
 
       setNumbers(allNumbers);
     } catch (error) {
@@ -580,16 +558,6 @@ const FeaturedNumbers: React.FC = () => {
            matchesStartWith && matchesAnywhere && matchesEndWith &&
            matchesMustContain && matchesNotContain && matchesTotal && matchesAdvSum;
   });
-
-  // Debug logging
-  useEffect(() => {
-    if (selectedCategories.length > 0) {
-      console.log('Selected category IDs:', selectedCategories);
-      console.log('Total numbers:', numbers.length);
-      console.log('Filtered numbers:', filteredNumbers.length);
-      console.log('Sample numbers with category_id:', numbers.slice(0, 5).map(n => ({ id: n.id, number: n.number, category_id: n.category_id })));
-    }
-  }, [selectedCategories, numbers, filteredNumbers.length]);
 
   return (
     <PageContainer>

@@ -663,24 +663,6 @@ const AdminPhoneNumbers: React.FC = () => {
     setLoading(true);
     try {
       const data = await phoneNumberService.getAllPhoneNumbers();
-      console.log('===== FETCHED PHONE NUMBERS =====');
-      console.log('Total phone numbers:', data?.length || 0);
-
-      // Log category distribution
-      if (data && data.length > 0) {
-        const categoryDistribution: { [key: string]: number } = {};
-        data.forEach(num => {
-          const catId = num.category_id ? String(num.category_id).trim() : 'null';
-          categoryDistribution[catId] = (categoryDistribution[catId] || 0) + 1;
-        });
-        console.log('Category distribution:', categoryDistribution);
-        console.log('Sample numbers with categories:', data.slice(0, 5).map(n => ({
-          number: n.number,
-          category_id: n.category_id,
-          category_id_type: typeof n.category_id
-        })));
-      }
-
       setPhoneNumbers(data || []);
     } catch (error) {
       console.error('Error fetching phone numbers:', error);
@@ -693,9 +675,6 @@ const AdminPhoneNumbers: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const data = await categoryService.getAllCategories();
-      console.log('===== FETCHED CATEGORIES =====');
-      console.log('Total categories fetched:', data?.length || 0);
-      console.log('Categories:', data?.map(c => ({ id: c.id, name: c.name })));
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -875,14 +854,6 @@ const AdminPhoneNumbers: React.FC = () => {
 
       if ((window as any)[debugKey] < 5) {
         if (categoryIds.length > 0) {
-          console.log('Checking number:', {
-            number: num.number,
-            selectedCategoryFilter: categoryFilter,
-            numberCategoryIds: categoryIds,
-            matchesCategory,
-            rawCategoryId: num.category_id,
-            rawType: typeof num.category_id
-          });
           if (matchesCategory) {
             (window as any)[debugKey]++;
           }
@@ -970,9 +941,6 @@ const AdminPhoneNumbers: React.FC = () => {
           value={categoryFilter}
           onChange={(e) => {
             const newCategoryFilter = parseInt(e.target.value);
-            console.log('===== CATEGORY FILTER CHANGED =====');
-            console.log('Selected category ID:', newCategoryFilter);
-            console.log('Selected category name:', categories.find(c => c.id === newCategoryFilter)?.name || 'All');
             setCategoryFilter(newCategoryFilter);
           }}
           style={{ minWidth: '200px' }}
@@ -996,17 +964,6 @@ const AdminPhoneNumbers: React.FC = () => {
               }
             });
             const count = matchingNumbers.length;
-
-            // Log for debugging
-            if (count > 0) {
-              console.log(`Category "${cat.name}" (ID: ${cat.id}) has ${count} numbers`);
-              if (count > 0 && count < 3) {
-                console.log('  Sample numbers:', matchingNumbers.slice(0, 3).map(n => ({
-                  number: n.number,
-                  category_id: n.category_id
-                })));
-              }
-            }
 
             return (
               <option key={cat.id} value={cat.id}>

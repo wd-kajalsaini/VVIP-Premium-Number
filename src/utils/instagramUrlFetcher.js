@@ -6,12 +6,9 @@ import { fetchSimpleInstagramPosts } from './simpleInstagramSolution.js';
 
 export const fetchInstagramFromUrl = async (profileUrl) => {
   try {
-    console.log('🔄 Fetching Instagram posts from URL:', profileUrl);
-
     // Try to fetch Instagram posts using simple solution
     const instagramPosts = await fetchSimpleInstagramPosts(profileUrl);
     if (instagramPosts && instagramPosts.length > 0) {
-      console.log('🎉 SUCCESS! Loaded', instagramPosts.length, 'Instagram posts');
       return instagramPosts;
     }
 
@@ -20,9 +17,6 @@ export const fetchInstagramFromUrl = async (profileUrl) => {
     if (!username) {
       throw new Error('Invalid Instagram URL');
     }
-
-    console.log('👤 Instagram username:', username);
-    console.log('⚠️ Real Instagram fetching failed, using themed fallback posts');
 
     // Return themed posts customized for the Instagram account
     return generateThemedPostsForAccount(username);
@@ -77,7 +71,7 @@ const tryInstagramRSS = async (username) => {
           }
         }
       } catch (err) {
-        console.log('RSS feed failed:', feedUrl);
+        // RSS feed failed, try next one
       }
     }
 
@@ -109,7 +103,7 @@ const tryInstagramScraping = async (username) => {
           }
         }
       } catch (err) {
-        console.log('Proxy failed:', proxyUrl);
+        // Proxy failed, try next one
       }
     }
 
@@ -306,8 +300,6 @@ export const getPremiumNumberPost = () => {
 
 // Generate themed posts customized for the specific Instagram account
 const generateThemedPostsForAccount = (username) => {
-  console.log('🎨 Generating themed posts for Instagram account:', username);
-
   const themedImages = [
     'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
     'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=500&fit=crop',
@@ -351,7 +343,6 @@ const generateSamplePosts = (username) => {
 export const saveInstagramUrl = (url) => {
   try {
     localStorage.setItem('instagram_profile_url', url);
-    console.log('✅ Instagram URL saved:', url);
   } catch (error) {
     console.error('❌ Failed to save Instagram URL:', error);
   }

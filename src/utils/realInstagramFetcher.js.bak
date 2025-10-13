@@ -3,6 +3,7 @@
 
 export const fetchRealInstagramPosts = async (profileUrl) => {
   try {
+    console.log('🔄 Fetching REAL Instagram posts from:', profileUrl);
 
     // Extract username from URL
     const username = extractUsernameFromUrl(profileUrl);
@@ -10,31 +11,37 @@ export const fetchRealInstagramPosts = async (profileUrl) => {
       throw new Error('Invalid Instagram URL');
     }
 
+    console.log('👤 Extracted username:', username);
 
     // Method 1: Try Instagram's public JSON endpoint
     const publicJsonPosts = await tryPublicJsonEndpoint(username);
     if (publicJsonPosts && publicJsonPosts.length > 0) {
+      console.log('✅ Success via public JSON endpoint:', publicJsonPosts.length, 'posts');
       return publicJsonPosts;
     }
 
     // Method 2: Try RSS services that work
     const rssPosts = await tryWorkingRSSServices(username);
     if (rssPosts && rssPosts.length > 0) {
+      console.log('✅ Success via working RSS services:', rssPosts.length, 'posts');
       return rssPosts;
     }
 
     // Method 3: Try Instagram embed endpoint
     const embedPosts = await tryInstagramEmbedEndpoint(username);
     if (embedPosts && embedPosts.length > 0) {
+      console.log('✅ Success via Instagram embed endpoint:', embedPosts.length, 'posts');
       return embedPosts;
     }
 
     // Method 4: Try alternative scraping services
     const scrapedPosts = await tryAlternativeScrapingServices(username);
     if (scrapedPosts && scrapedPosts.length > 0) {
+      console.log('✅ Success via alternative scraping:', scrapedPosts.length, 'posts');
       return scrapedPosts;
     }
 
+    console.log('⚠️ All real Instagram methods failed');
     return null;
 
   } catch (error) {
@@ -67,6 +74,7 @@ const extractUsernameFromUrl = (url) => {
 // Method 1: Instagram's public JSON endpoint (sometimes works)
 const tryPublicJsonEndpoint = async (username) => {
   try {
+    console.log('🔄 Trying public JSON endpoint...');
 
     // Instagram sometimes serves JSON data at this endpoint
     const instagramUrl = `https://www.instagram.com/${username}/?__a=1&__d=dis`;
@@ -92,12 +100,14 @@ const tryPublicJsonEndpoint = async (username) => {
             return posts;
           }
         } catch (parseError) {
+          console.log('JSON parsing failed for public endpoint');
         }
       }
     }
 
     return null;
   } catch (error) {
+    console.log('❌ Public JSON endpoint failed:', error.message);
     return null;
   }
 };
@@ -105,6 +115,7 @@ const tryPublicJsonEndpoint = async (username) => {
 // Method 2: Working RSS services
 const tryWorkingRSSServices = async (username) => {
   try {
+    console.log('🔄 Trying working RSS services...');
 
     const workingRSSServices = [
       `https://rss.app/feeds/_/instagram-user/${username}.rss`,
@@ -125,11 +136,13 @@ const tryWorkingRSSServices = async (username) => {
           }
         }
       } catch (err) {
+        console.log('RSS service failed:', rssUrl);
       }
     }
 
     return null;
   } catch (error) {
+    console.log('❌ Working RSS services failed:', error.message);
     return null;
   }
 };
@@ -137,6 +150,7 @@ const tryWorkingRSSServices = async (username) => {
 // Method 3: Instagram embed endpoint
 const tryInstagramEmbedEndpoint = async (username) => {
   try {
+    console.log('🔄 Trying Instagram embed endpoint...');
 
     // Instagram's oembed endpoint for getting post data
     const embedUrl = `https://api.instagram.com/oembed/?url=https://www.instagram.com/${username}/`;
@@ -155,12 +169,14 @@ const tryInstagramEmbedEndpoint = async (username) => {
             return posts;
           }
         } catch (parseError) {
+          console.log('Embed data parsing failed');
         }
       }
     }
 
     return null;
   } catch (error) {
+    console.log('❌ Instagram embed endpoint failed:', error.message);
     return null;
   }
 };
@@ -168,6 +184,7 @@ const tryInstagramEmbedEndpoint = async (username) => {
 // Method 4: Alternative scraping services
 const tryAlternativeScrapingServices = async (username) => {
   try {
+    console.log('🔄 Trying alternative scraping services...');
 
     // Free Instagram scraping APIs
     const scrapingServices = [
@@ -192,11 +209,13 @@ const tryAlternativeScrapingServices = async (username) => {
           }
         }
       } catch (err) {
+        console.log('Scraping service failed:', serviceUrl);
       }
     }
 
     return null;
   } catch (error) {
+    console.log('❌ Alternative scraping services failed:', error.message);
     return null;
   }
 };
@@ -235,6 +254,7 @@ const parseInstagramJsonData = (jsonData, username) => {
 
     return null;
   } catch (error) {
+    console.log('JSON data parsing failed:', error);
     return null;
   }
 };
@@ -277,6 +297,7 @@ const parseRSSContent = (rssContent, username) => {
 
     return null;
   } catch (error) {
+    console.log('RSS parsing failed:', error);
     return null;
   }
 };
@@ -306,6 +327,7 @@ const parseInstagramEmbedData = (embedData, username) => {
 
     return null;
   } catch (error) {
+    console.log('Embed data parsing failed:', error);
     return null;
   }
 };
@@ -343,6 +365,7 @@ const parseScrapingServiceData = (data, username) => {
 
     return null;
   } catch (error) {
+    console.log('Scraping service data parsing failed:', error);
     return null;
   }
 };

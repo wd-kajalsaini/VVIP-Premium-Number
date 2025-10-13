@@ -540,7 +540,6 @@ const AdminCurrencyNumbers: React.FC = () => {
           body: formData,
         });
       } catch (proxyError) {
-        console.log('Proxy failed, trying direct WAMP URL...');
         response = await fetch('http://localhost/premium-numbers/public/api/upload-currency-image.php', {
           method: 'POST',
           body: formData,
@@ -561,7 +560,6 @@ const AdminCurrencyNumbers: React.FC = () => {
     } catch (error) {
       console.error('Error uploading image:', error);
       // Fallback to data URL if upload fails
-      console.log('Upload failed, using data URL as fallback...');
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {

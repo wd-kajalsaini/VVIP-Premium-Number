@@ -3,45 +3,36 @@
 
 export const fetchPluginInstagramPosts = async (profileUrl) => {
   try {
-    console.log('🔌 Fetching Instagram posts using plugin approach:', profileUrl);
-
     // Extract username from URL
     const username = extractUsernameFromUrl(profileUrl);
     if (!username) {
       throw new Error('Invalid Instagram URL');
     }
 
-    console.log('👤 Username extracted:', username);
-
     // Method 1: Try Instagram web scraper (server-side approach)
     const webScrapedPosts = await tryInstagramWebScraper(username);
     if (webScrapedPosts && webScrapedPosts.length > 0) {
-      console.log('✅ SUCCESS via web scraper:', webScrapedPosts.length, 'posts');
       return webScrapedPosts;
     }
 
     // Method 2: Try Instagram RSS aggregator
     const rssAggregatorPosts = await tryRSSAggregator(username);
     if (rssAggregatorPosts && rssAggregatorPosts.length > 0) {
-      console.log('✅ SUCCESS via RSS aggregator:', rssAggregatorPosts.length, 'posts');
       return rssAggregatorPosts;
     }
 
     // Method 3: Try using a free Instagram API service
     const freeApiPosts = await tryFreeInstagramAPI(username);
     if (freeApiPosts && freeApiPosts.length > 0) {
-      console.log('✅ SUCCESS via free API:', freeApiPosts.length, 'posts');
       return freeApiPosts;
     }
 
     // Method 4: Try Instagram-to-RSS converter
     const rssConverterPosts = await tryInstagramRSSConverter(username);
     if (rssConverterPosts && rssConverterPosts.length > 0) {
-      console.log('✅ SUCCESS via RSS converter:', rssConverterPosts.length, 'posts');
       return rssConverterPosts;
     }
 
-    console.log('⚠️ All plugin methods failed');
     return null;
 
   } catch (error) {
@@ -74,8 +65,6 @@ const extractUsernameFromUrl = (url) => {
 // Method 1: Instagram web scraper using different CORS proxy
 const tryInstagramWebScraper = async (username) => {
   try {
-    console.log('🔄 Trying Instagram web scraper...');
-
     // Use a more reliable CORS proxy service
     const instagramUrl = `https://www.instagram.com/${username}/`;
     const proxy = `https://cors-proxy.htmldriven.com/?url=${encodeURIComponent(instagramUrl)}`;
@@ -103,7 +92,6 @@ const tryInstagramWebScraper = async (username) => {
 
     return null;
   } catch (error) {
-    console.log('❌ Web scraper failed:', error.message);
     return null;
   }
 };
@@ -111,8 +99,6 @@ const tryInstagramWebScraper = async (username) => {
 // Method 2: RSS aggregator approach
 const tryRSSAggregator = async (username) => {
   try {
-    console.log('🔄 Trying RSS aggregator...');
-
     // RSS2JSON service for converting Instagram RSS to JSON
     const rssUrl = `https://rsshub.app/instagram/user/${username}`;
     const rss2jsonUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&api_key=YOUR_API_KEY&count=12`;
@@ -140,7 +126,6 @@ const tryRSSAggregator = async (username) => {
 
     return null;
   } catch (error) {
-    console.log('❌ RSS aggregator failed:', error.message);
     return null;
   }
 };
@@ -148,8 +133,6 @@ const tryRSSAggregator = async (username) => {
 // Method 3: Free Instagram API service
 const tryFreeInstagramAPI = async (username) => {
   try {
-    console.log('🔄 Trying free Instagram API...');
-
     // Using RapidAPI free tier Instagram scraper
     const url = `https://instagram-scraper-api2.p.rapidapi.com/v1/posts?username_or_id_or_url=${username}`;
 
@@ -182,7 +165,6 @@ const tryFreeInstagramAPI = async (username) => {
 
     return null;
   } catch (error) {
-    console.log('❌ Free Instagram API failed:', error.message);
     return null;
   }
 };
@@ -190,8 +172,6 @@ const tryFreeInstagramAPI = async (username) => {
 // Method 4: Instagram RSS converter
 const tryInstagramRSSConverter = async (username) => {
   try {
-    console.log('🔄 Trying Instagram RSS converter...');
-
     // FetchRSS service for Instagram
     const fetchRSSUrl = `https://fetchrss.com/rss/6347ded6536b9b0b1dc71ba26347ded6866b9b0b1dc71ba2/${username}.xml`;
 
@@ -207,7 +187,6 @@ const tryInstagramRSSConverter = async (username) => {
 
     return null;
   } catch (error) {
-    console.log('❌ Instagram RSS converter failed:', error.message);
     return null;
   }
 };
@@ -246,7 +225,6 @@ const parseInstagramHTML = (html, username) => {
 
     return null;
   } catch (error) {
-    console.log('HTML parsing failed:', error);
     return null;
   }
 };
@@ -286,7 +264,6 @@ const parseRSSContent = (rssContent, username) => {
 
     return null;
   } catch (error) {
-    console.log('RSS parsing failed:', error);
     return null;
   }
 };

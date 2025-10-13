@@ -2160,6 +2160,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const fetchedCategories = await categoryService.getActiveCategories();
+      console.log('Fetched active categories:', fetchedCategories);
       setDbCategories(fetchedCategories);
     };
     fetchCategories();
@@ -2182,6 +2183,9 @@ const Home: React.FC = () => {
           featuredNumbers = await phoneNumberService.getActivePhoneNumbers({});
         }
 
+        console.log('===== FETCH DEBUG =====');
+        console.log('Total active numbers fetched:', featuredNumbers.length);
+        console.log('Selected category IDs:', selectedCategoryIds);
 
         // Check category distribution
         const catDistribution = featuredNumbers.reduce((acc: any, num) => {
@@ -2189,20 +2193,32 @@ const Home: React.FC = () => {
           acc[catId] = (acc[catId] || 0) + 1;
           return acc;
         }, {});
+        console.log('Category distribution:', catDistribution);
 
         // Check if category 15 exists
         const cat15Count = featuredNumbers.filter(n => String(n.category_id) === '15').length;
+        console.log('Numbers with category_id = 15:', cat15Count);
 
         if (cat15Count > 0) {
+          console.log('Sample category 15 number:', featuredNumbers.find(n => String(n.category_id) === '15'));
         }
 
         // Fetch attractive numbers and today's offers for home sections
         const attractiveNumbers = await phoneNumberService.getAttractiveNumbers();
         const todayOffers = await phoneNumberService.getTodayOffers();
 
+        console.log('===== HOME PAGE DATA FETCH =====');
+        console.log('Fetched featured numbers count:', featuredNumbers.length);
         if (featuredNumbers.length > 0) {
-          // Featured numbers already loaded, no additional processing needed
+          console.log('First 3 featured numbers with categories:', featuredNumbers.slice(0, 3).map(n => ({
+            id: n.id,
+            number: n.number,
+            category_id: n.category_id,
+            is_featured: n.is_featured
+          })));
         }
+        console.log('Fetched attractive numbers count:', attractiveNumbers.length);
+        console.log('Fetched today offers count:', todayOffers.length);
 
         setDbFeaturedNumbers(featuredNumbers); // All featured numbers for filtering
         setDbAttractiveNumbers(attractiveNumbers.slice(0, 8)); // Limit to 8
@@ -2219,6 +2235,7 @@ const Home: React.FC = () => {
     const loadCarouselSlides = async () => {
       try {
         const slides = await carouselService.getCarouselSlides();
+        console.log('Loaded carousel slides:', slides);
 
         if (slides && slides.length > 0) {
           setCarouselSlides(slides);
@@ -2289,12 +2306,14 @@ const Home: React.FC = () => {
           // Mark as counted in this session
           sessionStorage.setItem('visitor_counted', 'true');
 
+          console.log('Visitor count incremented to:', formattedCount);
         } else {
           // Just fetch the current count without incrementing
           const currentCount = await visitorService.getVisitorCount();
           const formattedCount = visitorService.formatVisitorCount(currentCount);
           setVisitorCount(formattedCount);
 
+          console.log('Visitor already counted. Current count:', formattedCount);
         }
       } catch (error) {
         console.error('Error tracking visitor:', error);
@@ -2876,6 +2895,10 @@ const Home: React.FC = () => {
                     let filtered = dbFeaturedNumbers;
 
                     // Debug logging
+                    console.log('===== FILTERING DEBUG =====');
+                    console.log('Total featured numbers:', dbFeaturedNumbers.length);
+                    console.log('Selected category IDs:', selectedCategoryIds);
+                    console.log('Sum total search:', sumTotalSearch);
 
                     if (dbFeaturedNumbers.length > 0) {
                       const categoryCounts = dbFeaturedNumbers.reduce((acc: any, num) => {
@@ -2883,10 +2906,18 @@ const Home: React.FC = () => {
                         acc[catId] = (acc[catId] || 0) + 1;
                         return acc;
                       }, {});
+                      console.log('Numbers by category_id:', categoryCounts);
+                      console.log('First 5 numbers:', dbFeaturedNumbers.slice(0, 5).map(n => ({
+                        id: n.id,
+                        number: n.number,
+                        category_id: n.category_id
+                      })));
                     }
 
                     // Filter by category
                     if (selectedCategoryIds.length > 0) {
+                      console.log('Filtering by categories:', selectedCategoryIds);
+                      console.log('Selected category types:', selectedCategoryIds.map(id => typeof id));
                       const beforeFilter = filtered.length;
 
                       // Debug: Check what category_id types we have
@@ -2896,6 +2927,7 @@ const Home: React.FC = () => {
                         category_id_type: typeof n.category_id,
                         category_id_string: String(n.category_id)
                       }));
+                      console.log('Sample category_id data:', sampleCategoryIds);
 
                       filtered = filtered.filter(num => {
                         if (num.category_id === null || num.category_id === undefined) {
@@ -2918,6 +2950,7 @@ const Home: React.FC = () => {
                           );
 
                           if (matches && selectedCategoryIds.includes(15)) {
+                            console.log('MATCH (comma-separated):', num.number, 'has categories:', numberCategories, 'selected:', selectedCategoryIds);
                           }
                           return matches;
                         } else {
@@ -2932,15 +2965,21 @@ const Home: React.FC = () => {
                           });
 
                           if (matches && selectedCategoryIds.includes(15)) {
+                            console.log('MATCH (single):', num.number, 'has category:', catIdNum, 'type:', typeof num.category_id, 'selected:', selectedCategoryIds);
                           }
                           return matches;
                         }
                       });
+                      console.log(`Category filter: ${beforeFilter} -> ${filtered.length} numbers`);
                       if (filtered.length > 0) {
+                        console.log('Sample filtered number:', filtered[0]);
                       } else {
+                        console.log('NO MATCHES FOUND! Checking why...');
                         // Show numbers that have category_id = 15
                         const cat15Numbers = dbFeaturedNumbers.filter(n => String(n.category_id) === '15' || n.category_id === 15);
+                        console.log('Numbers with category_id = 15 in full dataset:', cat15Numbers.length);
                         if (cat15Numbers.length > 0) {
+                          console.log('Example cat 15 number:', cat15Numbers[0]);
                         }
                       }
                     }
@@ -2951,6 +2990,7 @@ const Home: React.FC = () => {
                         const sumTotal = getSumTotalString(num.number);
                         return sumTotal.includes(sumTotalSearch);
                       });
+                      console.log('After sum total filter:', filtered.length);
                     }
 
                     // Filter by global search term
@@ -2962,6 +3002,7 @@ const Home: React.FC = () => {
                                cleanNumber.includes(searchClean) ||
                                num.price.toString().includes(searchTerm);
                       });
+                      console.log('After global search filter:', filtered.length);
                     }
 
                     // Advanced search filters
@@ -3021,6 +3062,7 @@ const Home: React.FC = () => {
 
                         return true;
                       });
+                      console.log('After advanced search filter:', filtered.length);
                     }
 
                     // Get display numbers
@@ -3041,6 +3083,9 @@ const Home: React.FC = () => {
                       ? filtered.slice(0, 20) // Direct slice when any filter is active
                       : getDiverseNumbers(filtered, 20); // Diverse mix only when no filters
 
+                    console.log('Display numbers:', displayNumbers.length);
+                    console.log('Has filters:', hasAnyFilter);
+                    console.log('Filtered count before display limit:', filtered.length);
 
                     return (
                       <>

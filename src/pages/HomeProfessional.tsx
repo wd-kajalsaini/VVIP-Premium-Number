@@ -793,7 +793,7 @@ const Home: React.FC = () => {
               <FilterButton $active={selectedCategory === 'premium'} onClick={() => setSelectedCategory('premium')}>
                 Premium
               </FilterButton>
-              <FilterButton onClick={() => console.log('Open filters')}>
+              <FilterButton onClick={() => {}}>
                 <FaFilter /> More Filters
               </FilterButton>
             </SearchFilters>
@@ -860,7 +860,7 @@ const Home: React.FC = () => {
                 <ActionButton $primary onClick={() => window.open(`https://wa.me/917700071600?text=Hi! I want to buy +91 ${number.number}`, '_blank')}>
                   Buy Now
                 </ActionButton>
-                <ActionButton onClick={() => console.log('View details')}>
+                <ActionButton onClick={() => {}}>
                   Details
                 </ActionButton>
               </NumberActions>
