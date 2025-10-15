@@ -915,7 +915,7 @@ const VipScrollWrapper = styled.div`
   display: flex;
   gap: 25px;
   width: max-content;
-  animation: autoScroll 80s linear infinite;
+  animation: autoScroll 30s linear infinite;
   will-change: transform;
 
   &:hover {
@@ -933,7 +933,12 @@ const VipScrollWrapper = styled.div`
 
   /* Ensure this doesn't interfere with page scroll */
   pointer-events: auto;
-  touch-action: pan-y;
+  touch-action: pan-x;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 const VipCard = styled.div`
@@ -1148,7 +1153,7 @@ const AttractiveScrollWrapper = styled.div`
   display: flex;
   gap: 25px;
   width: max-content;
-  animation: autoScrollReverse 85s linear infinite;
+  animation: autoScrollReverse 35s linear infinite;
   will-change: transform;
 
   &:hover {
@@ -1162,6 +1167,14 @@ const AttractiveScrollWrapper = styled.div`
     100% {
       transform: translateX(-50%);
     }
+  }
+
+  /* Enable touch scrolling for mobile */
+  touch-action: pan-x;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
   }
 `;
 
@@ -1717,6 +1730,7 @@ const getSumTotalString = (phoneNumber: string): string => {
 
 const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [numbersToShow] = useState(10); // Show fixed 10 numbers
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -1734,6 +1748,7 @@ const Home: React.FC = () => {
   const [dbTodayOffers, setDbTodayOffers] = useState<PhoneNumber[]>([]);
   const [dbAttractiveNumbers, setDbAttractiveNumbers] = useState<PhoneNumber[]>([]);
   const [showCategories, setShowCategories] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   // Advanced search states
   const [advancedSearch, setAdvancedSearch] = useState({
     startWith: '',
@@ -2156,6 +2171,15 @@ const Home: React.FC = () => {
     return true;
   });
 
+  // Debounce search term to prevent too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300); // 300ms debounce - faster response
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   // Fetch categories from database - show all active categories (same as Featured page)
   useEffect(() => {
     const fetchCategories = async () => {
@@ -2166,22 +2190,42 @@ const Home: React.FC = () => {
   }, []);
 
   // Fetch featured numbers, attractive numbers, and today's offers
-  // Refetch when categories change to use optimized server-side filtering
+  // Refetch when categories or debounced search term changes to use optimized server-side filtering
   useEffect(() => {
     const fetchAllNumbers = async () => {
+      setIsSearching(true);
       try {
-        // Fetch featured numbers with optional category filtering
         let featuredNumbers;
-        if (selectedCategoryIds.length > 0) {
-          // Use server-side filtering for better performance
-          featuredNumbers = await phoneNumberService.getActivePhoneNumbers({
-            category_ids: selectedCategoryIds
-          });
-        } else {
-          // Fetch ALL active numbers when no category filter is applied
-          featuredNumbers = await phoneNumberService.getActivePhoneNumbers({});
-        }
 
+        // Use fast search when searching (limits to 100 results for speed)
+        if (debouncedSearchTerm.trim()) {
+          featuredNumbers = await phoneNumberService.fastSearchPhoneNumbers(debouncedSearchTerm.trim(), 100);
+
+          // Apply category filter client-side if needed
+          if (selectedCategoryIds.length > 0) {
+            featuredNumbers = featuredNumbers.filter(phoneNumber => {
+              if (!phoneNumber.category_id) return false;
+              const categoryIdStr = String(phoneNumber.category_id).trim();
+
+              if (categoryIdStr.includes(',')) {
+                const phoneCategories = categoryIdStr.split(',').map(id => parseInt(id.trim(), 10));
+                return phoneCategories.some(catId =>
+                  !isNaN(catId) && selectedCategoryIds.includes(catId)
+                );
+              } else {
+                const catId = parseInt(categoryIdStr, 10);
+                return !isNaN(catId) && selectedCategoryIds.includes(catId);
+              }
+            });
+          }
+        } else {
+          // Use normal fetch when not searching
+          const queryParams: any = {};
+          if (selectedCategoryIds.length > 0) {
+            queryParams.category_ids = selectedCategoryIds;
+          }
+          featuredNumbers = await phoneNumberService.getActivePhoneNumbers(queryParams);
+        }
 
         // Check category distribution
         const catDistribution = featuredNumbers.reduce((acc: any, num) => {
@@ -2209,10 +2253,12 @@ const Home: React.FC = () => {
         setDbTodayOffers(todayOffers.slice(0, 8)); // Limit to 8
       } catch (error) {
         console.error('Error fetching numbers:', error);
+      } finally {
+        setIsSearching(false);
       }
     };
     fetchAllNumbers();
-  }, [selectedCategoryIds]);
+  }, [selectedCategoryIds, debouncedSearchTerm]);
 
   // Load carousel slides from admin panel
   useEffect(() => {
@@ -2630,7 +2676,7 @@ const Home: React.FC = () => {
               <SearchInputContainer>
                 <SearchInputField
                   type="text"
-                  placeholder="Search Any Number"
+                  placeholder={isSearching ? "Searching..." : "Search Any Number"}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={(e) => {
@@ -2953,16 +2999,8 @@ const Home: React.FC = () => {
                       });
                     }
 
-                    // Filter by global search term
-                    if (searchTerm.trim()) {
-                      filtered = filtered.filter(num => {
-                        const cleanNumber = num.number.replace(/\D/g, '');
-                        const searchClean = searchTerm.replace(/\D/g, '');
-                        return num.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                               cleanNumber.includes(searchClean) ||
-                               num.price.toString().includes(searchTerm);
-                      });
-                    }
+                    // Note: Global search term is now handled server-side in the API call
+                    // No need for client-side filtering of searchTerm anymore
 
                     // Advanced search filters
                     if (advancedSearch.startWith || advancedSearch.anywhere || advancedSearch.endWith ||

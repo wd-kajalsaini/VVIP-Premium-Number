@@ -144,7 +144,7 @@ export const phoneNumberService = {
           query = query.lte('price', filters.max_price);
         }
         if (filters?.search) {
-          query = query.or(`number.ilike.%${filters.search}%,display_number.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+          query = query.ilike('number', `%${filters.search}%`);
         }
 
         const { data, error } = await query
@@ -398,5 +398,31 @@ export const phoneNumberService = {
   // Search phone numbers
   async searchPhoneNumbers(query: string): Promise<PhoneNumber[]> {
     return this.getActivePhoneNumbers({ search: query });
+  },
+
+  // Fast search with limit - optimized for home page search
+  async fastSearchPhoneNumbers(searchQuery: string, limit: number = 100): Promise<PhoneNumber[]> {
+    try {
+      let query = supabase
+        .from('phone_numbers')
+        .select('*')
+        .eq('is_active', true)
+        .eq('is_sold', false);
+
+      // Add search filter
+      if (searchQuery.trim()) {
+        query = query.ilike('number', `%${searchQuery}%`);
+      }
+
+      const { data, error } = await query
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error searching phone numbers:', error);
+      return [];
+    }
   }
 };

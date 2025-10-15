@@ -434,6 +434,46 @@ const CheckboxGroup = styled.div`
   flex-wrap: wrap;
 `;
 
+const ScrollableCheckboxGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
+  overscroll-behavior: contain; /* Prevent parent scroll when at boundaries */
+
+  /* Custom scrollbar for webkit browsers */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  @media (max-width: 768px) {
+    max-height: 250px; /* Slightly taller on mobile */
+    padding: 12px;
+    gap: 4px;
+    touch-action: pan-y; /* Allow vertical scrolling only */
+  }
+`;
+
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
@@ -441,11 +481,22 @@ const CheckboxLabel = styled.label`
   cursor: pointer;
   font-size: 0.9rem;
   color: #444;
+  padding: 4px 0; /* Add some vertical padding for easier touch targets */
 
   input[type="checkbox"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 0; /* Larger touch target on mobile */
+    min-height: 44px; /* Ensure minimum touch target size */
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
   }
 `;
 
@@ -1192,7 +1243,7 @@ const AdminPhoneNumbers: React.FC = () => {
 
               <FormGroup $fullWidth>
                 <Label>Categories (Select Multiple)</Label>
-                <CheckboxGroup style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px', borderRadius: '6px' }}>
+                <ScrollableCheckboxGroup>
                   {categories.map(cat => (
                     <CheckboxLabel key={cat.id}>
                       <input
@@ -1209,7 +1260,7 @@ const AdminPhoneNumbers: React.FC = () => {
                       {cat.name}
                     </CheckboxLabel>
                   ))}
-                </CheckboxGroup>
+                </ScrollableCheckboxGroup>
               </FormGroup>
 
 
