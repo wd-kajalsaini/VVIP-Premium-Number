@@ -143,10 +143,6 @@ export const phoneNumberService = {
         if (filters?.max_price) {
           query = query.lte('price', filters.max_price);
         }
-        if (filters?.search) {
-          query = query.ilike('number', `%${filters.search}%`);
-        }
-
         const { data, error } = await query
           .order('created_at', { ascending: false })
           .range(offset, offset + batchSize - 1);
@@ -163,6 +159,17 @@ export const phoneNumberService = {
       }
 
       let result = allData;
+
+      // Apply client-side search filter if needed (strips special characters for flexible matching)
+      if (filters?.search) {
+        const cleanedSearch = filters.search.replace(/\D/g, '');
+        if (cleanedSearch) {
+          result = result.filter(num => {
+            const cleanedNumber = num.number.replace(/\D/g, '');
+            return cleanedNumber.includes(cleanedSearch);
+          });
+        }
+      }
 
       // Handle multiple category filtering (client-side)
       // This handles comma-separated category_ids in the database (stored as TEXT)
@@ -403,23 +410,30 @@ export const phoneNumberService = {
   // Fast search with limit - optimized for home page search
   async fastSearchPhoneNumbers(searchQuery: string, limit: number = 100): Promise<PhoneNumber[]> {
     try {
-      let query = supabase
+      // Strip all non-digit characters from search query for flexible matching
+      const cleanedSearch = searchQuery.replace(/\D/g, '');
+
+      // Fetch all active numbers (limited)
+      const { data, error } = await supabase
         .from('phone_numbers')
         .select('*')
         .eq('is_active', true)
-        .eq('is_sold', false);
-
-      // Add search filter
-      if (searchQuery.trim()) {
-        query = query.ilike('number', `%${searchQuery}%`);
-      }
-
-      const { data, error } = await query
+        .eq('is_sold', false)
         .order('created_at', { ascending: false })
-        .limit(limit);
+        .limit(500); // Fetch more to filter client-side
 
       if (error) throw error;
-      return data || [];
+
+      // Filter client-side to match digits only
+      if (cleanedSearch) {
+        const filtered = (data || []).filter(num => {
+          const cleanedNumber = num.number.replace(/\D/g, '');
+          return cleanedNumber.includes(cleanedSearch);
+        });
+        return filtered.slice(0, limit);
+      }
+
+      return (data || []).slice(0, limit);
     } catch (error) {
       console.error('Error searching phone numbers:', error);
       return [];
