@@ -693,12 +693,6 @@ const FeaturedNumbers: React.FC = () => {
                         >
                           Buy Now
                         </NumberAction>
-                        <NumberAction
-                          $variant="secondary"
-                          onClick={() => alert(`Details for ${number.number}\nCategory: ${categoryName}\nPrice: ₹${number.price.toLocaleString()}\n\nCall 97722-97722 for more details.`)}
-                        >
-                          Details
-                        </NumberAction>
                       </NumberActions>
                     </NumberCard>
                   );
